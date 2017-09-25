@@ -3,7 +3,7 @@
     <id>cherrycloud</id>
     <name>CherryCloud</name>
     <description>CherryTree file editor</description>
-    <licence>MIT</licence>
+    <licence>apache</licence>
     <author>Alexander Demchenko</author>
     <version>0.0.3</version>
     <namespace>CherryCloud</namespace>
