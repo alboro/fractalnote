@@ -1,0 +1,84 @@
+.cherrycloud-app-content-wrapper {
+    height: 100%;
+}
+
+.page-not-found {
+    height: 100%;
+    width: 100%;
+    padding-top: 30px;
+    text-align: center;
+}
+
+.cherrycloud-editor {
+    height: 100%;
+    width: 100%;
+}
+
+.cherrycloud-editor .header {
+    width: 100%;
+    text-align: left;
+    border-top: 1px solid #ccc;
+    background-color: #fafafa;
+}
+
+.cherrycloud-editor .header .title {
+    float: left;
+    font-size: 27px;
+    margin-left: 20px;
+    padding: 7px;
+}
+
+.cherrycloud-editor .header .save {
+    float: right;
+}
+.cherrycloud-editor .loading {
+    background: url("vendor/vakata-jstree/default/throbber.gif") center center no-repeat;
+}
+
+.cherrycloud-editor .input {
+    height: calc(100% - 51px);
+    width: 100%;
+}
+
+.cherrycloud-editor .input textarea {
+    height: 100%;
+    width: 100%;
+    border: 0;
+    margin: 0;
+    border-radius: 0;
+    overflow-y: auto;
+}
+
+.cherrycloud-navigation .jstree-icon-no-edit {
+    background-color: transparent;
+    background-image: url("vendor/vakata-jstree/proton/32px.png");
+    background-size: 320px 96px;
+    background-position: -35px -68px;
+    background-repeat: no-repeat;
+}
+.cherrycloud-navigation {
+overflow: hidden;
+overflow-x: scroll;
+overflow-y: scroll;
+}
+.cherrycloud-app-settings {
+    display: none;
+}
+/* Compactability fixes. Disable nextcloud/ownCloud styles, force jstree styles: */
+#app-navigation.cherrycloud-navigation li.jstree-node > a.jstree-anchor {
+    display: inline-block;
+    width: auto;
+    line-height: 24px;
+    min-height: 0px;
+    padding: 0px;
+    /*overflow: auto;*/
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    white-space: nowrap;
+    text-overflow: clip;
+    color: #000;
+    opacity: 1;
+}
+#app-navigation.cherrycloud-navigation input.jstree-rename-input {
+    height: 20px !important;
+}
