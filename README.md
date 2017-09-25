@@ -8,7 +8,7 @@ _CherryCloud_ is CherryTree file format editor for Nextcloud/owncloud (just for 
 * Current development phase is ``pre-alpha``. Just nodes of plain text are supported.  
 
 # Common set up
-* Use windows/linux supported [CherryTree program](www.giuspen.com/cherrytree/), [download here](www.giuspen.com/cherrytree/#downl)
+* Use windows/linux supported [CherryTree program](https://www.giuspen.com/cherrytree/), [download here](https://www.giuspen.com/cherrytree/#downl)
 * Use on your own server self-hosted nextcloud/owncloud solution for private files synchronisation to all your devices, [download link](https://nextcloud.com/install)
 * Install _CherryCloud_ in nextcloud/owncloud settings section
 
