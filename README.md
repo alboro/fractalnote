@@ -7,12 +7,12 @@ _CherryCloud_ is CherryTree file format editor for Nextcloud/owncloud (just for 
 * Recommended CherryTree file size should not be big (about ``<= 5MB``), because for now every page refresh in browser full file is getting loaded
 * Current development phase is ``pre-alpha``. Just nodes of plain text are supported.  
 
-# Common set up
+# Requirements
 * Use windows/linux supported [CherryTree program](https://www.giuspen.com/cherrytree/), [download here](https://www.giuspen.com/cherrytree/#downl)
-* Use on your own server self-hosted nextcloud/owncloud solution for private files synchronisation to all your devices, [download link](https://nextcloud.com/install)
-* Install _CherryCloud_ in nextcloud/owncloud settings section
+* Use self-hosted such Dropbox/Google Drive analog as Nextcloud/Owncloud. It synchronises your private files between all your devices. [Download link.](https://nextcloud.com/install)
+* _CherryCloud_ installed and enabled in Nextcloud/Owncloud settings UI
 
-# Recommended Desktop set up  
+# Recommended Desktop computer set up  
 * In CherryTree program preferences keep checked option ``reload after external update to CT* file``
 * Check also autosave
 * Install nextcloud/owncloud desktop synchronisation client 
@@ -34,6 +34,7 @@ And run in the command line:
 ```
 maintenance:mimetype:update-db --repair-filecache
 ```
+* Enable _CherryCloud_ in Nextcloud/Owncloud settings UI
 
 ## Running tests
 After [Installing PHPUnit](http://phpunit.de/getting-started.html) run:
