@@ -5,7 +5,7 @@ _CherryCloud_ is CherryTree file format editor for Nextcloud/owncloud (just for 
 * Create any _[filename].ctb_ with CherryTree program
 * Upload _[filename].ctb_ to nextcloud/owncloud, edit file there: ``https://[your-cloud-server]/index.php/apps/cherrycloud?f=[filename].ctb``
 * Recommended CherryTree file size should not be big (about ``<= 5MB``), because for now every page refresh in browser full file is getting loaded
-* Current development phase is ``pre-alpha``. Just nodes of plain text are supported.  
+* Current development phase is ``pre-alpha``. Just nodes of plain text are editable, others are read-only.  
 
 # Requirements
 * Use windows/linux supported [CherryTree program](https://www.giuspen.com/cherrytree/), [download here](https://www.giuspen.com/cherrytree/#downl)
