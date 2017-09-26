@@ -1,11 +1,12 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: alexander.demchenko
- * Date: 9/21/2017
- * Time: 5:44 PM
+ * NextCloud / ownCloud - cherrycloud
+ *
+ * Licensed under the Apache License, Version 2.0
+ *
+ * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
+ * @copyright Alexander Demchenko 2017
  */
-
 namespace OCA\CherryCloud\Service;
 
 use \OCP\IDBConnection;
