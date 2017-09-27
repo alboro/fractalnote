@@ -299,11 +299,11 @@
                                 alert(e.responseJSON.message);
                             });
                     })
-                    /*.on('state_ready.jstree', function (e, data) {
-                        if (!data.instance.is_selected()) {
+                    .on('state_ready.jstree', function (e, data) {
+                        if (data.instance.get_state().core.selected.length == 0) {
                             data.instance.select_node(nodes[0].id);
                         }
-                    })*/
+                    })
                     .on('set_state.jstree', function (e, data) {
                         var selected = data.instance.get_selected();
                         if (selected.length) {
@@ -319,7 +319,7 @@
                             self.renderContent();
                         }
                     })
-                    .on('activate_node.jstree', function (e, data) {
+                    .on('select_node.jstree', function (e, data) {
                         self.checkChanged();
                         self.setActiveNode({
                             id:      data.node.id,
