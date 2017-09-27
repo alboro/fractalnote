@@ -13,7 +13,7 @@
 
         // this notes object holds all our notes
         var NodeRepository = function (baseUrl, filePath) {
-            this._baseUrl = baseUrl;
+            this._baseUrl  = baseUrl;
             this._filePath = filePath;
         };
 
@@ -38,7 +38,7 @@
 
             updateNode: function (nodeModel, modifiedTime) {
                 return $.ajax({
-                    url: this._baseUrl + '/' + nodeModel.id  + '?' + 'f=' + this._filePath,
+                    url: this._baseUrl + '/' + nodeModel.id  + '?f=' + this._filePath,
                     method: 'PUT',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -178,7 +178,7 @@
              * @returns {undefined}
              */
             render: function () {
-                var self = this;
+                var self = this, nodes = this.getNodes();
                 this.renderContent();
                 this.getNavigation()
                     .jstree({
@@ -192,7 +192,15 @@
                             "animation": 0,
                             // "li_height": "20px",
                             "check_callback": true,
-                            "data": this.getNodes()
+                            "data": nodes
+                        },
+                        "plugins": ["contextmenu", "dnd", "search", "state", "types", "wholerow"],
+                        "search": {
+                            "show_only_matches_children": true
+                            //"search_callback": true
+                        },
+                        "state": {
+                            "key": this.nodeRepo._filePath
                         },
                         "types" : {
                             "txt": {
@@ -208,10 +216,6 @@
                                 "icon" : "jstree-icon-no-edit",
                                 "a_attr": {"class": "app-navigation-noclose"} // nextcloud config
                             }
-                        },
-                        "search": {
-                            "show_only_matches_children": true //,
-                            //"search_callback": true
                         },
                         "contextmenu": {
                             "items": {
@@ -271,8 +275,7 @@
                                     }
                                 }*/
                             }
-                        },
-                        "plugins": ["contextmenu", "dnd", "search", "state", "types", "wholerow"]
+                        }
                     })
                     .on('rename_node.jstree', function (e, data) {
                         var requestModel = {
@@ -296,6 +299,11 @@
                                 alert(e.responseJSON.message);
                             });
                     })
+                    /*.on('state_ready.jstree', function (e, data) {
+                        if (!data.instance.is_selected()) {
+                            data.instance.select_node(nodes[0].id);
+                        }
+                    })*/
                     .on('set_state.jstree', function (e, data) {
                         var selected = data.instance.get_selected();
                         if (selected.length) {
