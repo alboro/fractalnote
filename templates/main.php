@@ -18,7 +18,10 @@ script('cherrycloud', 'cherrycloud');
 
 	<div id="app-content" class="cherrycloud-app-content">
 		<div id="app-content-wrapper" class="cherrycloud-app-content-wrapper">
-			<?php print_unescaped($this->inc('part.content')); ?>
+            <script id="cherrycloud-content-tpl" type="text/x-handlebars-template"><?php
+                print_unescaped($this->inc('dynamic-area.handlebars'));
+            ?></script>
+            <div id="cherrycloud-editor" class="cherrycloud-editor"></div>
 		</div>
 	</div>
 </div>

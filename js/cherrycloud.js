@@ -23,7 +23,7 @@
                 var deferred = $.Deferred();
                 var self = this;
                 $.ajax({
-                    url: this._baseUrl + '?' + 'f=' + this._filePath,
+                    url: this._baseUrl + '?f=' + this._filePath,
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(noteModel)
@@ -56,20 +56,24 @@
          * @param {NodeRepository} object
          */
         var View = function (noteRepo) {
-            this.nodeRepo = noteRepo;
-            this.activeNode = undefined;
+            this.nodeRepo           = noteRepo;
+            this.activeNode         = undefined;
 
-            this.editorTextarea   = null;
-            this.editorSaveButton = null;
-            this.editorTitle      = null;
+            this.contentTplElement  = $('#cherrycloud-content-tpl');
+            this.editorElement      = $('#cherrycloud-editor');
 
-            this.searchElement = $('#cherrycloud-searchbar');
-            this.navigationElement = $('#cherrycloud-navigation');
-            this.contentTplElement = $('#cherrycloud-content-tpl');
-            this.editorElement = $('#cherrycloud-editor');
-            this.themeName = $('#js-tree-data').data('themeName');
-            this.mtime = $('#js-tree-data').data('mtime');
-            this.treeDataSource = $('#js-tree-data');
+            this.selectorText       = '#cherrycloud-editor textarea';
+            this.selectorSaveButton = '#cherrycloud-editor [name=save]';
+            this.selectorTitle      = '#cherrycloud-editor #cherrycloud-node-title';
+
+            this.searchElement      = $('#cherrycloud-searchbar');
+            this.navigationElement  = $('#cherrycloud-navigation');
+
+            var treeData = $('#js-tree-data');
+
+            this.themeName          = treeData.data('themeName');
+            this.mtime              = treeData.data('mtime');
+            this.treeDataSource     = treeData;
         };
 
         View.prototype = {
@@ -127,29 +131,30 @@
              */
             renderContent: function () {
                 var areaTemplate = Handlebars.compile(this.contentTplElement.html());
-                var html = areaTemplate({note: this.getActiveOrEmptyNodeModel()});
-                this.editorElement.html(html);
-                this.editorTextarea = $('#cherrycloud-editor textarea');
-                this.editorSaveButton = $('#cherrycloud-editor [name=save]');
-                this.editorTitle = $('#cherrycloud-editor #cherrycloud-node-title');
+                this.editorElement.html(
+                    areaTemplate({note: this.getActiveOrEmptyNodeModel()})
+                );
                 // handle saves
-                var self = this;
-                self.editorSaveButton.click(function () {
-                    var requestNode = self.getActiveNode();
-                    requestNode.content = self.editorTextarea.val();
-                    self.editorSaveButton.addClass('loading');
-                    self.nodeRepo.updateNode(requestNode, self.getTime())
-                        .done(function (response) {
-                            self.editorSaveButton.removeClass('loading');
-                            var jsTreeNode = self.getTreeInstance().get_node(requestNode.id);
-                            jsTreeNode.data.content = requestNode.content;
-                            self.setTime(response[0]);
-                        })
-                        .fail(function (e) {
-                            alert(e.responseJSON.message);
-                        });
-                });
+                $(this.selectorSaveButton).click(this.saveClick.bind(this));
+            },
 
+            /**
+             * @access {public}
+             */
+            saveClick: function () {
+                var self = this, button = $(this.selectorSaveButton), requestNode = this.getActiveNode();
+                requestNode.content = $(this.selectorText).val();
+                $(button).addClass('loading');
+                this.nodeRepo.updateNode(requestNode, this.getTime())
+                    .done(function (response) {
+                        $(button).removeClass('loading');
+                        var jsTreeNode = self.getTreeInstance().get_node(requestNode.id);
+                        jsTreeNode.data.content = requestNode.content;
+                        self.setTime(response[0]);
+                    })
+                    .fail(function (e) {
+                        alert(e.responseJSON.message);
+                    });
             },
 
             /**
@@ -158,13 +163,13 @@
             getTreeInstance: function () {
                 return this.getNavigation().jstree(true);
             },
+
             checkChanged: function () {
-                var self = this;
-                var node = self.getActiveNode();
+                var node = this.getActiveNode();
                 if (node) {
-                    var currentValue = self.editorTextarea.val();
+                    var currentValue = $(this.selectorText).val();
                     if (node.content != currentValue) {
-                        self.editorSaveButton.click();
+                        $(this.selectorSaveButton).click();
                     }
                 }
             },
@@ -275,19 +280,19 @@
                             title: data.text,
                             content: null
                         };
-                        self.editorSaveButton.addClass('loading');
+                        $(self.selectorSaveButton).addClass('loading');
                         self.nodeRepo.updateNode(requestModel, self.getTime())
                             .done(function (response) {
                                 self.setTime(response[0]);
                                 if (self.getActiveNode().id === data.node.id) {
-                                    self.editorTitle.html(data.text);
+                                    $(self.selectorTitle).html(data.text);
                                 }
-                                self.editorSaveButton.removeClass('loading');
+                                $(self.selectorSaveButton).removeClass('loading');
                             })
                             .fail(function (e) {
                                 var jsTreeNode = data.instance.get_node(requestModel.id);
                                 data.instance.set_text(jsTreeNode, data.old);
-                                self.editorSaveButton.removeClass('loading');
+                                $(self.selectorSaveButton).removeClass('loading');
                                 alert(e.responseJSON.message);
                             });
                     })

@@ -13,6 +13,10 @@ use OCP\Migration\IRepairStep;
 use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 
+// @todo
+// before this: automatically add new mimetype to config/mimetypes.json
+// refactor this: show, that it is inspired by \OC\Core\Command\Maintenance\Mimetype\UpdateDB::execute, add comments
+
 class AddMimetypeToFilecache implements IRepairStep {
   public function __construct(IDBConnection $connection) {}
 
