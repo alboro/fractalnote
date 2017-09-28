@@ -59,15 +59,15 @@
             this.nodeRepo           = noteRepo;
             this.activeNode         = undefined;
 
-            this.contentTplElement  = $('#cherrycloud-content-tpl');
-            this.editorElement      = $('#cherrycloud-editor');
+            this.contentTplElement  = $('#note-content-tpl');
+            this.editorElement      = $('#note-editor');
 
-            this.selectorText       = '#cherrycloud-editor textarea';
-            this.selectorSaveButton = '#cherrycloud-editor [name=save]';
-            this.selectorTitle      = '#cherrycloud-editor #cherrycloud-node-title';
+            this.selectorText       = '#note-editor textarea';
+            this.selectorSaveButton = '#note-editor [name=save]';
+            this.selectorTitle      = '#note-editor #note-node-title';
 
-            this.searchElement      = $('#cherrycloud-searchbar');
-            this.navigationElement  = $('#cherrycloud-navigation');
+            this.searchElement      = $('#note-searchbar');
+            this.navigationElement  = $('#note-navigation');
 
             var treeData = $('#js-tree-data');
 

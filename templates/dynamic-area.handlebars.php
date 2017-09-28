@@ -10,7 +10,7 @@
         {{/if}}
         </sup>
     {{/if}}
-    <h2 class="title" id="cherrycloud-node-title">{{ note.title }}</h2>
+    <h2 class="title" id="note-node-title">{{ note.title }}</h2>
 </div>
 <div class="input">
     <textarea {{#if note.isEditable }}{{else}}disabled{{/if}}>{{ note.content }}</textarea>

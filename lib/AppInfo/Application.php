@@ -22,6 +22,8 @@ use OCA\CherryCloud\Service\NotesStructure;
  */
 class Application extends App {
 
+    const APP_NAME = 'cherrycloud';
+
     /**
      * Constructor
      *
@@ -29,7 +31,7 @@ class Application extends App {
      */
     public function __construct(array $urlParams = [])
     {
-        parent::__construct('cherrycloud', $urlParams);
+        parent::__construct(self::APP_NAME, $urlParams);
 
         $c = $this->getContainer();
 
@@ -71,8 +73,8 @@ class Application extends App {
                 'id' => $c->getAppName(),
                 'order' => 10,
                 'name' => $server->getL10N($c->getAppName())->t('CherryCloud'),
-                'href' => $server->getURLGenerator()->linkToRoute('cherrycloud.page.index'),
-                'icon' => $server->getURLGenerator()->imagePath($c->getAppName(), 'cherrycloud.svg'),
+                'href' => $server->getURLGenerator()->linkToRoute($c->getAppName() . '.page.index'),
+                'icon' => $server->getURLGenerator()->imagePath($c->getAppName(), 'app.svg'),
             ];
         };
         $server->getNavigationManager()->add($navigationEntry);

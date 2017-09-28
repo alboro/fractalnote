@@ -16,6 +16,7 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCA\CherryCloud\Service\NotesStructure;
 use OCA\CherryCloud\Controller\AbstractController;
+use OCA\CherryCloud\AppInfo\Application;
 
 class PageController extends AbstractController
 {
@@ -33,7 +34,7 @@ class PageController extends AbstractController
     public function index()
     {
         if (!$this->connector->isConnected()) {
-            return new TemplateResponse('cherrycloud', '404');
+            return new TemplateResponse(Application::APP_NAME, '404');
         }
         // Override default CSP
         $csp = new ContentSecurityPolicy();
@@ -43,7 +44,7 @@ class PageController extends AbstractController
             'tree'  => $this->notesStructure->buildTree(),
             'mtime' => $this->connector->getModifyTime(),
         ];
-        $response = new TemplateResponse('cherrycloud', 'main', $params); // templates/main.php
+        $response = new TemplateResponse(Application::APP_NAME, 'main', $params); // templates/main.php
         $response->setContentSecurityPolicy($csp);
         return $response;
     }

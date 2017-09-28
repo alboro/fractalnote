@@ -20,7 +20,7 @@ if (\OCP\User::isLoggedIn()) {
     $eventDispatcher->addListener(
         'OCA\Files::loadAdditionalScripts',
         function() {
-            Util::addScript('cherrycloud', 'cherrycloud-router');
+            Util::addScript(Application::APP_NAME, 'router');
         }
     );
 }
