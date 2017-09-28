@@ -1,9 +1,9 @@
 # What is it?
-_CherryCloud_ is CherryTree file format editor for Nextcloud/owncloud (just for .ctb extension for now).
+_CherryCloud_ is CherryTree file format editor for Nextcloud/Owncloud (just for .ctb extension for now).
 
 # How to use?
 * Create any _[filename].ctb_ with CherryTree program
-* Upload _[filename].ctb_ to nextcloud/owncloud, edit file there: ``https://[your-cloud-server]/index.php/apps/cherrycloud?f=[filename].ctb``
+* Upload _[filename].ctb_ to Nextcloud/Owncloud, edit file there: ``https://[your-cloud-server]/index.php/apps/cherrycloud?f=[filename].ctb``
 * Recommended CherryTree file size should not be big (about ``<= 5MB``), because for now every page refresh in browser full file is getting loaded
 * Current development phase is ``pre-alpha``. Just nodes of plain text are editable, others are read-only.  
 
@@ -15,16 +15,16 @@ _CherryCloud_ is CherryTree file format editor for Nextcloud/owncloud (just for 
 # Recommended Desktop computer set up  
 * In CherryTree program preferences keep checked option Edit->Preferences->Miscellaneous->``Reload after external update to CT* file``
 * Check also autosave
-* Install nextcloud/owncloud desktop synchronisation client 
-* Put _[filename].ctb_ under nextcloud/owncloud synchronisation folder 
+* Install Nextcloud/Owncloud desktop synchronisation client 
+* Put _[filename].ctb_ under Nextcloud/Owncloud synchronisation folder 
 
 # Server requirements
 * PHP ``>= 5.6``
-* Nextcloud ``>= 12.0`` _OR_ ownCloud ``>= 8.1``
+* Nextcloud ``>= 12.0`` _OR_ OwnCloud ``>= 8.1``
 
 # CherryCloud installation
-* Place this app in ``[nextcloud installation folder]/apps/``
-* To be able to open files from file list app, add ``.ctb`` file type to the ``[nextcloud installation folder]/config/mimetypemapping.json`` like that:
+* Place this app in ``[nextcloud/owncloud installation folder]/apps/cherrycloud``
+* To be able to open files from file list app, add ``.ctb`` file type to the ``[nextcloud/owncloud installation folder]/config/mimetypemapping.json`` like that:
 ```
 {
     "ctb": ["application/cherrytree-ctb"]
