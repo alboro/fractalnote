@@ -1,7 +1,7 @@
 <?php
 
 /**
- * NextCloud / ownCloud - cherrycloud
+ * NextCloud / ownCloud - notehierarchy
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -9,14 +9,14 @@
  * @copyright Alexander Demchenko 2017
  */
 
-namespace OCA\CherryCloud\Controller;
+namespace OCA\NoteHierarchy\Controller;
 
 use OCP\IRequest;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCA\CherryCloud\Service\NotesStructure;
-use OCA\CherryCloud\Controller\AbstractController;
-use OCA\CherryCloud\AppInfo\Application;
+use OCA\NoteHierarchy\Service\NotesStructure;
+use OCA\NoteHierarchy\Controller\AbstractController;
+use OCA\NoteHierarchy\AppInfo\Application;
 
 class PageController extends AbstractController
 {

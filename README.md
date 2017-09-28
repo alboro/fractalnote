@@ -1,16 +1,16 @@
 # What is it?
-_CherryCloud_ is CherryTree file format editor for Nextcloud/Owncloud (just for .ctb extension for now).
+_NoteHierarchy_ is CherryTree file format editor for Nextcloud/Owncloud (just for .ctb extension for now).
 
 # How to use?
 * Create any _[filename].ctb_ with CherryTree program
-* Upload _[filename].ctb_ to Nextcloud/Owncloud, edit file there: ``https://[your-cloud-server]/index.php/apps/cherrycloud?f=[filename].ctb``
+* Upload _[filename].ctb_ to Nextcloud/Owncloud, edit file there: ``https://[your-cloud-server]/index.php/apps/notehierarchy?f=[filename].ctb``
 * Recommended CherryTree file size should not be big (about ``<= 5MB``), because for now every page refresh in browser full file is getting loaded
 * Current development phase is ``pre-alpha``. Just nodes of plain text are editable, others are read-only.  
 
 # Requirements
 * Use windows/linux supported [CherryTree program](https://www.giuspen.com/cherrytree/), [download here](https://www.giuspen.com/cherrytree/#downl)
 * Use such Dropbox/Google Drive analog as self-hosted Nextcloud/Owncloud. It synchronises your private files between all your devices. [Download link.](https://nextcloud.com/install)
-* _CherryCloud_ installed and enabled in Nextcloud/Owncloud settings UI
+* _NoteHierarchy_ installed and enabled in Nextcloud/Owncloud settings UI
 
 # Recommended Desktop computer set up  
 * In CherryTree program preferences keep checked option Edit->Preferences->Miscellaneous->``Reload after external update to CT* file``
@@ -22,8 +22,8 @@ _CherryCloud_ is CherryTree file format editor for Nextcloud/Owncloud (just for 
 * PHP ``>= 5.6``
 * Nextcloud ``>= 12.0`` _OR_ OwnCloud ``>= 8.1``
 
-# CherryCloud installation
-* Place this app in ``[nextcloud/owncloud installation folder]/apps/cherrycloud``
+# NoteHierarchy installation
+* Place this app in ``[nextcloud/owncloud installation folder]/apps/notehierarchy``
 * To be able to open files from file list app, add ``.ctb`` file type to the ``[nextcloud/owncloud installation folder]/config/mimetypemapping.json`` like that:
 ```
 {
@@ -34,7 +34,7 @@ And run in the command line:
 ```
 occ maintenance:mimetype:update-db --repair-filecache
 ```
-* Enable _CherryCloud_ in Nextcloud/Owncloud settings UI
+* Enable _NoteHierarchy_ in Nextcloud/Owncloud settings UI
 
 ## Running tests
 After [Installing PHPUnit](http://phpunit.de/getting-started.html) run:

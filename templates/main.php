@@ -1,7 +1,7 @@
 <?php
-namespace OCA\CherryCloud;
+namespace OCA\NoteHierarchy;
 
-use OCA\CherryCloud\AppInfo\Application;
+use OCA\NoteHierarchy\AppInfo\Application;
 
 $jsTreeThemeName = 'proton'; //default
 

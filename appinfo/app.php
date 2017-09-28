@@ -1,6 +1,6 @@
 <?php
 /**
- * NextCloud / ownCloud - cherrycloud
+ * NextCloud / ownCloud - notehierarchy
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -8,7 +8,7 @@
  * @copyright Alexander Demchenko 2017
  */
 
-namespace OCA\CherryCloud\AppInfo;
+namespace OCA\NoteHierarchy\AppInfo;
 
 use OCP\Util;
 

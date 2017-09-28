@@ -1,5 +1,5 @@
 /**
- * NextCloud / ownCloud - cherrycloud
+ * NextCloud / ownCloud - notehierarchy
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -7,12 +7,12 @@
  * @copyright Alexander Demchenko 2017
  */
 OCA = OCA || {};
-OCA.CherryCloudRouter = {
+OCA.NoteHierarchyRouter = {
     /**
      * Handles the FileAction click event
      */
     _onEditorTrigger: function (filename, context) {
-        window.document.location.href = OC.generateUrl('/apps/cherrycloud') + '?f=' + context.dir + '/' + filename;
+        window.document.location.href = OC.generateUrl('/apps/notehierarchy') + '?f=' + context.dir + '/' + filename;
     },
     /**
      * Registers the file actions
@@ -34,5 +34,5 @@ OCA.CherryCloudRouter = {
 };
 
 $(document).ready(function () {
-    OCA.CherryCloudRouter.registerFileActions();
+    OCA.NoteHierarchyRouter.registerFileActions();
 });

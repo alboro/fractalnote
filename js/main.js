@@ -1,5 +1,5 @@
 /**
- * NextCloud / ownCloud - cherrycloud
+ * NextCloud / ownCloud - notehierarchy
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -344,7 +344,7 @@
         };
 
         var noteRepo = new NodeRepository(
-            OC.generateUrl('/apps/cherrycloud') + '/notes',
+            OC.generateUrl('/apps/notehierarchy') + '/notes',
             window.document.location.search.substring(3) // @todo
         );
         new View(noteRepo).render();

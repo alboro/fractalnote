@@ -1,28 +1,28 @@
 <?php
 /**
- * NextCloud / ownCloud - cherrycloud
+ * NextCloud / ownCloud - notehierarchy
  *
  * Licensed under the Apache License, Version 2.0
  *
  * @author    Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\CherryCloud\AppInfo;
+namespace OCA\NoteHierarchy\AppInfo;
 
 use OCP\IContainer;
 use OCP\AppFramework\App;
-use OCA\CherryCloud\Controller\PageController;
-use OCA\CherryCloud\Controller\NoteController;
-use OCA\CherryCloud\Service\NotesStructure;
+use OCA\NoteHierarchy\Controller\PageController;
+use OCA\NoteHierarchy\Controller\NoteController;
+use OCA\NoteHierarchy\Service\NotesStructure;
 
 /**
  * Class Application
  *
- * @package OCA\CherryCloud\AppInfo
+ * @package OCA\NoteHierarchy\AppInfo
  */
 class Application extends App {
 
-    const APP_NAME = 'cherrycloud';
+    const APP_NAME = 'notehierarchy';
 
     /**
      * Constructor
@@ -72,7 +72,7 @@ class Application extends App {
             return [
                 'id' => $c->getAppName(),
                 'order' => 10,
-                'name' => $server->getL10N($c->getAppName())->t('CherryCloud'),
+                'name' => $server->getL10N($c->getAppName())->t('NoteHierarchy'),
                 'href' => $server->getURLGenerator()->linkToRoute($c->getAppName() . '.page.index'),
                 'icon' => $server->getURLGenerator()->imagePath($c->getAppName(), 'app.svg'),
             ];

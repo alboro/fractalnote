@@ -1,22 +1,22 @@
 <?php
 /**
- * NextCloud / ownCloud - cherrycloud
+ * NextCloud / ownCloud - notehierarchy
  *
  * Licensed under the Apache License, Version 2.0
  *
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\CherryCloud\Controller;
+namespace OCA\NoteHierarchy\Controller;
 
 use OCP\IRequest;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Controller as BaseController;
-use OCA\CherryCloud\Service\WebException;
-use OCA\CherryCloud\Service\NotFoundException;
-use OCA\CherryCloud\Service\NotesStructure;
-use OCA\CherryCloud\Service\Connector;
+use OCA\NoteHierarchy\Service\WebException;
+use OCA\NoteHierarchy\Service\NotFoundException;
+use OCA\NoteHierarchy\Service\NotesStructure;
+use OCA\NoteHierarchy\Service\Connector;
 
 class AbstractController extends BaseController
 {

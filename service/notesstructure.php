@@ -1,26 +1,26 @@
 <?php
 /**
- * NextCloud / ownCloud - cherrycloud
+ * NextCloud / ownCloud - notehierarchy
  *
  * Licensed under the Apache License, Version 2.0
  *
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\CherryCloud\Service;
+namespace OCA\NoteHierarchy\Service;
 
 use Exception;
 use OC\Files\View;
 use OCP\IDBConnection;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
-use OCA\CherryCloud\Db\Relation;
-use OCA\CherryCloud\Db\RelationMapper;
-use OCA\CherryCloud\Db\Node;
-use OCA\CherryCloud\Db\NodeMapper;
-use OCA\CherryCloud\Service\Connector;
-use OCA\CherryCloud\Service\NotFoundException;
-use OCA\CherryCloud\Service\NotEditableException;
+use OCA\NoteHierarchy\Db\Relation;
+use OCA\NoteHierarchy\Db\RelationMapper;
+use OCA\NoteHierarchy\Db\Node;
+use OCA\NoteHierarchy\Db\NodeMapper;
+use OCA\NoteHierarchy\Service\Connector;
+use OCA\NoteHierarchy\Service\NotFoundException;
+use OCA\NoteHierarchy\Service\NotEditableException;
 
 class NotesStructure
 {

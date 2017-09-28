@@ -1,2 +1,2 @@
-owncloud-cherrycloud (0.0.3)
+owncloud-notehierarchy (0.0.3)
 * Pre-alpha release

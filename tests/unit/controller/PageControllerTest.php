@@ -1,13 +1,13 @@
 <?php
 /**
- * NextCloud / ownCloud - cherrycloud
+ * NextCloud / ownCloud - notehierarchy
  *
  * Licensed under the Apache License, Version 2.0
  *
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\CherryCloud\Controller;
+namespace OCA\NoteHierarchy\Controller;
 
 use PHPUnit_Framework_TestCase;
 
@@ -23,7 +23,7 @@ class PageControllerTest extends PHPUnit_Framework_TestCase {
 		$request = $this->getMockBuilder('OCP\IRequest')->getMock();
 
 		$this->controller = new PageController(
-			'cherrycloud', $request, $this->userId
+			'notehierarchy', $request, $this->userId
 		);
 	}
 
