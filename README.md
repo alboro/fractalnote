@@ -41,3 +41,9 @@ After [Installing PHPUnit](http://phpunit.de/getting-started.html) run:
 ```
     phpunit -c phpunit.xml
 ```
+
+# Tehnologies used
+* jquery jsTree plugin, that provides interactive trees: https://github.com/vakata/jstree
+* Reponsive jsTree Twitter Bootstrap 3 Compatible Theme: https://github.com/orangehill/jstree-bootstrap-theme
+* Handlebars.js https://github.com/wycats/handlebars.js/
+* Inspired by awesome CherryTree: https://github.com/giuspen/cherrytree 
