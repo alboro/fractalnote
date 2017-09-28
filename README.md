@@ -1,5 +1,5 @@
 # What is it?
-_NoteHierarchy_ is CherryTree file format editor for Nextcloud/Owncloud (just for .ctb extension for now).
+_NoteHierarchy_ is hierarchical notes web-editor for Nextcloud/Owncloud with CherryTree *.ctb files support. Demo: http://cloud.aldem.ru/index.php/apps/notehierarchy?f=/demo.ctb
 
 # How to use?
 * Create any _[filename].ctb_ with CherryTree program
