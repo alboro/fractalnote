@@ -8,7 +8,7 @@ $jsTreeThemeName = 'proton'; //default
 script(Application::APP_NAME,	'vendor/vakata-jstree/dist/jstree');
 style(Application::APP_NAME,	"vendor/vakata-jstree/$jsTreeThemeName/style.min");
 
-style(Application::APP_NAME, 'cherrycloud');
+style(Application::APP_NAME, 'main');
 script(Application::APP_NAME,	'vendor/handlebars-v4.0.10'); // @todo: vendor_script()
 script(Application::APP_NAME, 'main');
 ?>
