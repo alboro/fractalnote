@@ -1,5 +1,5 @@
 /**
- * NextCloud / ownCloud - notehierarchy
+ * NextCloud / ownCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -7,12 +7,12 @@
  * @copyright Alexander Demchenko 2017
  */
 OCA = OCA || {};
-OCA.NoteHierarchyRouter = {
+OCA.FractalNoteRouter = {
     /**
      * Handles the FileAction click event
      */
     _onEditorTrigger: function (filename, context) {
-        window.document.location.href = OC.generateUrl('/apps/notehierarchy') + '?f=' + context.dir + '/' + filename;
+        window.document.location.href = OC.generateUrl('/apps/fractalnote') + '?f=' + context.dir + '/' + filename;
     },
     /**
      * Registers the file actions
@@ -34,5 +34,5 @@ OCA.NoteHierarchyRouter = {
 };
 
 $(document).ready(function () {
-    OCA.NoteHierarchyRouter.registerFileActions();
+    OCA.FractalNoteRouter.registerFileActions();
 });

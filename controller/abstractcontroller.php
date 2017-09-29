@@ -1,22 +1,22 @@
 <?php
 /**
- * NextCloud / ownCloud - notehierarchy
+ * NextCloud / ownCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\NoteHierarchy\Controller;
+namespace OCA\FractalNote\Controller;
 
 use OCP\IRequest;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Controller as BaseController;
-use OCA\NoteHierarchy\Service\WebException;
-use OCA\NoteHierarchy\Service\NotFoundException;
-use OCA\NoteHierarchy\Service\NotesStructure;
-use OCA\NoteHierarchy\Service\Connector;
+use OCA\FractalNote\Service\WebException;
+use OCA\FractalNote\Service\NotFoundException;
+use OCA\FractalNote\Service\NotesStructure;
+use OCA\FractalNote\Service\Connector;
 
 class AbstractController extends BaseController
 {

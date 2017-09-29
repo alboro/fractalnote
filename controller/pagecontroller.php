@@ -1,7 +1,7 @@
 <?php
 
 /**
- * NextCloud / ownCloud - notehierarchy
+ * NextCloud / ownCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -9,14 +9,14 @@
  * @copyright Alexander Demchenko 2017
  */
 
-namespace OCA\NoteHierarchy\Controller;
+namespace OCA\FractalNote\Controller;
 
 use OCP\IRequest;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCA\NoteHierarchy\Service\NotesStructure;
-use OCA\NoteHierarchy\Controller\AbstractController;
-use OCA\NoteHierarchy\AppInfo\Application;
+use OCA\FractalNote\Service\NotesStructure;
+use OCA\FractalNote\Controller\AbstractController;
+use OCA\FractalNote\AppInfo\Application;
 
 class PageController extends AbstractController
 {

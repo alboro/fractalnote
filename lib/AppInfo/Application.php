@@ -1,28 +1,28 @@
 <?php
 /**
- * NextCloud / ownCloud - notehierarchy
+ * NextCloud / ownCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
  * @author    Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\NoteHierarchy\AppInfo;
+namespace OCA\FractalNote\AppInfo;
 
 use OCP\IContainer;
 use OCP\AppFramework\App;
-use OCA\NoteHierarchy\Controller\PageController;
-use OCA\NoteHierarchy\Controller\NoteController;
-use OCA\NoteHierarchy\Service\NotesStructure;
+use OCA\FractalNote\Controller\PageController;
+use OCA\FractalNote\Controller\NoteController;
+use OCA\FractalNote\Service\NotesStructure;
 
 /**
  * Class Application
  *
- * @package OCA\NoteHierarchy\AppInfo
+ * @package OCA\FractalNote\AppInfo
  */
 class Application extends App {
 
-    const APP_NAME = 'notehierarchy';
+    const APP_NAME = 'fractalnote';
 
     /**
      * Constructor
@@ -72,7 +72,7 @@ class Application extends App {
             return [
                 'id' => $c->getAppName(),
                 'order' => 10,
-                'name' => $server->getL10N($c->getAppName())->t('NoteHierarchy'),
+                'name' => $server->getL10N($c->getAppName())->t('FractalNote'),
                 'href' => $server->getURLGenerator()->linkToRoute($c->getAppName() . '.page.index'),
                 'icon' => $server->getURLGenerator()->imagePath($c->getAppName(), 'app.svg'),
             ];

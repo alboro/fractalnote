@@ -1,17 +1,17 @@
 <?php
 /**
- * NextCloud / ownCloud - notehierarchy
+ * NextCloud / ownCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\NoteHierarchy\Service;
+namespace OCA\FractalNote\Service;
 
 use \OCP\IDBConnection;
 use \OC\Files\Filesystem;
-use \OCA\NoteHierarchy\Db\SqliteConnectionFactory;
+use \OCA\FractalNote\Db\SqliteConnectionFactory;
 
 class Connector
 {

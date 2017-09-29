@@ -1,23 +1,23 @@
 <?php
 /**
- * NextCloud / ownCloud - notehierarchy
+ * NextCloud / ownCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\NoteHierarchy\Db;
+namespace OCA\FractalNote\Db;
 
 use OCP\IDBConnection;
 
 class RelationMapper extends Mapper
 {
-    const RELATED_NODE = '\OCA\NoteHierarchy\Db\Node';
+    const RELATED_NODE = '\OCA\FractalNote\Db\Node';
 
     public function __construct(IDBConnection $db)
     {
-        parent::__construct($db, 'children', '\OCA\NoteHierarchy\Db\Relation');
+        parent::__construct($db, 'children', '\OCA\FractalNote\Db\Relation');
     }
 
     public function relatedEntityMapping(Entity $entity)

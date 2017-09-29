@@ -1,13 +1,13 @@
 <?php
 /**
- * NextCloud / ownCloud - notehierarchy
+ * NextCloud / ownCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\NoteHierarchy\Db;
+namespace OCA\FractalNote\Db;
 
 use OCP\IDBConnection;
 
@@ -16,7 +16,7 @@ class NodeMapper extends Mapper
 
     public function __construct(IDBConnection $db)
     {
-        parent::__construct($db, 'node', '\OCA\NoteHierarchy\Db\Node');
+        parent::__construct($db, 'node', '\OCA\FractalNote\Db\Node');
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
-namespace OCA\NoteHierarchy;
+namespace OCA\FractalNote;
 
-use OCA\NoteHierarchy\AppInfo\Application;
+use OCA\FractalNote\AppInfo\Application;
 
 $jsTreeThemeName = 'proton'; //default
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * NextCloud / ownCloud - notehierarchy
+ * NextCloud / ownCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -23,13 +23,13 @@ class AppTest extends TestCase {
 
     public function setUp() {
         parent::setUp();
-        $app = new App('notehierarchy');
+        $app = new App('fractalnote');
         $this->container = $app->getContainer();
     }
 
     public function testAppInstalled() {
         $appManager = $this->container->query('OCP\App\IAppManager');
-        $this->assertTrue($appManager->isInstalled('notehierarchy'));
+        $this->assertTrue($appManager->isInstalled('fractalnote'));
     }
 
 }

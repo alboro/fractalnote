@@ -1,5 +1,5 @@
 /**
- * NextCloud / ownCloud - notehierarchy
+ * NextCloud / ownCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -344,7 +344,7 @@
         };
 
         var noteRepo = new NodeRepository(
-            OC.generateUrl('/apps/notehierarchy') + '/notes',
+            OC.generateUrl('/apps/fractalnote') + '/notes',
             window.document.location.search.substring(3) // @todo
         );
         new View(noteRepo).render();

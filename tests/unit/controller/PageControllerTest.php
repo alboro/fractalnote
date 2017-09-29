@@ -1,13 +1,13 @@
 <?php
 /**
- * NextCloud / ownCloud - notehierarchy
+ * NextCloud / ownCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\NoteHierarchy\Controller;
+namespace OCA\FractalNote\Controller;
 
 use PHPUnit_Framework_TestCase;
 
@@ -23,7 +23,7 @@ class PageControllerTest extends PHPUnit_Framework_TestCase {
 		$request = $this->getMockBuilder('OCP\IRequest')->getMock();
 
 		$this->controller = new PageController(
-			'notehierarchy', $request, $this->userId
+			'fractalnote', $request, $this->userId
 		);
 	}
 

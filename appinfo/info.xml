@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <info>
-    <id>notehierarchy</id>
-    <name>NoteHierarchy</name>
-    <description>NoteHierarchy is hierarchical notes web-editor for Nextcloud/Owncloud, that opens CherryTree *.ctb files</description>
+    <id>fractalnote</id>
+    <name>FractalNote</name>
+    <description>FractalNote is hierarchical notes web-editor for Nextcloud/Owncloud, that opens CherryTree *.ctb files</description>
     <licence>apache</licence>
     <author>Alexander Demchenko</author>
     <version>0.0.3</version>
-    <namespace>NoteHierarchy</namespace>
+    <namespace>FractalNote</namespace>
     <category>office</category>
     <category>organization</category>
     <category>tools</category>
-    <website>https://github.com/alboro/notehierarchy</website>
+    <website>https://github.com/alboro/fractalnote</website>
     <dependencies>
         <php min-version="5.6" max-version="7"/>
         <owncloud min-version="8.1" max-version="10" />
@@ -18,10 +18,10 @@
     </dependencies>
     <repair-steps>
         <install>
-            <step>OCA\NoteHierarchy\Migration\AddMimetypeToFilecache</step>
+            <step>OCA\FractalNote\Migration\AddMimetypeToFilecache</step>
         </install>
         <uninstall>
-            <step>OCA\NoteHierarchy\Migration\RemoveMimetypeFromFilecache</step>
+            <step>OCA\FractalNote\Migration\RemoveMimetypeFromFilecache</step>
         </uninstall>
     </repair-steps>
 </info>

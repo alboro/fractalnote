@@ -1,5 +1,5 @@
 <?php
-    style(\OCA\NoteHierarchy\AppInfo\Application::APP_NAME, 'main');
+    style(\OCA\FractalNote\AppInfo\Application::APP_NAME, 'main');
 ?>
 <div id="app" class="note-app">
 	<div id="app-content" class="note-app-content">

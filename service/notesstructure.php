@@ -1,26 +1,26 @@
 <?php
 /**
- * NextCloud / ownCloud - notehierarchy
+ * NextCloud / ownCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\NoteHierarchy\Service;
+namespace OCA\FractalNote\Service;
 
 use Exception;
 use OC\Files\View;
 use OCP\IDBConnection;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
-use OCA\NoteHierarchy\Db\Relation;
-use OCA\NoteHierarchy\Db\RelationMapper;
-use OCA\NoteHierarchy\Db\Node;
-use OCA\NoteHierarchy\Db\NodeMapper;
-use OCA\NoteHierarchy\Service\Connector;
-use OCA\NoteHierarchy\Service\NotFoundException;
-use OCA\NoteHierarchy\Service\NotEditableException;
+use OCA\FractalNote\Db\Relation;
+use OCA\FractalNote\Db\RelationMapper;
+use OCA\FractalNote\Db\Node;
+use OCA\FractalNote\Db\NodeMapper;
+use OCA\FractalNote\Service\Connector;
+use OCA\FractalNote\Service\NotFoundException;
+use OCA\FractalNote\Service\NotEditableException;
 
 class NotesStructure
 {

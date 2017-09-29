@@ -1,6 +1,6 @@
 <?php
 /**
- * NextCloud / ownCloud - notehierarchy
+ * NextCloud / ownCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -8,7 +8,7 @@
  * @copyright Alexander Demchenko 2017
  */
 
-namespace OCA\NoteHierarchy\AppInfo;
+namespace OCA\FractalNote\AppInfo;
 
 use OCP\Util;
 
