@@ -57,7 +57,9 @@
          */
         var View = function (noteRepo) {
             this.nodeRepo           = noteRepo;
-            this.activeNode         = undefined;
+            this.activeNode         = null;
+            this.allNodes           = null;
+            this.firstNode          = null;
 
             this.contentTplElement  = $('#note-content-tpl');
             this.editorElement      = $('#note-editor');
@@ -69,7 +71,7 @@
             this.searchElement      = $('#note-searchbar');
             this.navigationElement  = $('#note-navigation');
 
-            var treeData = $('#js-tree-data');
+            var treeData            = $('#js-tree-data');
 
             this.themeName          = treeData.data('themeName');
             this.mtime              = treeData.data('mtime');
@@ -78,11 +80,9 @@
 
         View.prototype = {
 
-            /**
-             * @returns {Array}
-             */
-            getNodes: function () {
-                return JSON.parse(this.treeDataSource.text());
+            parseNodes: function () {
+                this.allNodes = JSON.parse(this.treeDataSource.text());
+                this.firstNode = this.allNodes[0].id;
             },
 
             setTime: function (time) {
@@ -178,8 +178,9 @@
              * @returns {undefined}
              */
             render: function () {
-                var self = this, nodes = this.getNodes();
+                var self = this;
                 this.renderContent();
+                this.parseNodes();
                 this.getNavigation()
                     .jstree({
                         "core": {
@@ -192,7 +193,7 @@
                             "animation": 0,
                             // "li_height": "20px",
                             "check_callback": true,
-                            "data": nodes
+                            "data": this.allNodes
                         },
                         "plugins": ["contextmenu", "dnd", "search", "state", "types", "wholerow"],
                         "search": {
@@ -301,7 +302,7 @@
                     })
                     .on('state_ready.jstree', function (e, data) {
                         if (data.instance.get_state().core.selected.length == 0) {
-                            data.instance.select_node(nodes[0].id);
+                            data.instance.select_node(self.firstNode);
                         }
                     })
                     .on('set_state.jstree', function (e, data) {
@@ -331,6 +332,8 @@
                         });
                         self.renderContent();
                     });
+                this.allNodes = null;
+                this.firstNode = null;
                 var to = false;
                 self.searchElement.keyup(function () {
                     if (to) {

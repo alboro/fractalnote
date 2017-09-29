@@ -17,7 +17,7 @@ class ConflictException extends WebException
     public function __construct($title)
     {
         $message = "It's not possible to save your changes to the '$title' note, "
-            . "because the note tree was recently changed by another user. "
+            . "because the note tree was recently changed by another process. "
             . "Please, save your changes somewhere, reload the page in the browser and retry.";
         parent::__construct($message);
     }

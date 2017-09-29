@@ -91,7 +91,6 @@ abstract class Mapper extends NativeMapper
      * @throws \InvalidArgumentException if entity has no id
      * @param Entity $entity the entity that should be created
      * @return Entity the saved entity with the set id
-     * @return Entity the saved entity with the set id
      * @since 7.0.0 - return value was added in 8.0.0
      */
     public function update(NativeEntity $entity){
