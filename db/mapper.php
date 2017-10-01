@@ -142,4 +142,28 @@ abstract class Mapper extends NativeMapper
 
         return $entity;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function insert(NativeEntity $entity)
+    {
+        $id = $entity->getId();
+        $result = parent::insert($entity);
+        $entity->setId($id);
+        return $result;
+    }
+
+    /**
+     * @param $fieldName
+     *
+     * @return integer
+     */
+    public function calculateNextIncrementValue($fieldName = null)
+    {
+        $fieldName = $fieldName ? : (new $this->entityClass)->getPrimaryAttribute();
+        $sql = 'select ' . $fieldName . ' from `' . $this->tableName . '` order by ' . $fieldName . ' desc limit 1';
+        $row = $this->findOneQuery($sql);
+        return isset($row[$fieldName]) ? 1 + (int)$row[$fieldName] : 1;
+    }
 }

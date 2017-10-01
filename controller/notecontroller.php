@@ -30,6 +30,30 @@ class NoteController extends AbstractController
     /**
      * @NoAdminRequired
      *
+     * @param int    $parentId
+     * @param string $title
+     * @param int    $sequence
+     * @param int    $mtime
+     *
+     * @return DataResponse
+     */
+    public function create($parentId, $title, $sequence, $mtime)
+    {
+        return $this->handleWebErrors(function () use ($parentId, $title, $sequence, $mtime) {
+            if (!$this->connector->isConnected()) {
+                throw new NotFoundException();
+            }
+            if ($this->connector->getModifyTime() !== $mtime) {
+                throw new ConflictException($title);
+            }
+            $relation = $this->notesStructure->create($parentId, $title, $sequence);
+            return [$this->connector->getModifyTime(), $relation->getNodeId()];
+        });
+    }
+
+    /**
+     * @NoAdminRequired
+     *
      * @param int     $id
      * @param string  $title
      * @param string  $content
@@ -38,18 +62,15 @@ class NoteController extends AbstractController
     public function update($id, $title, $content, $mtime)
     {
         return $this->handleWebErrors(function () use ($id, $title, $content, $mtime) {
-            if (!$this->connector->isConnected()) {
+            $id = (int)$id;
+            if (!$id || !$this->connector->isConnected()) {
                 throw new NotFoundException();
             }
             if ($this->connector->getModifyTime() !== $mtime) {
                 throw new ConflictException($title);
             }
-            $isOk = $this->notesStructure->update($id, $title, $content);
-            if (!$isOk) {
-                throw new WebException();
-            }
-            $newmtime = $this->connector->getModifyTime();
-            return [$newmtime];
+            $this->notesStructure->update($id, $title, $content);
+            return [$this->connector->getModifyTime()];
         });
     }
 }

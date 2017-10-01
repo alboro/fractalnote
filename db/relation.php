@@ -11,6 +11,18 @@ namespace OCA\FractalNote\Db;
 
 use JsonSerializable;
 
+/**
+ * Class Relation
+ *
+ * @method integer getNodeId()
+ * @method integer getFatherId()
+ * @method integer getSequence()
+ * @method void setFatherId(integer $parentId)
+ * @method void setNodeId(integer $nodeId)
+ * @method void setSequence(integer $position)
+ *
+ * @package OCA\FractalNote\Db
+ */
 class Relation extends Entity implements JsonSerializable
 {
 
@@ -37,6 +49,8 @@ class Relation extends Entity implements JsonSerializable
     public function setNode(Node $node)
     {
         $this->node = $node;
+
+        $this->setNodeId($node->getId());
 
         return $this;
     }
@@ -68,21 +82,6 @@ class Relation extends Entity implements JsonSerializable
     public function getAttributesNames()
     {
         return ['node_id', 'father_id', 'sequence'];
-    }
-
-    public function getNodeId()
-    {
-        return $this->nodeId;
-    }
-
-    public function getFatherId()
-    {
-        return $this->fatherId;
-    }
-
-    public function getSequence()
-    {
-        return $this->sequence;
     }
 
     public function jsonSerialize()

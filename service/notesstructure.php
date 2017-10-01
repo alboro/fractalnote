@@ -10,17 +10,12 @@
 namespace OCA\FractalNote\Service;
 
 use Exception;
-use OC\Files\View;
-use OCP\IDBConnection;
-use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Db\MultipleObjectsReturnedException;
-use OCA\FractalNote\Db\Relation;
-use OCA\FractalNote\Db\RelationMapper;
 use OCA\FractalNote\Db\Node;
 use OCA\FractalNote\Db\NodeMapper;
-use OCA\FractalNote\Service\Connector;
-use OCA\FractalNote\Service\NotFoundException;
-use OCA\FractalNote\Service\NotEditableException;
+use OCA\FractalNote\Db\Relation;
+use OCA\FractalNote\Db\RelationMapper;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 
 class NotesStructure
 {
@@ -84,41 +79,57 @@ class NotesStructure
         return $node;
     }
 
+    /**
+     * @param int    $parentId
+     * @param string $title
+     * @param int    $sequence
+     * @param string $content
+     * @param string $syntax
+     * @param int    $isRich
+     *
+     * @return Relation|void
+     */
     public function create(
-        $title,
-        $content,
-        $parentId,
+        $parentId = 0,
+        $title = 'New node',
+        $sequence = 0,
+        $content = '',
         $syntax = 'plain-text',
         $isRich = 0
-    )
-    {
+    ) {
         $db = $this->connector->getDb();
         try {
-            // todo: calculate level
+            $this->connector->lockResource();
             $db->beginTransaction();
 
-            $note = new Node();
+            $note = Node::factory();
             $note->setName($title);
             $note->setTxt($content);
             $note->setSyntax($syntax);
-            $note->setLevel(0);
             $note->setIsRichtxt((int)(bool)$isRich);
-            $note = $this->createNodeMapper()->insert($note);
+            // todo: calculate level
+            $note->setId(
+                $this->createNodeMapper()->calculateNextIncrementValue()
+            );
+            $this->createNodeMapper()->insert($note);
 
             $child = new Relation();
-            $child->setNodeId($note->getId());
+            $child->setNode($note);
             $child->setFatherId($parentId);
-            $child->setSequence(0);
-            $child = $this->createChildMapper()->insert($child);
+            $child->setSequence($sequence);
+            $this->createChildMapper()->insert($child);
 
             $db->commit();
+            $this->connector->requireSync();
+            $this->connector->unlockResource();
         } catch (Exception $e) {
             $db->rollBack();
+            $this->connector->unlockResource();
 
             return $this->handleException($e);
         }
 
-        return $note;
+        return $child;
     }
 
     public function update($id, $title, $content)
@@ -126,25 +137,25 @@ class NotesStructure
         $syntax = 'plain-text';
         $isRich = 0;
         $mapper = $this->createNodeMapper();
-        $note = $mapper->find($id);
-        if (!$note->isEditable()) {
-            throw new NotEditableException($note->isRich(), $note->isReadOnly());
-        }
-        null !== $title && $note->setName($title);
-        null !== $content && $note->setTxt($content);
-        $note->setSyntax($syntax);
-        $note->setIsRichtxt((int)(bool)$isRich);
         try {
+            $note = $mapper->find($id);
+            if (!$note->isEditable()) {
+                throw new NotEditableException($note->isRich(), $note->isReadOnly());
+            }
+            null !== $title && $note->setName($title);
+            null !== $content && $note->setTxt($content);
+            $note->setSyntax($syntax);
+            $note->setIsRichtxt((int)(bool)$isRich);
             // make changes
             $this->connector->lockResource();
-            $updateResult = $mapper->update($note);
+            $mapper->update($note);
             unset($mapper);
-            $updateResult && $this->connector->requireSync();
+            $this->connector->requireSync();
             $this->connector->unlockResource();
         } catch (Exception $e) {
             $this->handleException($e);
         }
-        return $updateResult;
+        return $note;
     }
 
     /**

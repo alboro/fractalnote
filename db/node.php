@@ -9,6 +9,18 @@
  */
 namespace OCA\FractalNote\Db;
 
+/**
+ * Class Node
+ *
+ * @method string getName()
+ * @method string getTxt()
+ * @method void setName(string $title)
+ * @method void setTxt(string $content)
+ * @method void setSyntax(string $syntax)
+ * @method void setIsRichtxt(integer $isRich)
+ *
+ * @package OCA\FractalNote\Db
+ */
 class Node extends Entity
 {
 
@@ -16,26 +28,17 @@ class Node extends Entity
     protected $name;
     protected $txt;
     protected $level;
-    protected $syntax = 'plain-text';
-    protected $tags = '';
-    protected $isRo = 0;
-    protected $isRichtxt = 0;
-    protected $hasCodebox = 0;
-    protected $hasTable = 0;
-    protected $hasImage = 0;
+    protected $syntax;
+    protected $tags;
+    protected $isRo;
+    protected $isRichtxt;
+    protected $hasCodebox;
+    protected $hasTable;
+    protected $hasImage;
+    protected $tsCreation;
+    protected $tsLastsave;
     /** @var Node */
     protected $node;
-
-    /*public function getNode()
-    {
-        return $this->node;
-    }
-
-    public function setNode(Node $node)
-    {
-        $this->node = $node;
-        return $this;
-    }*/
 
     public function getPrimaryAttribute()
     {
@@ -51,18 +54,14 @@ class Node extends Entity
             'level',
             'is_richtxt',
             'is_ro',
-            // 'syntax', 'tags', 'has_codebox', 'has_table', 'has_image',
+            'syntax',
+            'tags',
+            'has_codebox',
+            'has_table',
+            'has_image',
+            'ts_creation',
+            'ts_lastsave',
         ];
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function getTxt()
-    {
-        return $this->txt;
     }
 
     public function isRich()
@@ -78,5 +77,22 @@ class Node extends Entity
     public function isEditable()
     {
         return !$this->isReadOnly() && !$this->isRich();
+    }
+
+    public static function factory()
+    {
+        // default values must be set with setter, rather then with native default property values
+        $note = new static();
+        $note->setSyntax('plain-text');
+        $note->setTsCreation(time());
+        $note->setTsLastsave(time());
+        $note->setLevel(0);
+        $note->setIsRo(0);
+        $note->setHasCodebox(0);
+        $note->setHasTable(0);
+        $note->setHasImage(0);
+        $note->setTags('');
+
+        return $note;
     }
 }

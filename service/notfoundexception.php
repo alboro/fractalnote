@@ -18,4 +18,8 @@ class NotFoundException extends WebException
         return Http::STATUS_NOT_FOUND;
     }
 
+    protected function defaultMessage()
+    {
+        return 'Not found';
+    }
 }

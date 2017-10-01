@@ -18,6 +18,11 @@ abstract class Entity extends NativeEntity
 
     abstract public function getAttributesNames();
 
+    public function __construct()
+    {
+        $this->addType($this->columnToProperty($this->getPrimaryAttribute()), 'integer');
+    }
+
     /**
      * @param integer $id
      * @return void
@@ -25,7 +30,7 @@ abstract class Entity extends NativeEntity
     public function setId($id)
     {
         $property = $this->columnToProperty($this->getPrimaryAttribute());
-        $this->setter($property, $id);
+        $this->setter($property, [$id]);
         // return $this;
     }
 

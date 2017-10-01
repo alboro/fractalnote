@@ -19,22 +19,19 @@
 
         NodeRepository.prototype = {
 
-            /*create: function (noteModel) {
-                var deferred = $.Deferred();
-                var self = this;
-                $.ajax({
+            createNode: function (parentId, title, sequence, modifiedTime) {
+                return $.ajax({
                     url: this._baseUrl + '?f=' + this._filePath,
                     method: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify(noteModel)
-                }).done(function (response) {
-                    self.setActiveNode(response);
-                    deferred.resolve();
-                }).fail(function () {
-                    deferred.reject();
+                    data: JSON.stringify({
+                        parentId: parentId,
+                        title   : title,
+                        sequence: sequence,
+                        mtime   : modifiedTime
+                    })
                 });
-                return deferred.promise();
-            },*/
+            },
 
             updateNode: function (nodeModel, modifiedTime) {
                 return $.ajax({
@@ -278,7 +275,7 @@
                             }
                         }
                     })
-                    .on('rename_node.jstree', function (e, data) {
+                    .on('rename_node.jstree', function (e, data, param3) {
                         var requestModel = {
                             id: data.node.id,
                             title: data.text,
@@ -296,6 +293,27 @@
                             .fail(function (e) {
                                 var jsTreeNode = data.instance.get_node(requestModel.id);
                                 data.instance.set_text(jsTreeNode, data.old);
+                                $(self.selectorSaveButton).removeClass('loading');
+                                alert(e.responseJSON.message);
+                            });
+                    })
+                    .on('create_node.jstree', function (e, data) {
+                        $(self.selectorSaveButton).addClass('loading');
+                        self.nodeRepo.createNode(data.parent, data.node.text, data.position, self.getTime())
+                            .done(function (response) {
+                                self.setTime(response[0]);
+                                data.node.id = response[1];
+                                data.node.data = {
+                                    content: '',
+                                    isEditable: true,
+                                    isReadonly: false,
+                                    isRich: false
+                                };
+                                $(self.selectorSaveButton).removeClass('loading');
+                            })
+                            .fail(function (e) {
+                                // var jsTreeNode = data.instance.get_node(requestModel.id);
+                                // data.instance.set_text(jsTreeNode, data.old);
                                 $(self.selectorSaveButton).removeClass('loading');
                                 alert(e.responseJSON.message);
                             });
