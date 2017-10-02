@@ -30,16 +30,16 @@ class NoteController extends AbstractController
     /**
      * @NoAdminRequired
      *
+     * @param int    $mtime
      * @param int    $parentId
      * @param string $title
      * @param int    $sequence
-     * @param int    $mtime
      *
      * @return DataResponse
      */
-    public function create($parentId, $title, $sequence, $mtime)
+    public function create($mtime, $parentId, $title, $sequence)
     {
-        return $this->handleWebErrors(function () use ($parentId, $title, $sequence, $mtime) {
+        return $this->handleWebErrors(function () use ($mtime, $parentId, $title, $sequence) {
             if (!$this->connector->isConnected()) {
                 throw new NotFoundException();
             }
@@ -54,14 +54,14 @@ class NoteController extends AbstractController
     /**
      * @NoAdminRequired
      *
+     * @param integer $mtime
      * @param int     $id
      * @param string  $title
      * @param string  $content
-     * @param integer $mtime
      */
-    public function update($id, $title, $content, $mtime)
+    public function update($mtime, $id, $title, $content)
     {
-        return $this->handleWebErrors(function () use ($id, $title, $content, $mtime) {
+        return $this->handleWebErrors(function () use ($mtime, $id, $title, $content) {
             $id = (int)$id;
             if (!$id || !$this->connector->isConnected()) {
                 throw new NotFoundException();

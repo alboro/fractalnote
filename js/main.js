@@ -25,10 +25,10 @@
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
+                        mtime   : modifiedTime,
                         parentId: parentId,
                         title   : title,
-                        sequence: sequence,
-                        mtime   : modifiedTime
+                        sequence: sequence
                     })
                 });
             },
@@ -39,10 +39,10 @@
                     method: 'PUT',
                     contentType: 'application/json',
                     data: JSON.stringify({
+                        mtime   : modifiedTime,
                         id      : nodeModel.id,
                         title   : nodeModel.title,
-                        content : nodeModel.content,
-                        mtime   : modifiedTime
+                        content : nodeModel.content
                     })
                 });
             }
@@ -170,6 +170,87 @@
                     }
                 }
             },
+
+            /**
+             * @access {public}
+             * @returns {undefined}
+             */
+            renameNode: function (data) {
+                var inst = $.jstree.reference(data.reference),
+                    obj = inst.get_node(data.reference);
+                inst.edit(obj);
+            },
+
+            /**
+             * @access {public}
+             */
+            onNodeRename: function (e, data) {
+                var requestModel, self = this;
+                requestModel = {
+                    id: data.node.id,
+                    title: data.text,
+                    content: null
+                };
+                $(self.selectorSaveButton).addClass('loading');
+                self.nodeRepo.updateNode(requestModel, self.getTime())
+                    .done(function (response) {
+                        self.setTime(response[0]);
+                        if (self.getActiveNode().id === data.node.id) {
+                            $(self.selectorTitle).html(data.text);
+                        }
+                        $(self.selectorSaveButton).removeClass('loading');
+                    })
+                    .fail(function (e) {
+                        var jsTreeNode = data.instance.get_node(requestModel.id);
+                        data.instance.set_text(jsTreeNode, data.old);
+                        $(self.selectorSaveButton).removeClass('loading');
+                        alert(e.responseJSON.message);
+                    });
+            },
+
+            /**
+             * @access {public}
+             * @returns {undefined}
+             */
+            menuCreateNode: function (data) {
+                var title, newNode,
+                    inst = $.jstree.reference(data.reference),
+                    obj = inst.get_node(data.reference);
+                title = prompt('Provide new node title:', 'New node', 'New node');
+                newNode = {
+                    id: null,
+                    type: 'txt',
+                    text: title,
+                    data: {
+                        content: '',
+                        isEditable: true,
+                        isReadonly: false,
+                        isRich: false
+                    },
+                    children: []
+                };
+                inst.create_node(obj, newNode, 'last');
+            },
+
+            /**
+             * @access {public}
+             */
+            onNodeCreate: function (e, data) {
+                var self = this;
+                $(self.selectorSaveButton).addClass('loading');
+                self.nodeRepo.createNode(data.parent, data.node.text, data.position, self.getTime())
+                    .done(function (response) {
+                        self.setTime(response[0]);
+                        self.getTreeInstance().set_id(data.node.id, response[1]);
+                        $(self.selectorSaveButton).removeClass('loading');
+                    })
+                    .fail(function (e) {
+                        self.getTreeInstance().delete_node(data.node);
+                        $(self.selectorSaveButton).removeClass('loading');
+                        alert(e.responseJSON.message);
+                    });
+            },
+
             /**
              * @access {public}
              * @returns {undefined}
@@ -225,15 +306,15 @@
                                     "shortcut"			: 113,
                                     "shortcut_label"	: 'F2',
                                     "icon"				: "glyphicon glyphicon-leaf",
-                                    "action"			: $.jstree.defaults.contextmenu.items().rename.action
-                                }/*,
+                                    "action"			: this.renameNode.bind(this)
+                                },
                                 "create" : {
                                     "separator_before"	: false,
                                     "separator_after"	: true,
                                     "_disabled"			: false, //(this.check("create_node", data.reference, {}, "last")),
                                     "label"				: "Create",
-                                    "action"			: $.jstree.defaults.contextmenu.items().create.action
-                                },
+                                    "action"			: this.menuCreateNode.bind(this)
+                                }/*,
                                 "remove" : {
                                     "separator_before"	: false,
                                     "icon"				: false,
@@ -275,49 +356,8 @@
                             }
                         }
                     })
-                    .on('rename_node.jstree', function (e, data, param3) {
-                        var requestModel = {
-                            id: data.node.id,
-                            title: data.text,
-                            content: null
-                        };
-                        $(self.selectorSaveButton).addClass('loading');
-                        self.nodeRepo.updateNode(requestModel, self.getTime())
-                            .done(function (response) {
-                                self.setTime(response[0]);
-                                if (self.getActiveNode().id === data.node.id) {
-                                    $(self.selectorTitle).html(data.text);
-                                }
-                                $(self.selectorSaveButton).removeClass('loading');
-                            })
-                            .fail(function (e) {
-                                var jsTreeNode = data.instance.get_node(requestModel.id);
-                                data.instance.set_text(jsTreeNode, data.old);
-                                $(self.selectorSaveButton).removeClass('loading');
-                                alert(e.responseJSON.message);
-                            });
-                    })
-                    .on('create_node.jstree', function (e, data) {
-                        $(self.selectorSaveButton).addClass('loading');
-                        self.nodeRepo.createNode(data.parent, data.node.text, data.position, self.getTime())
-                            .done(function (response) {
-                                self.setTime(response[0]);
-                                data.node.id = response[1];
-                                data.node.data = {
-                                    content: '',
-                                    isEditable: true,
-                                    isReadonly: false,
-                                    isRich: false
-                                };
-                                $(self.selectorSaveButton).removeClass('loading');
-                            })
-                            .fail(function (e) {
-                                // var jsTreeNode = data.instance.get_node(requestModel.id);
-                                // data.instance.set_text(jsTreeNode, data.old);
-                                $(self.selectorSaveButton).removeClass('loading');
-                                alert(e.responseJSON.message);
-                            });
-                    })
+                    .on('rename_node.jstree', this.onNodeRename.bind(this))
+                    .on('create_node.jstree', this.onNodeCreate.bind(this))
                     .on('state_ready.jstree', function (e, data) {
                         if (data.instance.get_state().core.selected.length == 0) {
                             data.instance.select_node(self.firstNode);
