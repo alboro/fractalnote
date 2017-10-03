@@ -399,7 +399,6 @@
                     self.renderContent();
                 });
                 this.allNodes = null;
-                this.firstNode = null;
                 var to = false;
                 self.searchElement.keyup(function () {
                     if (to) {
