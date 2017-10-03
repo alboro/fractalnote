@@ -80,12 +80,12 @@ class NotesStructure
     }
 
     /**
-     * @param int    $parentId
-     * @param string $title
-     * @param int    $sequence
-     * @param string $content
-     * @param string $syntax
-     * @param int    $isRich
+     * @param integer $parentId
+     * @param string  $title
+     * @param integer $sequence
+     * @param string  $content
+     * @param string  $syntax
+     * @param integer $isRich
      *
      * @return Relation|void
      */

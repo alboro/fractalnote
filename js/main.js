@@ -175,7 +175,7 @@
              * @access {public}
              * @returns {undefined}
              */
-            renameNode: function (data) {
+            menuRenameNode: function (data) {
                 var inst = $.jstree.reference(data.reference),
                     obj = inst.get_node(data.reference);
                 inst.edit(obj);
@@ -216,7 +216,10 @@
                 var title, newNode,
                     inst = $.jstree.reference(data.reference),
                     obj = inst.get_node(data.reference);
-                title = prompt('Provide new node title:', 'New node', 'New node');
+                title = prompt('Provide new node title:', 'New node');
+                if (!title) {
+                    return;
+                }
                 newNode = {
                     id: null,
                     type: 'txt',
@@ -259,137 +262,136 @@
                 var self = this;
                 this.renderContent();
                 this.parseNodes();
-                this.getNavigation()
-                    .jstree({
-                        "core": {
-                            "themes": {
-                                "name": this.themeName,
-                                // "variant" : "large",
-                                "responsive": true
+                this.getNavigation().jstree({
+                    "core": {
+                        "themes": {
+                            "name": this.themeName,
+                            // "variant" : "large",
+                            "responsive": true
+                        },
+                        "multiple" : false,
+                        "animation": 0,
+                        // "li_height": "20px",
+                        "check_callback": true,
+                        "data": this.allNodes
+                    },
+                    "plugins": ["contextmenu", "dnd", "search", "state", "types", "wholerow"],
+                    "search": {
+                        "show_only_matches_children": true
+                        //"search_callback": true
+                    },
+                    "state": {
+                        "key": this.nodeRepo._filePath
+                    },
+                    "types" : {
+                        "txt": {
+                            // "icon": "file", -> i -> jstree-icon jstree-themeicon file jstree-themeicon-custom
+                            // no icon set -> i -> jstree-icon jstree-themeicon
+                            "a_attr": {"class": "app-navigation-noclose"} // nextcloud config
+                        },
+                        "readonly": {
+                            "icon" : "jstree-icon-no-edit",
+                            "a_attr": {"class": "app-navigation-noclose"} // nextcloud config
+                        },
+                        "rich": {
+                            "icon" : "jstree-icon-no-edit",
+                            "a_attr": {"class": "app-navigation-noclose"} // nextcloud config
+                        }
+                    },
+                    "contextmenu": {
+                        "items": {
+                            "rename" : {
+                                "separator_before"	: false,
+                                "separator_after"	: false,
+                                "_disabled"			: false, //(this.check("rename_node", data.reference, this.get_parent(data.reference), "")),
+                                "label"				: "Rename",
+                                "shortcut"			: 113,
+                                "shortcut_label"	: 'F2',
+                                "icon"				: "glyphicon glyphicon-leaf",
+                                "action"			: this.menuRenameNode.bind(this)
                             },
-                            "multiple" : false,
-                            "animation": 0,
-                            // "li_height": "20px",
-                            "check_callback": true,
-                            "data": this.allNodes
-                        },
-                        "plugins": ["contextmenu", "dnd", "search", "state", "types", "wholerow"],
-                        "search": {
-                            "show_only_matches_children": true
-                            //"search_callback": true
-                        },
-                        "state": {
-                            "key": this.nodeRepo._filePath
-                        },
-                        "types" : {
-                            "txt": {
-                                // "icon": "file", -> i -> jstree-icon jstree-themeicon file jstree-themeicon-custom
-                                // no icon set -> i -> jstree-icon jstree-themeicon
-                                "a_attr": {"class": "app-navigation-noclose"} // nextcloud config
+                            "create" : {
+                                "separator_before"	: false,
+                                "separator_after"	: true,
+                                "_disabled"			: false, //(this.check("create_node", data.reference, {}, "last")),
+                                "label"				: "Create",
+                                "action"			: this.menuCreateNode.bind(this)
+                            }/*,
+                            "remove" : {
+                                "separator_before"	: false,
+                                "icon"				: false,
+                                "separator_after"	: false,
+                                "_disabled"			: false, //(this.check("delete_node", data.reference, this.get_parent(data.reference), "")),
+                                "label"				: "Delete",
+                                "action"			: $.jstree.defaults.contextmenu.items().remove.action
                             },
-                            "readonly": {
-                                "icon" : "jstree-icon-no-edit",
-                                "a_attr": {"class": "app-navigation-noclose"} // nextcloud config
-                            },
-                            "rich": {
-                                "icon" : "jstree-icon-no-edit",
-                                "a_attr": {"class": "app-navigation-noclose"} // nextcloud config
-                            }
-                        },
-                        "contextmenu": {
-                            "items": {
-                                "rename" : {
-                                    "separator_before"	: false,
-                                    "separator_after"	: false,
-                                    "_disabled"			: false, //(this.check("rename_node", data.reference, this.get_parent(data.reference), "")),
-                                    "label"				: "Rename",
-                                    "shortcut"			: 113,
-                                    "shortcut_label"	: 'F2',
-                                    "icon"				: "glyphicon glyphicon-leaf",
-                                    "action"			: this.renameNode.bind(this)
-                                },
-                                "create" : {
-                                    "separator_before"	: false,
-                                    "separator_after"	: true,
-                                    "_disabled"			: false, //(this.check("create_node", data.reference, {}, "last")),
-                                    "label"				: "Create",
-                                    "action"			: this.menuCreateNode.bind(this)
-                                }/*,
-                                "remove" : {
-                                    "separator_before"	: false,
-                                    "icon"				: false,
-                                    "separator_after"	: false,
-                                    "_disabled"			: false, //(this.check("delete_node", data.reference, this.get_parent(data.reference), "")),
-                                    "label"				: "Delete",
-                                    "action"			: $.jstree.defaults.contextmenu.items().remove.action
-                                },
-                                "ccp" : {
-                                    "separator_before"	: true,
-                                    "icon"				: false,
-                                    "separator_after"	: false,
-                                    "label"				: "Edit",
-                                    "action"			: false,
-                                    "submenu" : {
-                                        "cut" : {
-                                            "separator_before"	: false,
-                                            "separator_after"	: false,
-                                            "label"				: "Cut",
-                                            "action"			: $.jstree.defaults.contextmenu.items().ccp.submenu.cut.action
-                                        },
-                                        "copy" : {
-                                            "separator_before"	: false,
-                                            "icon"				: false,
-                                            "separator_after"	: false,
-                                            "label"				: "Copy",
-                                            "action"			: $.jstree.defaults.contextmenu.items().ccp.submenu.copy.action
-                                        },
-                                        "paste" : {
-                                            "separator_before"	: false,
-                                            "icon"				: false,
-                                            "_disabled"			: $.jstree.defaults.contextmenu.items().ccp.submenu.paste._disabled,
-                                            "separator_after"	: false,
-                                            "label"				: "Paste",
-                                            "action"			: $.jstree.defaults.contextmenu.items().ccp.submenu.paste.action
-                                        }
+                            "ccp" : {
+                                "separator_before"	: true,
+                                "icon"				: false,
+                                "separator_after"	: false,
+                                "label"				: "Edit",
+                                "action"			: false,
+                                "submenu" : {
+                                    "cut" : {
+                                        "separator_before"	: false,
+                                        "separator_after"	: false,
+                                        "label"				: "Cut",
+                                        "action"			: $.jstree.defaults.contextmenu.items().ccp.submenu.cut.action
+                                    },
+                                    "copy" : {
+                                        "separator_before"	: false,
+                                        "icon"				: false,
+                                        "separator_after"	: false,
+                                        "label"				: "Copy",
+                                        "action"			: $.jstree.defaults.contextmenu.items().ccp.submenu.copy.action
+                                    },
+                                    "paste" : {
+                                        "separator_before"	: false,
+                                        "icon"				: false,
+                                        "_disabled"			: $.jstree.defaults.contextmenu.items().ccp.submenu.paste._disabled,
+                                        "separator_after"	: false,
+                                        "label"				: "Paste",
+                                        "action"			: $.jstree.defaults.contextmenu.items().ccp.submenu.paste.action
                                     }
-                                }*/
-                            }
+                                }
+                            }*/
                         }
-                    })
-                    .on('rename_node.jstree', this.onNodeRename.bind(this))
-                    .on('create_node.jstree', this.onNodeCreate.bind(this))
-                    .on('state_ready.jstree', function (e, data) {
-                        if (data.instance.get_state().core.selected.length == 0) {
-                            data.instance.select_node(self.firstNode);
-                        }
-                    })
-                    .on('set_state.jstree', function (e, data) {
-                        var selected = data.instance.get_selected();
-                        if (selected.length) {
-                            var node = data.instance.get_node(selected[0]);
-                            self.setActiveNode({
-                                id:      node.id,
-                                title:   node.text,
-                                content: node.data.content,
-                                isEditable: node.data.isEditable,
-                                isReadonly: node.data.isReadonly,
-                                isRich: node.data.isRich
-                            });
-                            self.renderContent();
-                        }
-                    })
-                    .on('select_node.jstree', function (e, data) {
-                        self.checkChanged();
+                    }
+                })
+                .on('rename_node.jstree', this.onNodeRename.bind(this))
+                .on('create_node.jstree', this.onNodeCreate.bind(this))
+                .on('state_ready.jstree', function (e, data) {
+                    if (data.instance.get_state().core.selected.length == 0) {
+                        data.instance.select_node(self.firstNode);
+                    }
+                })
+                .on('set_state.jstree', function (e, data) {
+                    var selected = data.instance.get_selected();
+                    if (selected.length) {
+                        var node = data.instance.get_node(selected[0]);
                         self.setActiveNode({
-                            id:      data.node.id,
-                            title:   data.node.text,
-                            content: data.node.data.content,
-                            isEditable: data.node.data.isEditable,
-                            isReadonly: data.node.data.isReadonly,
-                            isRich: data.node.data.isRich
+                            id:      node.id,
+                            title:   node.text,
+                            content: node.data.content,
+                            isEditable: node.data.isEditable,
+                            isReadonly: node.data.isReadonly,
+                            isRich: node.data.isRich
                         });
                         self.renderContent();
+                    }
+                })
+                .on('select_node.jstree', function (e, data) {
+                    self.checkChanged();
+                    self.setActiveNode({
+                        id:      data.node.id,
+                        title:   data.node.text,
+                        content: data.node.data.content,
+                        isEditable: data.node.data.isEditable,
+                        isReadonly: data.node.data.isReadonly,
+                        isRich: data.node.data.isRich
                     });
+                    self.renderContent();
+                });
                 this.allNodes = null;
                 this.firstNode = null;
                 var to = false;

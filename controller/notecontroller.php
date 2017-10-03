@@ -30,10 +30,10 @@ class NoteController extends AbstractController
     /**
      * @NoAdminRequired
      *
-     * @param int    $mtime
-     * @param int    $parentId
-     * @param string $title
-     * @param int    $sequence
+     * @param integer $mtime
+     * @param integer $parentId
+     * @param string  $title
+     * @param integer $sequence
      *
      * @return DataResponse
      */
@@ -55,7 +55,7 @@ class NoteController extends AbstractController
      * @NoAdminRequired
      *
      * @param integer $mtime
-     * @param int     $id
+     * @param integer $id
      * @param string  $title
      * @param string  $content
      */
