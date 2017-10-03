@@ -176,8 +176,14 @@
              * @returns {undefined}
              */
             menuRenameNode: function (data) {
-                var inst = $.jstree.reference(data.reference),
+                var title,
+                    inst = $.jstree.reference(data.reference),
                     obj = inst.get_node(data.reference);
+                title = prompt('Provide new node title:', obj.text);
+                if (!title) {
+                    return;
+                }
+                inst.set_text(obj, title);
                 inst.edit(obj);
             },
 
