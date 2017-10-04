@@ -176,39 +176,40 @@
              * @returns {undefined}
              */
             menuRenameNode: function (data) {
-                var title,
+                var title, oldTitle,
                     inst = $.jstree.reference(data.reference),
                     obj = inst.get_node(data.reference);
                 title = prompt('Provide new node title:', obj.text);
-                if (!title) {
-                    return;
+                if (title) {
+                    oldTitle = obj.text;
+                    inst.set_text(obj, title);
+                    this.afterNodeRename(obj, title, oldTitle); // inst.edit(obj);
                 }
-                inst.set_text(obj, title);
-                inst.edit(obj);
+                return true;
             },
 
             /**
              * @access {public}
              */
-            onNodeRename: function (e, data) {
+            afterNodeRename: function (node, old) {
                 var requestModel, self = this;
                 requestModel = {
-                    id: data.node.id,
-                    title: data.text,
+                    id: node.id,
+                    title: node.text,
                     content: null
                 };
                 $(self.selectorSaveButton).addClass('loading');
                 self.nodeRepo.updateNode(requestModel, self.getTime())
                     .done(function (response) {
                         self.setTime(response[0]);
-                        if (self.getActiveNode().id === data.node.id) {
-                            $(self.selectorTitle).html(data.text);
+                        if (self.getActiveNode().id === node.id) {
+                            $(self.selectorTitle).html(node.text);
                         }
                         $(self.selectorSaveButton).removeClass('loading');
                     })
                     .fail(function (e) {
                         var jsTreeNode = data.instance.get_node(requestModel.id);
-                        data.instance.set_text(jsTreeNode, data.old);
+                        data.instance.set_text(jsTreeNode, old);
                         $(self.selectorSaveButton).removeClass('loading');
                         alert(e.responseJSON.message);
                     });
@@ -244,17 +245,17 @@
             /**
              * @access {public}
              */
-            onNodeCreate: function (e, data) {
+            afterNodeCreate: function (parent, node, position) {
                 var self = this;
                 $(self.selectorSaveButton).addClass('loading');
-                self.nodeRepo.createNode(data.parent, data.node.text, data.position, self.getTime())
+                self.nodeRepo.createNode(parent, node.text, position, self.getTime())
                     .done(function (response) {
                         self.setTime(response[0]);
-                        self.getTreeInstance().set_id(data.node.id, response[1]);
+                        self.getTreeInstance().set_id(node.id, response[1]);
                         $(self.selectorSaveButton).removeClass('loading');
                     })
                     .fail(function (e) {
-                        self.getTreeInstance().delete_node(data.node);
+                        self.getTreeInstance().delete_node(node);
                         $(self.selectorSaveButton).removeClass('loading');
                         alert(e.responseJSON.message);
                     });
@@ -364,8 +365,12 @@
                         }
                     }
                 })
-                .on('rename_node.jstree', this.onNodeRename.bind(this))
-                .on('create_node.jstree', this.onNodeCreate.bind(this))
+                .on('rename_node.jstree', function (e, data) {
+                    self.afterNodeRename(data.node, data.old);
+                })
+                .on('create_node.jstree', function (e, data) {
+                    self.afterNodeCreate(data.parent, data.node, data.position);
+                })
                 .on('state_ready.jstree', function (e, data) {
                     if (data.instance.get_state().core.selected.length == 0) {
                         data.instance.select_node(self.firstNode);
