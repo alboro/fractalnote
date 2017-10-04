@@ -273,12 +273,10 @@
                     "core": {
                         "themes": {
                             "name": this.themeName,
-                            // "variant" : "large",
                             "responsive": true
                         },
                         "multiple" : false,
                         "animation": 0,
-                        // "li_height": "20px",
                         "check_callback": true,
                         "data": this.allNodes
                     },
@@ -292,8 +290,6 @@
                     },
                     "types" : {
                         "txt": {
-                            // "icon": "file", -> i -> jstree-icon jstree-themeicon file jstree-themeicon-custom
-                            // no icon set -> i -> jstree-icon jstree-themeicon
                             "a_attr": {"class": "app-navigation-noclose"} // nextcloud config
                         },
                         "readonly": {
@@ -310,7 +306,7 @@
                             "rename" : {
                                 "separator_before"	: false,
                                 "separator_after"	: false,
-                                "_disabled"			: false, //(this.check("rename_node", data.reference, this.get_parent(data.reference), "")),
+                                "_disabled"			: false,
                                 "label"				: "Rename",
                                 "shortcut"			: 113,
                                 "shortcut_label"	: 'F2',
@@ -320,53 +316,12 @@
                             "create" : {
                                 "separator_before"	: false,
                                 "separator_after"	: true,
-                                "_disabled"			: false, //(this.check("create_node", data.reference, {}, "last")),
+                                "_disabled"			: false,
                                 "label"				: "Create",
                                 "action"			: this.menuCreateNode.bind(this)
-                            }/*,
-                            "remove" : {
-                                "separator_before"	: false,
-                                "icon"				: false,
-                                "separator_after"	: false,
-                                "_disabled"			: false, //(this.check("delete_node", data.reference, this.get_parent(data.reference), "")),
-                                "label"				: "Delete",
-                                "action"			: $.jstree.defaults.contextmenu.items().remove.action
-                            },
-                            "ccp" : {
-                                "separator_before"	: true,
-                                "icon"				: false,
-                                "separator_after"	: false,
-                                "label"				: "Edit",
-                                "action"			: false,
-                                "submenu" : {
-                                    "cut" : {
-                                        "separator_before"	: false,
-                                        "separator_after"	: false,
-                                        "label"				: "Cut",
-                                        "action"			: $.jstree.defaults.contextmenu.items().ccp.submenu.cut.action
-                                    },
-                                    "copy" : {
-                                        "separator_before"	: false,
-                                        "icon"				: false,
-                                        "separator_after"	: false,
-                                        "label"				: "Copy",
-                                        "action"			: $.jstree.defaults.contextmenu.items().ccp.submenu.copy.action
-                                    },
-                                    "paste" : {
-                                        "separator_before"	: false,
-                                        "icon"				: false,
-                                        "_disabled"			: $.jstree.defaults.contextmenu.items().ccp.submenu.paste._disabled,
-                                        "separator_after"	: false,
-                                        "label"				: "Paste",
-                                        "action"			: $.jstree.defaults.contextmenu.items().ccp.submenu.paste.action
-                                    }
-                                }
-                            }*/
+                            }
                         }
                     }
-                })
-                .on('rename_node.jstree', function (e, data) {
-                    self.afterNodeRename(data.node, data.old);
                 })
                 .on('create_node.jstree', function (e, data) {
                     self.afterNodeCreate(data.parent, data.node, data.position);
