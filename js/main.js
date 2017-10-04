@@ -326,6 +326,9 @@
                 .on('create_node.jstree', function (e, data) {
                     self.afterNodeCreate(data.parent, data.node, data.position);
                 })
+                .on('rename_node.jstree', function (e, data) {
+                     self.afterNodeRename(data.node, data.old);
+                })
                 .on('state_ready.jstree', function (e, data) {
                     if (data.instance.get_state().core.selected.length == 0) {
                         data.instance.select_node(self.firstNode);
