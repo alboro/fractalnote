@@ -34,11 +34,11 @@ class NodeMapper extends Mapper
     /**
      * @return Node[]
      */
-    public function findAll()
+    /*public function findAll()
     {
         $sql = 'SELECT * FROM node n LIMIT 1000';
 
         return $this->findEntities($sql);
-    }
+    }*/
 
 }

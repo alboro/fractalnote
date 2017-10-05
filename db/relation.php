@@ -60,12 +60,12 @@ class Relation extends Entity implements JsonSerializable
         return $this->childRelations;
     }
 
-    public function setChildRelations(array $childRelations)
+    /*public function setChildRelations(array $childRelations)
     {
         $this->childRelations = $childRelations;
 
         return $this;
-    }
+    }*/
 
     public function addChild(Relation $child)
     {

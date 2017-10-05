@@ -60,6 +60,18 @@
                 });
             },
 
+            deleteNode: function (nodeModel, modifiedTime) {
+                return $.ajax({
+                    url: this._baseUrl + '/notes/' + nodeModel.id  + '?f=' + this._filePath,
+                    method: 'DELETE',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        mtime   : modifiedTime,
+                        id      : nodeModel.id
+                    })
+                });
+            },
+
             getParentId: function (parentId) {
                 return parentId === '#' ? 0 : parentId;
             }
@@ -166,7 +178,7 @@
                         self.setTime(response[0]);
                     })
                     .fail(function (e) {
-                        alert(e.responseJSON.message);
+                        alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
                     });
             },
 
@@ -209,13 +221,12 @@
              */
             afterNodeMove: function (node, newParentId, oldParentId) {
                 var self = this;
-                alert('Not supported yet');
                 self.nodeRepo.moveNode(node.id, newParentId, oldParentId, self.getTime())
                     .done(function (response) {
                         self.setTime(response[0]);
                     })
                     .fail(function (e) {
-                        alert(e.responseJSON.message);
+                        alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
                     });
             },
 
@@ -242,7 +253,7 @@
                         var jsTreeNode = data.instance.get_node(requestModel.id);
                         data.instance.set_text(jsTreeNode, old);
                         $(self.selectorSaveButton).removeClass('loading');
-                        alert(e.responseJSON.message);
+                        alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
                     });
             },
 
@@ -288,8 +299,28 @@
                     .fail(function (e) {
                         self.getTreeInstance().delete_node(node);
                         $(self.selectorSaveButton).removeClass('loading');
-                        alert(e.responseJSON.message);
+                        alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
                     });
+            },
+
+            /**
+             * @access {public}
+             * @returns {undefined}
+             */
+            menuDeleteNode: function (data) {
+                var children, ok, self = this, inst = $.jstree.reference(data.reference),
+                    node = inst.get_node(data.reference);
+                children = inst.get_children_dom(node);
+                ok = confirm('Are you sure to delete?');
+                if (!ok) {
+                    return;
+                }
+                this.nodeRepo.deleteNode(node, self.getTime())
+                    .done(inst.delete_node.bind(inst, node))
+                    .fail(function (e) {
+                        $(self.selectorSaveButton).removeClass('loading');
+                        alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
+                    })
             },
 
             /**
@@ -350,6 +381,14 @@
                                 "_disabled"			: false,
                                 "label"				: "Create",
                                 "action"			: this.menuCreateNode.bind(this)
+                            },
+                            "remove" : {
+                                "separator_before"	: false,
+                                "icon"				: false,
+                                "separator_after"	: false,
+                                "_disabled"			: false,
+                                "label"				: "Delete",
+                                "action"			: this.menuDeleteNode.bind(this)
                             }
                         }
                     }

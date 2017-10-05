@@ -34,10 +34,10 @@ class NotesStructure
         return $this;
     }
 
-    public function findAll()
+    /*public function findAll()
     {
         return $this->createNodeMapper()->findAll();
-    }
+    }*/
 
     public function buildTree()
     {
@@ -182,20 +182,42 @@ class NotesStructure
     }
 
     /**
-     * @param $id
-     *
-     * @return Node
+     * @param $noteId
      */
-    public function delete($id)
+    public function delete($noteId)
     {
         try {
-            $note = $this->createNodeMapper()->find($id, $userId = 0);
-            $this->createNodeMapper()->delete($note);
+            $db = $this->connector->getDb();
+            $this->connector->lockResource();
+            $db->beginTransaction();
 
-            return $note;
+            $this->_delete($noteId);
+
+            $db->commit();
+            $this->connector->requireSync();
+            $this->connector->unlockResource();
         } catch (Exception $e) {
+            $db->rollBack();
             $this->handleException($e);
         }
+    }
+
+    /**
+     * @param $noteId
+     */
+    private function _delete($noteId)
+    {
+        $relationMapper = $this->createChildMapper();
+        $nodeMapper = $this->createNodeMapper();
+        $childRelations = $relationMapper->findNodeChildren($noteId);
+        foreach ($childRelations as $childRelation) {
+            $this->_delete($childRelation->getNodeId());
+        }
+        $relation = $relationMapper->find($noteId);
+        $note = $nodeMapper->find($noteId);
+
+        $relationMapper->delete($relation);
+        $nodeMapper->delete($note);
     }
 
     protected function createNodeMapper()

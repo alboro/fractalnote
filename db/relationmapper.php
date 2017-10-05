@@ -43,10 +43,10 @@ class RelationMapper extends Mapper
         return $this->findEntity($sql, [$nodeId]);
     }
 
-    public function findAll()
+    public function findNodeChildren($nodeId)
     {
-//        $sql = 'SELECT * FROM node LIMIT 1000';
-//        return $this->findEntities($sql);
+        $sql = 'SELECT * FROM children WHERE father_id = ?';
+        return $this->findEntities($sql, [$nodeId]);
     }
 
 }

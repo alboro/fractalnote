@@ -50,6 +50,8 @@ class NoteController extends AbstractController
      * @param integer $id
      * @param string  $title
      * @param string  $content
+     *
+     * @return DataResponse
      */
     public function update($mtime, $id, $title, $content)
     {
@@ -62,6 +64,28 @@ class NoteController extends AbstractController
                 throw new ConflictException($title);
             }
             $this->notesStructure->update($id, $title, $content);
+            return [$this->connector->getModifyTime()];
+        });
+    }
+
+    /**
+     * @param integer $mtime
+     * @param integer $id
+     *
+     * @return DataResponse
+     */
+    public function destroy($mtime, $id)
+    {
+        return $this->handleWebErrors(function () use ($mtime, $id) {
+            $id = (int)$id;
+            if (!$id || !$this->connector->isConnected()) {
+                throw new NotFoundException();
+            }
+            if ($this->connector->getModifyTime() !== $mtime) {
+                $title = $this->notesStructure->findNode($id)->getTxt();
+                throw new ConflictException($title);
+            }
+            $this->notesStructure->delete($id);
             return [$this->connector->getModifyTime()];
         });
     }
