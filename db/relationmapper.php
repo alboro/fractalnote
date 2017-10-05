@@ -37,10 +37,10 @@ class RelationMapper extends Mapper
         return $this->findOneToOneEntities([self::RELATED_NODE], $sql);
     }
 
-    public function find($id)
+    public function find($nodeId)
     {
-//        $sql = 'SELECT * FROM node WHERE node_id=? LIMIT 1';
-//        return $this->findEntity($sql, [$id]);
+        $sql = 'SELECT * FROM children WHERE node_id=? LIMIT 1';
+        return $this->findEntity($sql, [$nodeId]);
     }
 
     public function findAll()

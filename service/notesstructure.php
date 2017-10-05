@@ -142,7 +142,6 @@ class NotesStructure
         $mapper = $this->createChildMapper();
         try {
             $relation = $mapper->find($nodeId);
-            // var_export($relation); die;
             // make changes
             $this->connector->lockResource();
             $relation->setFatherId($newParentId);
