@@ -21,14 +21,6 @@ class NoteController extends AbstractController
 {
     /**
      * @NoAdminRequired
-     */
-    public function index()
-    {
-        return new DataResponse([$this->notesStructure->buildTree(), $this->connector->getModifyTime()]);
-    }
-
-    /**
-     * @NoAdminRequired
      *
      * @param integer $mtime
      * @param integer $parentId

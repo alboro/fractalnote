@@ -9,10 +9,11 @@
  */
 return [
     'resources' => [
-        'note' => ['url' => '/notes']
+        'note' => ['url' => '/notes'],
+        'relation' => ['url' => '/relations']
     ],
     'routes' => [
         ['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
-        ['name' => 'note#tree', 'url' => '/tree', 'verb' => 'GET'],
+        ['name' => 'note#move', 'url' => '/move', 'verb' => 'PATCH'],
     ],
 ];

@@ -132,6 +132,30 @@ class NotesStructure
         return $child;
     }
 
+    public function findNode($id)
+    {
+        return $this->createNodeMapper()->find($id);
+    }
+
+    public function move($nodeId, $newParentId)
+    {
+        $mapper = $this->createChildMapper();
+        try {
+            $relation = $mapper->find($nodeId);
+            // var_export($relation); die;
+            // make changes
+            $this->connector->lockResource();
+            $relation->setFatherId($newParentId);
+            $mapper->update($relation);
+            unset($mapper);
+            $this->connector->requireSync();
+            $this->connector->unlockResource();
+        } catch (Exception $e) {
+            $this->handleException($e);
+        }
+        return $relation;
+    }
+
     public function update($id, $title, $content)
     {
         $syntax = 'plain-text';

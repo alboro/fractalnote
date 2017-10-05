@@ -11,6 +11,7 @@ namespace OCA\FractalNote\AppInfo;
 
 use OCP\IContainer;
 use OCP\AppFramework\App;
+use OCA\FractalNote\Controller\RelationController;
 use OCA\FractalNote\Controller\PageController;
 use OCA\FractalNote\Controller\NoteController;
 use OCA\FractalNote\Service\NotesStructure;
@@ -34,33 +35,35 @@ class Application extends App {
         parent::__construct(self::APP_NAME, $urlParams);
 
         $c = $this->getContainer();
-
         /**
          * Controllers
          */
         $c->registerService(
             'PageController',
-            function (IContainer $c) {
-                return new PageController(
-                    $c->query('AppName'),
-                    $c->query('Request'),
-                    $c->query('UserId'),
-                    $c->query('NotesStructure')
-                );
-            }
+            $this->injectController(\OCA\FractalNote\Controller\PageController::class)
         );
 
         $c->registerService(
             'NoteController',
-            function (IContainer $c) {
-                return new NoteController(
-                    $c->query('AppName'),
-                    $c->query('Request'),
-                    $c->query('UserId'),
-                    $c->query('NotesStructure')
-                );
-            }
+            $this->injectController(\OCA\FractalNote\Controller\NoteController::class)
         );
+
+        $c->registerService(
+            'RelationController',
+            $this->injectController(\OCA\FractalNote\Controller\RelationController::class)
+        );
+    }
+
+    private function injectController($controllerName)
+    {
+        return function (IContainer $c) use ($controllerName) {
+            new $controllerName(
+                $c->query('AppName'),
+                $c->query('Request'),
+                $c->query('UserId'),
+                $c->query('NotesStructure')
+            );
+        };
     }
 
     public function registerNavigationEntry()

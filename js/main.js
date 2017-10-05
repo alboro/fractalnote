@@ -19,23 +19,36 @@
 
         NodeRepository.prototype = {
 
-            createNode: function (parentId, title, sequence, modifiedTime) {
+            createNode: function (parentId, title, position, modifiedTime) {
                 return $.ajax({
-                    url: this._baseUrl + '?f=' + this._filePath,
+                    url: this._baseUrl + '/notes?f=' + this._filePath,
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
                         mtime   : modifiedTime,
-                        parentId: parentId,
+                        parentId: this.getParentId(parentId),
                         title   : title,
-                        sequence: sequence
+                        sequence: position
+                    })
+                });
+            },
+
+            moveNode: function (nodeId, newParentId, oldParentId, modifiedTime) {
+                return $.ajax({
+                    url: this._baseUrl + '/relations/move?f=' + this._filePath,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        mtime       : modifiedTime,
+                        nodeId      : nodeId,
+                        newParentId : this.getParentId(newParentId)
                     })
                 });
             },
 
             updateNode: function (nodeModel, modifiedTime) {
                 return $.ajax({
-                    url: this._baseUrl + '/' + nodeModel.id  + '?f=' + this._filePath,
+                    url: this._baseUrl + '/notes/' + nodeModel.id  + '?f=' + this._filePath,
                     method: 'PUT',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -45,8 +58,11 @@
                         content : nodeModel.content
                     })
                 });
-            }
+            },
 
+            getParentId: function (parentId) {
+                return parentId === '#' ? 0 : parentId;
+            }
         };
 
         /**
@@ -186,6 +202,21 @@
                     this.afterNodeRename(obj, title, oldTitle); // inst.edit(obj);
                 }
                 return true;
+            },
+
+            /**
+             * @access {public}
+             */
+            afterNodeMove: function (node, newParentId, oldParentId) {
+                var self = this;
+                alert('Not supported yet');
+                self.nodeRepo.moveNode(node.id, newParentId, oldParentId, self.getTime())
+                    .done(function (response) {
+                        self.setTime(response[0]);
+                    })
+                    .fail(function (e) {
+                        alert(e.responseJSON.message);
+                    });
             },
 
             /**
@@ -360,6 +391,9 @@
                         isRich: data.node.data.isRich
                     });
                     self.renderContent();
+                })
+                .on('move_node.jstree', function (e, data) {
+                    self.afterNodeMove(data.node, data.parent, data.old_parent);
                 });
                 this.allNodes = null;
                 var to = false;
@@ -375,7 +409,7 @@
         };
 
         var noteRepo = new NodeRepository(
-            OC.generateUrl('/apps/fractalnote') + '/notes',
+            OC.generateUrl('/apps/fractalnote'),
             window.document.location.search.substring(3) // @todo
         );
         new View(noteRepo).render();
