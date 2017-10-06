@@ -50,20 +50,27 @@ class NoteController extends AbstractController
      * @param integer $id
      * @param string  $title
      * @param string  $content
+     * @param integer $newParentId
+     * @param integer $sequence
      *
      * @return DataResponse
      */
-    public function update($mtime, $id, $title, $content)
+    public function update($mtime, $id, $title, $content, $newParentId, $sequence)
     {
-        return $this->handleWebErrors(function () use ($mtime, $id, $title, $content) {
+        return $this->handleWebErrors(function () use ($mtime, $id, $title, $content, $newParentId, $sequence) {
             $id = (int)$id;
             if (!$id || !$this->connector->isConnected()) {
                 throw new NotFoundException();
             }
             if ($this->connector->getModifyTime() !== $mtime) {
-                throw new ConflictException($title);
+                $storedTitle = $this->notesStructure->findNode($id)->getName();
+                throw new ConflictException($storedTitle);
             }
-            $this->notesStructure->update($id, $title, $content);
+            if (null !== $newParentId) {
+                $this->notesStructure->move($id, $newParentId, $sequence);
+            } else {
+                $this->notesStructure->update($id, $title, $content);
+            }
             return [$this->connector->getModifyTime()];
         });
     }
@@ -82,7 +89,7 @@ class NoteController extends AbstractController
                 throw new NotFoundException();
             }
             if ($this->connector->getModifyTime() !== $mtime) {
-                $title = $this->notesStructure->findNode($id)->getTxt();
+                $title = $this->notesStructure->findNode($id)->getName();
                 throw new ConflictException($title);
             }
             $this->notesStructure->delete($id);

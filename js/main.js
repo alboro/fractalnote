@@ -33,17 +33,12 @@
                 });
             },
 
-            moveNode: function (nodeId, newParentId, oldParentId, modifiedTime) {
-                return $.ajax({
-                    url: this._baseUrl + '/relations/move?f=' + this._filePath,
-                    method: 'PUT',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        mtime       : modifiedTime,
-                        nodeId      : nodeId,
-                        newParentId : this.getParentId(newParentId)
-                    })
-                });
+            moveNode: function (nodeId, newParentId, sequence, modifiedTime) {
+                return this.updateNode({
+                        id         : nodeId,
+                        newParentId: newParentId,
+                        sequence   : sequence
+                }, modifiedTime);
             },
 
             updateNode: function (nodeModel, modifiedTime) {
@@ -53,9 +48,11 @@
                     contentType: 'application/json',
                     data: JSON.stringify({
                         mtime   : modifiedTime,
-                        id      : nodeModel.id,
-                        title   : nodeModel.title,
-                        content : nodeModel.content
+                        id      : nodeModel.id ? nodeModel.id : null,
+                        title   : nodeModel.title ? nodeModel.title : null,
+                        content : nodeModel.content ? nodeModel.content : null,
+                        newParentId : nodeModel.newParentId ? nodeModel.newParentId : null,
+                        sequence: nodeModel.sequence ? nodeModel.sequence : null
                     })
                 });
             },
@@ -221,7 +218,8 @@
              */
             afterNodeMove: function (node, newParentId, oldParentId) {
                 var self = this;
-                self.nodeRepo.moveNode(node.id, newParentId, oldParentId, self.getTime())
+                // @todo pass position
+                self.nodeRepo.moveNode(node.id, newParentId, null, self.getTime())
                     .done(function (response) {
                         self.setTime(response[0]);
                     })

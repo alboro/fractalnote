@@ -47,11 +47,6 @@ class Application extends App {
             'NoteController',
             $this->injectController(\OCA\FractalNote\Controller\NoteController::class)
         );
-
-        $c->registerService(
-            'RelationController',
-            $this->injectController(\OCA\FractalNote\Controller\RelationController::class)
-        );
     }
 
     private function injectController($controllerName)

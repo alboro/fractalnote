@@ -1,5 +1,5 @@
 # What is it?
-_FractalNote_ is online editor of hierarchical notes for Nextcloud/Owncloud server.
+_FractalNote_ is online editor of hierarchical notes (or note trees) for Nextcloud/Owncloud server.
 
 You can view/edit CherryTree (*.ctb) files with it in browser.
 

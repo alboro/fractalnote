@@ -10,7 +10,6 @@
 return [
     'resources' => [
         'note' => ['url' => '/notes'],
-        'relation' => ['url' => '/relations']
     ],
     'routes' => [
         ['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],

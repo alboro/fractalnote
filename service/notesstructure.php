@@ -63,7 +63,7 @@ class NotesStructure
         return array_values($children);
     }
 
-    public function find($id)
+    public function findNode($id)
     {
         try {
             $node = $this->createNodeMapper()->find($id);
@@ -73,7 +73,7 @@ class NotesStructure
             // into service related exceptions so controllers and service users
             // have to deal with only one type of exception
         } catch (Exception $e) {
-            return $this->handleException($e);
+            $this->handleException($e);
         }
 
         return $node;
@@ -98,19 +98,20 @@ class NotesStructure
         $isRich = 0
     ) {
         $db = $this->connector->getDb();
-        try {
-            $this->connector->lockResource();
-            $db->beginTransaction();
+        $note = Node::factory();
+        $note->setName($title);
+        $note->setTxt($content);
+        $note->setSyntax($syntax);
+        $note->setIsRichtxt((int)(bool)$isRich);
 
-            $note = Node::factory();
-            $note->setName($title);
-            $note->setTxt($content);
-            $note->setSyntax($syntax);
-            $note->setIsRichtxt((int)(bool)$isRich);
-            // todo: calculate level
+        try {
+            $db->beginTransaction();
+            $this->connector->lockResource();
+            // @todo: calculate level
             $note->setId(
                 $this->createNodeMapper()->calculateNextIncrementValue()
             );
+
             $this->createNodeMapper()->insert($note);
 
             $child = new Relation();
@@ -120,6 +121,7 @@ class NotesStructure
             $this->createChildMapper()->insert($child);
 
             $db->commit();
+
             $this->connector->requireSync();
             $this->connector->unlockResource();
         } catch (Exception $e) {
@@ -132,22 +134,30 @@ class NotesStructure
         return $child;
     }
 
-    public function findNode($id)
-    {
-        return $this->createNodeMapper()->find($id);
-    }
-
-    public function move($nodeId, $newParentId)
+    /**
+     * @param integer $nodeId
+     * @param integer $newParentId
+     * @param null    $sequence
+     *
+     * @return Relation
+     */
+    public function move($nodeId, $newParentId, $sequence = null)
     {
         $mapper = $this->createChildMapper();
         try {
-            $relation = $mapper->find($nodeId);
-            // make changes
             $this->connector->lockResource();
-            // @todo check existance of $newParentId or 0
+            $relation = $mapper->find($nodeId);
+            if (!$relation instanceof Relation) {
+                throw new NotFoundException();
+            }
+            if (!$this->createNodeMapper()->find($newParentId) instanceof Node) {
+                throw new WebException('Passed parent node doesn\'t exist');
+            }
+
             $relation->setFatherId($newParentId);
+            null !== $sequence && $relation->setSequence($sequence);
             $mapper->update($relation);
-            unset($mapper);
+
             $this->connector->requireSync();
             $this->connector->unlockResource();
         } catch (Exception $e) {
@@ -162,7 +172,14 @@ class NotesStructure
         $isRich = 0;
         $mapper = $this->createNodeMapper();
         try {
+            $this->connector->lockResource();
             $note = $mapper->find($id);
+            if (!$note instanceof Node) {
+                throw new NotFoundException();
+            }
+            if ($title === $note->getName() && $content === $note->getTxt()) {
+                throw new WebException('No changes done');
+            }
             if (!$note->isEditable()) {
                 throw new NotEditableException($note->isRich(), $note->isReadOnly());
             }
@@ -170,10 +187,10 @@ class NotesStructure
             null !== $content && $note->setTxt($content);
             $note->setSyntax($syntax);
             $note->setIsRichtxt((int)(bool)$isRich);
+
             // make changes
-            $this->connector->lockResource();
             $mapper->update($note);
-            unset($mapper);
+
             $this->connector->requireSync();
             $this->connector->unlockResource();
         } catch (Exception $e) {
@@ -187,8 +204,8 @@ class NotesStructure
      */
     public function delete($noteId)
     {
+        $db = $this->connector->getDb();
         try {
-            $db = $this->connector->getDb();
             $this->connector->lockResource();
             $db->beginTransaction();
 
@@ -210,15 +227,15 @@ class NotesStructure
     {
         $relationMapper = $this->createChildMapper();
         $nodeMapper = $this->createNodeMapper();
-        $childRelations = $relationMapper->findNodeChildren($noteId);
+        $childRelations = $relationMapper->findNodeChildRelations($noteId);
         foreach ($childRelations as $childRelation) {
-            $this->_delete($childRelation->getNodeId());
+            $childRelation instanceof Relation && $this->_delete($childRelation->getNodeId());
         }
         $relation = $relationMapper->find($noteId);
         $note = $nodeMapper->find($noteId);
 
-        $relationMapper->delete($relation);
-        $nodeMapper->delete($note);
+        $relation instanceof Relation && $relationMapper->delete($relation);
+        $note instanceof Node && $nodeMapper->delete($note);
     }
 
     protected function createNodeMapper()
