@@ -21,7 +21,7 @@ Current development phase is ``pre-alpha``. Just nodes of plain text are editabl
 * PHP ``>= 5.6``
 * Nextcloud ``>= 12.0`` _OR_ OwnCloud ``>= 8.1``
 ## Steps
-* Install into your web server [Nextcloud/Owncloud.](https://nextcloud.com/install). This is self-hosted Dropbox/Google Drive analog. It is able to synchronise your private files between all your devices. [Download link.](https://nextcloud.com/install)
+* Install into your web server [Nextcloud/Owncloud.](https://nextcloud.com/install) This is self-hosted Dropbox/Google Drive analog. It is able to synchronise your private files between all your devices. [Download link.](https://nextcloud.com/install)
 * Place _FractalNote_ in ``[nextcloud/owncloud installation folder]/apps/fractalnote``
 * To be able to open files from file list app, add ``.ctb`` file type to the ``[nextcloud/owncloud installation folder]/config/mimetypemapping.json`` like that:
 ```
