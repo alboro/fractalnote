@@ -8,12 +8,12 @@ Current development phase is ``pre-alpha``. Just nodes of plain text are editabl
 * Upload _[filename].ctb_ to Nextcloud/Owncloud
 * Edit uploaded file online: ``https://[your-cloud-server]/index.php/apps/fractalnote?f=[filename].ctb``
 
-# Recommendations  
+# Recommendations & Tips
 * [Download](https://www.giuspen.com/cherrytree/#downl), install and use [CherryTree program](https://www.giuspen.com/cherrytree/) for windows/linux. It manages *.ctb files on desktop computer.
-* In CherryTree program preferences keep checked option Edit->Preferences->Miscellaneous->``Reload after external update to CT* file``, check also autosave
+* In CherryTree program preferences keep checked autosave option and Edit->Preferences->Miscellaneous->``Reload after external update to CT* file`` option.
 * Install Nextcloud/Owncloud desktop [synchronisation client](https://nextcloud.com/install/#install-clients).
 * Put _[filename].ctb_ under Nextcloud/Owncloud synchronisation folder of your desktop computer.
-* _[filename].ctb_ size should not be big (about ``<= 5MB``), because for now every page refresh in browser full file is getting loaded
+* _[filename].ctb_ size should not be big (about ``<= 5MB``), because for now the full file gets loaded with every page refresh in browser. 
 
 # Installation
 ## Server requirements
@@ -34,7 +34,7 @@ occ maintenance:mimetype:update-db --repair-filecache
 ```
 * Enable _FractalNote_ in Nextcloud/Owncloud settings UI
 
-## Running tests
+# Running tests
 After [Installing PHPUnit](http://phpunit.de/getting-started.html) run:
 ```
     phpunit -c phpunit.xml
