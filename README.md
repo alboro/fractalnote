@@ -12,7 +12,7 @@ This is self-hosted Dropbox/Google Drive analog.
 It is able to synchronise your private files between all your devices. [Download link.](https://nextcloud.com/install)
 
 # How to use _FractalNote_?
-* Use [CherryTree program](https://www.giuspen.com/cherrytree/#downl) for windows/linux desktop computers to to create hierarchical notes.
+* Use [CherryTree program](https://www.giuspen.com/cherrytree/#downl) for windows/linux desktop computers to create hierarchical notes.
 * Save your hierarchical note tree as _[filename].ctb_ with [CherryTree program.](https://www.giuspen.com/cherrytree/)
 * Upload _[filename].ctb_ to Nextcloud/Owncloud
 * Edit uploaded file online: ``https://[your-cloud-server]/index.php/apps/fractalnote?f=[filename].ctb``
