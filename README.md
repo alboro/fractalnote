@@ -17,8 +17,8 @@ It is able to synchronise your private files between all your devices. [Download
 * Upload _[filename].ctb_ to Nextcloud/Owncloud
 * Edit uploaded file online: ``https://[your-cloud-server]/index.php/apps/fractalnote?f=[filename].ctb``
 * Install Nextcloud/Owncloud desktop [synchronisation client.](https://nextcloud.com/install/#install-clients)
-* Put _[filename].ctb_ under Nextcloud/Owncloud synchronisation folder of your desktop computer. From now the file will be uploaded into server automatically.
-* In CherryTree program preferences keep checked autosave option and Edit->Preferences->Miscellaneous->``Reload after external update to CT* file`` option. From now file changes made online will be downloaded automatically even when you navigating through the file with CherryTree program.
+* Put _[filename].ctb_ under Nextcloud/Owncloud synchronisation folder of your desktop computer. From now the file will be uploaded into server automatically after every saving.
+* In CherryTree program preferences keep checked autosave option and Edit->Preferences->Miscellaneous->``Reload after external update to CT* file`` option. From now file changes made online will be downloaded automatically even while you navigating through the file with CherryTree program.
 * _[filename].ctb_ size should not be big (about ``<= 5MB``), because for now the full file gets loaded with every page refresh in browser. 
 
 # Installation
