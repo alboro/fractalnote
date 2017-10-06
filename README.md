@@ -1,7 +1,8 @@
 # What is it?
-_FractalNote_ is hierarchical notes web-editor for Nextcloud/Owncloud server. It provides possibility to edit CherryTree *.ctb files online.
-Demo: http://cloud.aldem.ru/index.php/apps/fractalnote?f=/demo.ctb
+_FractalNote_ is online editor of hierarchical notes for Nextcloud/Owncloud server.
+You can view/edit CherryTree (*.ctb) files with it in browser.
 Current development phase is ``pre-alpha``. Just nodes of plain text are editable, others are read-only.
+[See it in action (demo)](http://cloud.aldem.ru/index.php/apps/fractalnote?f=/demo.ctb)
 
 # How to use?
 * Create any _[filename].ctb_ with [CherryTree program](https://www.giuspen.com/cherrytree/)
