@@ -144,6 +144,7 @@ class NotesStructure
             $relation = $mapper->find($nodeId);
             // make changes
             $this->connector->lockResource();
+            // @todo check existance of $newParentId or 0
             $relation->setFatherId($newParentId);
             $mapper->update($relation);
             unset($mapper);

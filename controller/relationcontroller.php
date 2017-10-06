@@ -31,7 +31,7 @@ class RelationController extends AbstractController
         return $this->handleWebErrors(function () use ($mtime, $nodeId, $newParentId) {
             $nodeId = (int)$nodeId;
             $newParentId = (int)$newParentId;
-            if (!$newParentId || !$nodeId || !$this->connector->isConnected()) {
+            if (!$nodeId || !$this->connector->isConnected()) {
                 throw new NotFoundException();
             }
             if ($this->connector->getModifyTime() !== $mtime) {
