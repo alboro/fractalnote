@@ -47,18 +47,14 @@ class NoteController extends AbstractController
      * @NoAdminRequired
      *
      * @param integer $mtime
-     * @param integer $id
-     * @param string  $title
-     * @param string  $content
-     * @param integer $newParentId
-     * @param integer $sequence
+     * @param array   $nodeData
      *
      * @return DataResponse
      */
-    public function update($mtime, $id, $title, $content, $newParentId, $sequence)
+    public function update($mtime, $nodeData)
     {
-        return $this->handleWebErrors(function () use ($mtime, $id, $title, $content, $newParentId, $sequence) {
-            $id = (int)$id;
+        return $this->handleWebErrors(function () use ($mtime, $nodeData) {
+            $id = (int)$nodeData['id'];
             if (!$id || !$this->connector->isConnected()) {
                 throw new NotFoundException();
             }
@@ -66,10 +62,10 @@ class NoteController extends AbstractController
                 $storedTitle = $this->notesStructure->findNode($id)->getName();
                 throw new ConflictException($storedTitle);
             }
-            if (null !== $newParentId) {
-                $this->notesStructure->move($id, $newParentId, $sequence);
+            if (array_key_exists('newParentId', $nodeData)) {
+                $this->notesStructure->move($id, $nodeData['newParentId'], $nodeData['sequence']);
             } else {
-                $this->notesStructure->update($id, $title, $content);
+                $this->notesStructure->update($id, $nodeData['title'], $nodeData['content']);
             }
             return [$this->connector->getModifyTime()];
         });

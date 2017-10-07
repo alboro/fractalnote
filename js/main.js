@@ -41,18 +41,14 @@
                 }, modifiedTime);
             },
 
-            updateNode: function (nodeModel, modifiedTime) {
+            updateNode: function (nodeData, modifiedTime) {
                 return $.ajax({
-                    url: this._baseUrl + '/notes/' + nodeModel.id  + '?f=' + this._filePath,
+                    url: this._baseUrl + '/notes/' + nodeData.id  + '?f=' + this._filePath,
                     method: 'PUT',
                     contentType: 'application/json',
                     data: JSON.stringify({
                         mtime   : modifiedTime,
-                        id      : nodeModel.id ? nodeModel.id : null,
-                        title   : nodeModel.title ? nodeModel.title : null,
-                        content : nodeModel.content ? nodeModel.content : null,
-                        newParentId : nodeModel.newParentId ? nodeModel.newParentId : null,
-                        sequence: nodeModel.sequence ? nodeModel.sequence : null
+                        nodeData: nodeData
                     })
                 });
             },
@@ -216,10 +212,9 @@
             /**
              * @access {public}
              */
-            afterNodeMove: function (node, newParentId, oldParentId) {
+            afterNodeMove: function (node, newParentId, newPosition) {
                 var self = this;
-                // @todo pass position
-                self.nodeRepo.moveNode(node.id, newParentId, null, self.getTime())
+                self.nodeRepo.moveNode(node.id, newParentId, newPosition, self.getTime())
                     .done(function (response) {
                         self.setTime(response[0]);
                     })
@@ -430,7 +425,7 @@
                     self.renderContent();
                 })
                 .on('move_node.jstree', function (e, data) {
-                    self.afterNodeMove(data.node, data.parent, data.old_parent);
+                    self.afterNodeMove(data.node, data.parent, data.position);
                 });
                 this.allNodes = null;
                 var to = false;

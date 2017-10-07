@@ -137,11 +137,11 @@ class NotesStructure
     /**
      * @param integer $nodeId
      * @param integer $newParentId
-     * @param null    $sequence
+     * @param integer $sequence
      *
      * @return Relation
      */
-    public function move($nodeId, $newParentId, $sequence = null)
+    public function move($nodeId, $newParentId, $sequence)
     {
         $mapper = $this->createChildMapper();
         try {
@@ -150,12 +150,12 @@ class NotesStructure
             if (!$relation instanceof Relation) {
                 throw new NotFoundException();
             }
-            if (!$this->createNodeMapper()->find($newParentId) instanceof Node) {
+            if ($newParentId !== 0 && !$this->createNodeMapper()->find($newParentId) instanceof Node) {
                 throw new WebException('Passed parent node doesn\'t exist');
             }
 
             $relation->setFatherId($newParentId);
-            null !== $sequence && $relation->setSequence($sequence);
+            null !== $sequence && $relation->setSequence((int)$sequence);
             $mapper->update($relation);
 
             $this->connector->requireSync();
