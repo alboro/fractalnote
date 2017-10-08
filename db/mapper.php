@@ -19,7 +19,24 @@ abstract class Mapper extends NativeMapper
     {
         return [];
     }
-    
+
+    /**
+     * @param integer $id
+     *
+     * @return Entity
+     */
+    public function find($id)
+    {
+        $tmpEntity = (new $this->entityClass);
+        if ($tmpEntity instanceof Entity) {
+            $idField = $tmpEntity->getPrimaryAttribute();
+        } else {
+            throw new \Exception('Find method not implemented for ' . self::class . 'entity');
+        }
+        $sql = 'SELECT * FROM `' . $this->tableName . '` WHERE `' . $idField . '`=? LIMIT 1';
+        return $this->findEntity($sql, [$id]);
+    }
+
     /**
      * Creates an entity from a row. Automatically determines the entity class
      * from the current mapper name (MyEntityMapper -> MyEntity)

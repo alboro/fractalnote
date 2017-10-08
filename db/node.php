@@ -12,8 +12,10 @@ namespace OCA\FractalNote\Db;
 /**
  * Class Node
  *
- * @method string getName()
  * @method string getTxt()
+ * @method string getName()
+ * @method integer getLevel()
+ * @method void setLevel(integer $level)
  * @method void setName(string $title)
  * @method void setTxt(string $content)
  * @method void setSyntax(string $syntax)
@@ -39,6 +41,18 @@ class Node extends Entity
     protected $tsLastsave;
     /** @var Node */
     protected $node;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->addType('level', 'integer');
+        $this->addType('isRo', 'boolean');
+        $this->addType('isRichtxt', 'boolean');
+        $this->addType('hasTable', 'boolean');
+        $this->addType('hasImage', 'boolean');
+        $this->addType('tsCreation', 'integer');
+        $this->addType('tsLastsave', 'integer');
+    }
 
     public function getPrimaryAttribute()
     {

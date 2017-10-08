@@ -9,6 +9,7 @@
  */
 namespace OCA\FractalNote\Db;
 
+use OCA\FractalNote\Service\NotFoundException;
 use OCP\IDBConnection;
 
 class RelationMapper extends Mapper
@@ -59,4 +60,20 @@ class RelationMapper extends Mapper
         return $this->findEntities($sql, [$nodeId]);
     }
 
+    /**
+     * @param integer $parentId
+     *
+     * @return integer
+     */
+    public function calculateLevelByParentId($parentId)
+    {
+        if ($parentId === 0) {
+            return 0;
+        }
+        $relation = $this->find($parentId);
+        if (!$relation instanceof Relation) {
+            throw new NotFoundException();
+        }
+        return 1 + $this->calculateLevelByParentId($relation->getFatherId());
+    }
 }

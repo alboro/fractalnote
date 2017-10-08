@@ -54,19 +54,20 @@ class NoteController extends AbstractController
     public function update($mtime, $nodeData)
     {
         return $this->handleWebErrors(function () use ($mtime, $nodeData) {
-            $id = (int)$nodeData['id'];
+            $id = array_key_exists('id', $nodeData) ? (int)$nodeData['id'] : null;
             if (!$id || !$this->connector->isConnected()) {
                 throw new NotFoundException();
             }
             if ($this->connector->getModifyTime() !== $mtime) {
-                $storedTitle = $this->notesStructure->findNode($id)->getName();
-                throw new ConflictException($storedTitle);
+                throw new ConflictException();
             }
-            if (array_key_exists('newParentId', $nodeData)) {
-                $this->notesStructure->move($id, $nodeData['newParentId'], $nodeData['sequence']);
-            } else {
-                $this->notesStructure->update($id, $nodeData['title'], $nodeData['content']);
-            }
+            $this->notesStructure->update(
+                $id,
+                array_key_exists('title', $nodeData) ? $nodeData['title'] : null,
+                array_key_exists('content', $nodeData) ? $nodeData['content'] : null,
+                array_key_exists('newParentId', $nodeData) ? $nodeData['newParentId'] : null,
+                array_key_exists('sequence', $nodeData) ? $nodeData['sequence'] : null
+            );
             return [$this->connector->getModifyTime()];
         });
     }
@@ -85,8 +86,7 @@ class NoteController extends AbstractController
                 throw new NotFoundException();
             }
             if ($this->connector->getModifyTime() !== $mtime) {
-                $title = $this->notesStructure->findNode($id)->getName();
-                throw new ConflictException($title);
+                throw new ConflictException();
             }
             $this->notesStructure->delete($id);
             return [$this->connector->getModifyTime()];

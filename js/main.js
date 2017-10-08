@@ -36,7 +36,7 @@
             moveNode: function (nodeId, newParentId, sequence, modifiedTime) {
                 return this.updateNode({
                         id         : nodeId,
-                        newParentId: newParentId,
+                        newParentId: this.getParentId(newParentId),
                         sequence   : sequence
                 }, modifiedTime);
             },
