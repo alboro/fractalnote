@@ -41,7 +41,7 @@ class NotesStructure
 
     public function buildTree()
     {
-        $shuffledChildren = $this->createChildMapper()->findChildrenWithNodes();
+        $shuffledChildren = $this->createRelationMapper()->findChildrenWithNodes();
         $children = [];
         foreach ($shuffledChildren as $k => $child) {
             /* @var $child Relation */
@@ -105,7 +105,7 @@ class NotesStructure
 
         $db = $this->connector->getDb();
         $nodeMapper = $this->createNodeMapper();
-        $relationMapper = $this->createChildMapper();
+        $relationMapper = $this->createRelationMapper();
         try {
             $this->connector->lockResource();
             $db->beginTransaction();
@@ -119,7 +119,7 @@ class NotesStructure
             $child->setNode($note);
             $child->setFatherId($parentId);
             $child->setSequence($sequence);
-            $this->createChildMapper()->insert($child);
+            $this->createRelationMapper()->insert($child);
 
             $db->commit();
 
@@ -144,7 +144,7 @@ class NotesStructure
      */
     protected function move($nodeId, $newParentId, $sequence)
     {
-        $relationMapper = $this->createChildMapper();
+        $relationMapper = $this->createRelationMapper();
         $relation = $relationMapper->find($nodeId);
         if (!$relation instanceof Relation) {
             throw new NotFoundException();
@@ -186,8 +186,10 @@ class NotesStructure
                     throw new WebException('No any changes done');
                 }
             } elseif (isset($newParentId)) {
+                $relationMapper = $this->createRelationMapper();
                 $this->move($nodeId, $newParentId, $sequence);
-                $note->setLevel($this->createChildMapper()->calculateLevelByParentId($newParentId));
+                $note->setLevel($relationMapper->calculateLevelByParentId($newParentId));
+                $this->updateChildRelationLevels($note);
             }
             // make changes
             $nodeMapper->update($note);
@@ -200,6 +202,18 @@ class NotesStructure
             $this->handleException($e);
         }
         return $note;
+    }
+
+    public function updateChildRelationLevels(Node $node)
+    {
+        $relationMapper = $this->createRelationMapper();
+        $parentLevel = $node->getLevel();
+        $childRelations = $relationMapper->findNodeChildRelations($node->getId(), true);
+        foreach ($childRelations as $relation) {
+            $relation->getNode()->setLevel($parentLevel + 1);
+            $this->createNodeMapper()->update($relation->getNode());
+            $this->updateChildRelationLevels($relation->getNode());
+        }
     }
 
     /**
@@ -228,7 +242,7 @@ class NotesStructure
      */
     private function _delete($noteId)
     {
-        $relationMapper = $this->createChildMapper();
+        $relationMapper = $this->createRelationMapper();
         $nodeMapper = $this->createNodeMapper();
         $childRelations = $relationMapper->findNodeChildRelations($noteId);
         foreach ($childRelations as $childRelation) {
@@ -246,7 +260,7 @@ class NotesStructure
         return new NodeMapper($this->connector->getDb());
     }
 
-    protected function createChildMapper()
+    protected function createRelationMapper()
     {
         return new RelationMapper($this->connector->getDb());
     }

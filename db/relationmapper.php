@@ -54,10 +54,14 @@ class RelationMapper extends Mapper
      *
      * @return Relation[]|array
      */
-    public function findNodeChildRelations($nodeId)
+    public function findNodeChildRelations($nodeId, $joinNodes = false)
     {
-        $sql = 'SELECT * FROM children WHERE father_id = ?';
-        return $this->findEntities($sql, [$nodeId]);
+        $sql = 'SELECT * FROM children c';
+        if ($joinNodes) {
+            $sql.= ' JOIN node n ON n.node_id = c.node_id';
+        }
+        $sql.= ' WHERE c.father_id = ' . $this->db->quote($nodeId);
+        return $this->findOneToOneEntities([self::RELATED_NODE], $sql);
     }
 
     /**

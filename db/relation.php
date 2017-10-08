@@ -33,13 +33,13 @@ class Relation extends Entity implements JsonSerializable
      *
      * @var Node
      */
-    protected $node;
+    private $node;
 
     /**
      *
      * @var Relation[]
      */
-    protected $childRelations = [];
+    private $childRelations = [];
 
     public function __construct()
     {
