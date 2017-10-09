@@ -50,7 +50,8 @@ class RelationMapper extends Mapper
     }
 
     /**
-     * @param $nodeId
+     * @param integer $nodeId
+     * @param bool    $joinNodes
      *
      * @return Relation[]|array
      */

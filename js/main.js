@@ -171,6 +171,7 @@
                         self.setTime(response[0]);
                     })
                     .fail(function (e) {
+                        $(button).removeClass('loading');
                         alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
                     });
             },
@@ -311,7 +312,6 @@
                 this.nodeRepo.deleteNode(node, self.getTime())
                     .done(inst.delete_node.bind(inst, node))
                     .fail(function (e) {
-                        $(self.selectorSaveButton).removeClass('loading');
                         alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
                     })
             },
