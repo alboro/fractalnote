@@ -144,14 +144,12 @@ class NotesStructure
      */
     protected function move($nodeId, $newParentId, $sequence)
     {
-        $relationMapper = $this->createRelationMapper();
-        $relation = $relationMapper->find($nodeId);
-        if (!$relation instanceof Relation) {
-            throw new NotFoundException();
-        }
-        if ((int)$newParentId !== 0 && !$this->createNodeMapper()->find($newParentId) instanceof Node) {
+        if ((int)$newParentId !== 0) {
             throw new WebException('Passed parent node doesn\'t exist');
         }
+        $relationMapper = $this->createRelationMapper();
+        $relation = $relationMapper->find($nodeId);
+        $this->createNodeMapper()->find($newParentId);
 
         $relation->setFatherId($newParentId);
         null !== $sequence && $relation->setSequence($sequence);
@@ -172,9 +170,6 @@ class NotesStructure
             $db->beginTransaction();
 
             $note = $nodeMapper->find($nodeId);
-            if (!$note instanceof Node) {
-                throw new NotFoundException();
-            }
 
             if ($newParentId === null) {
                 if (!$note->isEditable()) {
@@ -244,15 +239,14 @@ class NotesStructure
     {
         $relationMapper = $this->createRelationMapper();
         $nodeMapper = $this->createNodeMapper();
+        $relation = $relationMapper->find($noteId);
+        $note = $nodeMapper->find($noteId);
         $childRelations = $relationMapper->findChildRelations($noteId);
         foreach ($childRelations as $childRelation) {
             $childRelation instanceof Relation && $this->_delete($childRelation->getNodeId());
         }
-        $relation = $relationMapper->find($noteId);
-        $note = $nodeMapper->find($noteId);
-
-        $relation instanceof Relation && $relationMapper->delete($relation);
-        $note instanceof Node && $nodeMapper->delete($note);
+        $relationMapper->delete($relation);
+        $nodeMapper->delete($note);
     }
 
     protected function createNodeMapper()

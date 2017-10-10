@@ -39,17 +39,6 @@ class RelationMapper extends Mapper
     }
 
     /**
-     * @param $nodeId
-     *
-     * @return Relation
-     */
-    public function find($nodeId)
-    {
-        $sql = 'SELECT * FROM children WHERE node_id=? LIMIT 1';
-        return $this->findEntity($sql, [$nodeId]);
-    }
-
-    /**
      * @param integer $nodeId
      *
      * @return Relation[]|array
@@ -58,7 +47,7 @@ class RelationMapper extends Mapper
     public function findChildRelations($nodeId)
     {
         $sql = 'SELECT * FROM children WHERE father_id = ?';
-        return $this->findEntity($sql, [$nodeId]);
+        return $this->findEntities($sql, [$nodeId]);
     }
 
     /**
@@ -84,9 +73,6 @@ class RelationMapper extends Mapper
             return 0;
         }
         $relation = $this->find($parentId);
-        if (!$relation instanceof Relation) {
-            throw new NotFoundException();
-        }
         return 1 + $this->calculateLevelByParentId($relation->getFatherId());
     }
 }
