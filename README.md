@@ -9,7 +9,7 @@ Current development phase is ``pre-alpha``. Just nodes of plain text are editabl
 
 # About Nextcloud/Owncloud
 This is self-hosted Dropbox/Google Drive analog.
-It is able to synchronise your private files between all your devices. [Download link.](https://nextcloud.com/install)
+It is able to synchronise your private files between all your devices. [More about...](https://nextcloud.com/install/)
 
 # How to use _FractalNote_?
 * Use [CherryTree program](https://www.giuspen.com/cherrytree/#downl) for windows/linux desktop computers to create hierarchical notes.
@@ -26,10 +26,10 @@ It is able to synchronise your private files between all your devices. [Download
 * PHP ``>= 5.6``
 * Nextcloud ``>= 12.0`` _OR_ OwnCloud ``>= 8.1``
 ## Steps
-* Install into your web server [Nextcloud/Owncloud.](https://nextcloud.com/install)
+* Install into your web server [Nextcloud/Owncloud.](https://nextcloud.com/install/#instructions-server)
 * (This step is not required.) To open _[filename].ctb_ from file list nextcloud/owncloud app you need:
 
-Add ``.ctb`` file type to the ``[nextcloud/owncloud installation folder]/config/mimetypemapping.json`` like that:
+Add ``ctb`` file type to the ``[nextcloud/owncloud installation folder]/config/mimetypemapping.json`` like that:
 ```
 {
     "ctb": ["application/cherrytree-ctb"]
@@ -45,7 +45,7 @@ occ maintenance:mimetype:update-db --repair-filecache
 # Running tests
 After [Installing PHPUnit](http://phpunit.de/getting-started.html) run:
 ```
-    phpunit -c phpunit.xml
+phpunit -c phpunit.xml
 ```
 
 # Tehnologies used

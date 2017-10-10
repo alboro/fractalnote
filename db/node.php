@@ -54,27 +54,27 @@ class Node extends Entity
         $this->addType('tsLastsave', 'integer');
     }
 
-    public function getPrimaryAttribute()
+    public function getPrimaryPropertyName()
     {
-        return 'node_id';
+        return 'nodeId';
     }
 
-    public function getAttributesNames()
+    public function getPropertiesConfig()
     {
         return [
-            'node_id',
-            'name',
-            'txt',
-            'level',
-            'is_richtxt',
-            'is_ro',
-            'syntax',
-            'tags',
-            'has_codebox',
-            'has_table',
-            'has_image',
-            'ts_creation',
-            'ts_lastsave',
+            'nodeId' => [],
+            'name' => [],
+            'txt' => [],
+            'level' => [],
+            'isRichtxt' => [],
+            'isRo' => [],
+            'syntax' => [],
+            'tags' => [],
+            'hasCodebox' => [],
+            'hasTable' => [],
+            'hasImage' => [],
+            'tsCreation' => [],
+            'tsLastsave' => [],
         ];
     }
 

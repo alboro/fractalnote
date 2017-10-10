@@ -27,13 +27,11 @@ abstract class Mapper extends NativeMapper
      */
     public function find($id)
     {
-        $tmpEntity = (new $this->entityClass);
-        if ($tmpEntity instanceof Entity) {
-            $idField = $tmpEntity->getPrimaryAttribute();
-        } else {
+        $tmpEntity = new $this->entityClass; /* @var $tmpEntity Entity */
+        if (!$tmpEntity instanceof Entity) {
             throw new \Exception('Find method not implemented for ' . self::class . 'entity');
         }
-        $sql = 'SELECT * FROM `' . $this->tableName . '` WHERE `' . $idField . '`=? LIMIT 1';
+        $sql = 'SELECT * FROM `' . $this->tableName . '` WHERE `' . $tmpEntity->getPrimaryColumn() . '`=? LIMIT 1';
         return $this->findEntity($sql, [$id]);
     }
 
@@ -96,21 +94,23 @@ abstract class Mapper extends NativeMapper
      * {Inheritdoc}
      */
     public function delete(NativeEntity $entity){
+        if (!$entity instanceof Entity) {
+            return parent::delete($entity);
+        }
         $sql = 'DELETE FROM `' . $this->tableName . '`'
-            . ' WHERE `' . $entity->getPrimaryAttribute() . '` = ?';
+            . ' WHERE `' . $entity->getPrimaryColumn() . '` = ?';
         $stmt = $this->execute($sql, [$entity->getId()]);
         $stmt->closeCursor();
         return $entity;
     }
 
     /**
-     * Updates an entry in the db from an entity
-     * @throws \InvalidArgumentException if entity has no id
-     * @param Entity $entity the entity that should be created
-     * @return Entity the saved entity with the set id
-     * @since 7.0.0 - return value was added in 8.0.0
+     * {Inheritdoc}
      */
     public function update(NativeEntity $entity){
+        if (!$entity instanceof Entity) {
+            return parent::update($entity);
+        }
         // if entity wasn't changed it makes no sense to run a db query
         $properties = $entity->getUpdatedFields();
         if(count($properties) === 0) {
@@ -127,7 +127,7 @@ abstract class Mapper extends NativeMapper
         // get updated fields to save, fields have to be set using a setter to
         // be saved
         // do not update the id field
-        unset($properties[$entity->getPrimaryAttribute()]);
+        unset($properties[$entity->getPrimaryColumn()]);
 
         $columns = '';
         $params = [];
@@ -151,7 +151,7 @@ abstract class Mapper extends NativeMapper
         }
 
         $sql = 'UPDATE `' . $this->tableName . '` SET ' .
-            $columns . ' WHERE `' . $entity->getPrimaryAttribute() . '` = ?';
+            $columns . ' WHERE `' . $entity->getPrimaryColumn() . '` = ?';
         $params[] = $id;
 
         $stmt = $this->execute($sql, $params);
@@ -165,6 +165,9 @@ abstract class Mapper extends NativeMapper
      */
     public function insert(NativeEntity $entity)
     {
+        if (!$entity instanceof Entity) {
+            return parent::insert($entity);
+        }
         $id = $entity->getId();
         $result = parent::insert($entity);
         $entity->setId($id);
@@ -172,15 +175,17 @@ abstract class Mapper extends NativeMapper
     }
 
     /**
-     * @param $fieldName
+     * @param $propertyName
      *
      * @return integer
      */
-    public function calculateNextIncrementValue($fieldName = null)
+    public function calculateNextIncrementValue($propertyName = null)
     {
-        $fieldName = $fieldName ? : (new $this->entityClass)->getPrimaryAttribute();
-        $sql = 'select ' . $fieldName . ' from `' . $this->tableName . '` order by ' . $fieldName . ' desc limit 1';
+        $tmpEntity = new $this->entityClass; /* @var $tmpEntity Entity */
+        $columnName = $propertyName ? $tmpEntity->propertyToColumn($propertyName) : $tmpEntity->getPrimaryColumn();
+        $sql = 'select ' . $columnName . ' from `' . $this->tableName . '`'
+            . ' order by ' . $columnName . ' desc limit 1';
         $row = $this->findOneQuery($sql);
-        return isset($row[$fieldName]) ? 1 + (int)$row[$fieldName] : 1;
+        return isset($row[$columnName]) ? 1 + (int)$row[$columnName] : 1;
     }
 }

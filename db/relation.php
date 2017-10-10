@@ -74,14 +74,14 @@ class Relation extends Entity implements JsonSerializable
         return $this;
     }
 
-    public function getPrimaryAttribute()
+    public function getPrimaryPropertyName()
     {
-        return 'node_id';
+        return 'nodeId';
     }
 
-    public function getAttributesNames()
+    public function getPropertiesConfig()
     {
-        return ['node_id', 'father_id', 'sequence'];
+        return ['nodeId' => [], 'fatherId' => [], 'sequence' => []];
     }
 
     public function jsonSerialize()

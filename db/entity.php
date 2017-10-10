@@ -14,13 +14,13 @@ use OCP\AppFramework\Db\Entity as NativeEntity;
 abstract class Entity extends NativeEntity
 {
 
-    abstract public function getPrimaryAttribute();
+    abstract public function getPrimaryPropertyName();
 
-    abstract public function getAttributesNames();
+    abstract public function getPropertiesConfig();
 
     public function __construct()
     {
-        $this->addType($this->columnToProperty($this->getPrimaryAttribute()), 'integer');
+        $this->addType($this->getPrimaryPropertyName(), 'integer');
     }
 
     /**
@@ -29,9 +29,7 @@ abstract class Entity extends NativeEntity
      */
     public function setId($id)
     {
-        $property = $this->columnToProperty($this->getPrimaryAttribute());
-        $this->setter($property, [$id]);
-        // return $this;
+        $this->setter($this->getPrimaryPropertyName(), [$id]);
     }
 
     /**
@@ -39,22 +37,29 @@ abstract class Entity extends NativeEntity
      */
     public function getId()
     {
-        $property = $this->columnToProperty($this->getPrimaryAttribute());
-        $id = $this->getter($property);
-        /* @var integer $id */
-        return $id;
+        return $this->getter($this->getPrimaryPropertyName());
     }
 
-    public static function fromRow(array $row)
+    public function getPrimaryColumn()
     {
-        $attributes = (new static)->getAttributesNames();
-        $supposedEntityColumns = array_intersect_key($row, array_flip($attributes));
-        if ((count($supposedEntityColumns)) !== count($attributes)) {
+        return $this->propertyToColumn($this->getPrimaryPropertyName());
+    }
+
+    public static function fromRow(array $mayBeSeveralEntitiesRow)
+    {
+        $tmpEntity = (new static);
+        $propertiesConfig = $tmpEntity->getPropertiesConfig();
+        $columns = [];
+        foreach ($propertiesConfig as $property => $propertyConfig) {
+            $columns[] = $tmpEntity->propertyToColumn($property);
+        }
+        $justOneEntityRow = array_intersect_key($mayBeSeveralEntitiesRow, array_flip($columns));
+        if ((count($justOneEntityRow)) !== count($propertiesConfig)) {
             throw new \Exception(
-                'database row does not contain minimum required columns'
+                'Database row does not contain minimum required columns.'
             );
         }
-        return parent::fromRow($supposedEntityColumns);
+        return parent::fromRow($justOneEntityRow);
     }
 
 }

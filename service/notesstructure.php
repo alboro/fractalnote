@@ -176,7 +176,7 @@ class NotesStructure
                 throw new NotFoundException();
             }
 
-            if (empty($newParentId)) {
+            if ($newParentId === null) {
                 if (!$note->isEditable()) {
                     throw new NotEditableException($note->isRich(), $note->isReadOnly());
                 }
@@ -208,7 +208,7 @@ class NotesStructure
     {
         $relationMapper = $this->createRelationMapper();
         $parentLevel = $node->getLevel();
-        $childRelations = $relationMapper->findNodeChildRelations($node->getId(), true);
+        $childRelations = $relationMapper->findChildRelationsWithNodes($node->getId());
         foreach ($childRelations as $relation) {
             $relation->getNode()->setLevel($parentLevel + 1);
             $this->createNodeMapper()->update($relation->getNode());
@@ -244,7 +244,7 @@ class NotesStructure
     {
         $relationMapper = $this->createRelationMapper();
         $nodeMapper = $this->createNodeMapper();
-        $childRelations = $relationMapper->findNodeChildRelations($noteId);
+        $childRelations = $relationMapper->findChildRelations($noteId);
         foreach ($childRelations as $childRelation) {
             $childRelation instanceof Relation && $this->_delete($childRelation->getNodeId());
         }
