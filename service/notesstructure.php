@@ -34,11 +34,6 @@ class NotesStructure
         return $this;
     }
 
-    /*public function findAll()
-    {
-        return $this->createNodeMapper()->findAll();
-    }*/
-
     public function buildTree()
     {
         $shuffledChildren = $this->createRelationMapper()->findChildrenWithNodes();

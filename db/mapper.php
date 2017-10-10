@@ -25,14 +25,14 @@ abstract class Mapper extends NativeMapper
      *
      * @return Entity
      */
-    public function find($id, $enableExceptions = true)
+    public function find($id)
     {
         $tmpEntity = new $this->entityClass; /* @var $tmpEntity Entity */
         if (!$tmpEntity instanceof Entity) {
             throw new \Exception('Find method not implemented for ' . self::class . 'entity');
         }
         $sql = 'SELECT * FROM `' . $this->tableName . '` WHERE `' . $tmpEntity->getPrimaryColumn() . '`=? LIMIT 1';
-        return $enableExceptions ? $this->findEntity($sql, [$id]) : current($this->findEntities($sql, [$id]));
+        return $this->findEntity($sql, [$id]);
     }
 
     /**

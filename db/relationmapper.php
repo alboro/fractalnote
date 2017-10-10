@@ -42,7 +42,6 @@ class RelationMapper extends Mapper
      * @param integer $nodeId
      *
      * @return Relation[]|array
-     * @todo: remove
      */
     public function findChildRelations($nodeId)
     {
