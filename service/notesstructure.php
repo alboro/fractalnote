@@ -10,6 +10,7 @@
 namespace OCA\FractalNote\Service;
 
 use Exception;
+use OCA\FractalNote\Db\GridMapper;
 use OCA\FractalNote\Db\Node;
 use OCA\FractalNote\Db\NodeMapper;
 use OCA\FractalNote\Db\Relation;
@@ -248,6 +249,11 @@ class NotesStructure
             foreach ($images as $image) {
                 $imageMapper->delete($image);
             }
+            $gridMapper = $this->createGridMapper();
+            $grids = $gridMapper->findGrids($note->getId());
+            foreach ($grids as $grid) {
+                $gridMapper->delete($grid);
+            }
         }
         $nodeMapper->delete($note);
     }
@@ -265,6 +271,11 @@ class NotesStructure
     protected function createImageMapper()
     {
         return new ImageMapper($this->connector->getDb());
+    }
+
+    protected function createGridMapper()
+    {
+        return new GridMapper($this->connector->getDb());
     }
 
     private function handleException($e)
