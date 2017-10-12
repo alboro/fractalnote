@@ -139,8 +139,8 @@ class NotesStructure
      */
     protected function move($nodeId, $newParentId, $sequence)
     {
-        if ((int)$newParentId !== 0) {
-            throw new WebException('Passed parent node doesn\'t exist');
+        if ((int)$newParentId < 0) {
+            throw new WebException('Passed parent node is out of range');
         }
         $relationMapper = $this->createRelationMapper();
         $relation = $relationMapper->find($nodeId);
