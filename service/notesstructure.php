@@ -16,6 +16,7 @@ use OCA\FractalNote\Db\NodeMapper;
 use OCA\FractalNote\Db\Relation;
 use OCA\FractalNote\Db\RelationMapper;
 use OCA\FractalNote\Db\ImageMapper;
+use OCA\FractalNote\Db\BookmarkMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 
@@ -243,12 +244,19 @@ class NotesStructure
             $childRelation instanceof Relation && $this->_delete($childRelation->getNodeId());
         }
         $relationMapper->delete($relation);
+
+        $bookmarkMapper = $this->createBookmarkMapper();
+        $bookmark = $bookmarkMapper->findBookmark($note->getId());
+        $bookmark && $bookmarkMapper->delete($bookmark);
+
         if ($note->isRich()) {
+
             $imageMapper = $this->createImageMapper();
             $images = $imageMapper->findImages($note->getId());
             foreach ($images as $image) {
                 $imageMapper->delete($image);
             }
+
             $gridMapper = $this->createGridMapper();
             $grids = $gridMapper->findGrids($note->getId());
             foreach ($grids as $grid) {
@@ -271,6 +279,11 @@ class NotesStructure
     protected function createImageMapper()
     {
         return new ImageMapper($this->connector->getDb());
+    }
+
+    protected function createBookmarkMapper()
+    {
+        return new BookmarkMapper($this->connector->getDb());
     }
 
     protected function createGridMapper()
