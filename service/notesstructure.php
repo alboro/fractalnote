@@ -14,6 +14,7 @@ use OCA\FractalNote\Db\Node;
 use OCA\FractalNote\Db\NodeMapper;
 use OCA\FractalNote\Db\Relation;
 use OCA\FractalNote\Db\RelationMapper;
+use OCA\FractalNote\Db\ImageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 
@@ -234,13 +235,20 @@ class NotesStructure
     {
         $relationMapper = $this->createRelationMapper();
         $nodeMapper = $this->createNodeMapper();
-        $relation = $relationMapper->find($noteId);
-        $note = $nodeMapper->find($noteId);
+        $relation = $relationMapper->find($noteId); /** @var $relation Relation */
+        $note = $nodeMapper->find($noteId); /** @var $note Node */
         $childRelations = $relationMapper->findChildRelations($noteId);
         foreach ($childRelations as $childRelation) {
             $childRelation instanceof Relation && $this->_delete($childRelation->getNodeId());
         }
         $relationMapper->delete($relation);
+        if ($note->isRich()) {
+            $imageMapper = $this->createImageMapper();
+            $images = $imageMapper->findImages($note->getId());
+            foreach ($images as $image) {
+                $imageMapper->delete($image);
+            }
+        }
         $nodeMapper->delete($note);
     }
 
@@ -252,6 +260,11 @@ class NotesStructure
     protected function createRelationMapper()
     {
         return new RelationMapper($this->connector->getDb());
+    }
+
+    protected function createImageMapper()
+    {
+        return new ImageMapper($this->connector->getDb());
     }
 
     private function handleException($e)

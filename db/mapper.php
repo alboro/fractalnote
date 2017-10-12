@@ -31,7 +31,7 @@ abstract class Mapper extends NativeMapper
         if (!$tmpEntity instanceof Entity) {
             throw new \Exception('Find method not implemented for ' . self::class . 'entity');
         }
-        $sql = 'SELECT * FROM `' . $this->tableName . '` WHERE `' . $tmpEntity->getPrimaryColumn() . '`=? LIMIT 1';
+        $sql = 'SELECT * FROM `' . $this->getTableName() . '` WHERE `' . $tmpEntity->getPrimaryColumn() . '`=? LIMIT 1';
         return $this->findEntity($sql, [$id]);
     }
 
@@ -97,7 +97,7 @@ abstract class Mapper extends NativeMapper
         if (!$entity instanceof Entity) {
             return parent::delete($entity);
         }
-        $sql = 'DELETE FROM `' . $this->tableName . '`'
+        $sql = 'DELETE FROM `' . $this->getTableName() . '`'
             . ' WHERE `' . $entity->getPrimaryColumn() . '` = ?';
         $stmt = $this->execute($sql, [$entity->getId()]);
         $stmt->closeCursor();
@@ -150,7 +150,7 @@ abstract class Mapper extends NativeMapper
             $i++;
         }
 
-        $sql = 'UPDATE `' . $this->tableName . '` SET ' .
+        $sql = 'UPDATE `' . $this->getTableName() . '` SET ' .
             $columns . ' WHERE `' . $entity->getPrimaryColumn() . '` = ?';
         $params[] = $id;
 
@@ -183,7 +183,7 @@ abstract class Mapper extends NativeMapper
     {
         $tmpEntity = new $this->entityClass; /* @var $tmpEntity Entity */
         $columnName = $propertyName ? $tmpEntity->propertyToColumn($propertyName) : $tmpEntity->getPrimaryColumn();
-        $sql = 'select ' . $columnName . ' from `' . $this->tableName . '`'
+        $sql = 'select ' . $columnName . ' from `' . $this->getTableName() . '`'
             . ' order by ' . $columnName . ' desc limit 1';
         $row = $this->findOneQuery($sql);
         return isset($row[$columnName]) ? 1 + (int)$row[$columnName] : 1;
