@@ -165,7 +165,7 @@ class NotesStructure
             $this->connector->lockResource();
             $db->beginTransaction();
 
-            $note = $nodeMapper->find($nodeId);
+            $note = $nodeMapper->find($nodeId); /* @var Node $note */
 
             if ($newParentId === null) {
                 if (!$note->isEditable()) {
