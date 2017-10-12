@@ -42,18 +42,6 @@ class Node extends Entity
     /** @var Node */
     protected $node;
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->addType('level', 'integer');
-        $this->addType('isRo', 'boolean');
-        $this->addType('isRichtxt', 'boolean');
-        $this->addType('hasTable', 'boolean');
-        $this->addType('hasImage', 'boolean');
-        $this->addType('tsCreation', 'integer');
-        $this->addType('tsLastsave', 'integer');
-    }
-
     public function getPrimaryPropertyName()
     {
         return 'nodeId';
@@ -62,19 +50,45 @@ class Node extends Entity
     public function getPropertiesConfig()
     {
         return [
-            'nodeId' => [],
-            'name' => [],
-            'txt' => [],
-            'level' => [],
-            'isRichtxt' => [],
-            'isRo' => [],
-            'syntax' => [],
-            'tags' => [],
-            'hasCodebox' => [],
-            'hasTable' => [],
-            'hasImage' => [],
-            'tsCreation' => [],
-            'tsLastsave' => [],
+            'nodeId' => [
+                'type' => static::INT,
+            ],
+            'name' => [
+                'type' => static::STR,
+            ],
+            'txt' => [
+                'type' => static::STR,
+            ],
+            'level' => [
+                'type' => static::INT,
+            ],
+            'isRichtxt' => [
+                'type' => static::BOOL,
+            ],
+            'isRo' => [
+                'type' => static::BOOL,
+            ],
+            'syntax' => [
+                'type' => static::STR,
+            ],
+            'tags' => [
+                'type' => static::STR,
+            ],
+            'hasCodebox' => [
+                'type' => static::BOOL,
+            ],
+            'hasTable' => [
+                'type' => static::BOOL,
+            ],
+            'hasImage' => [
+                'type' => static::BOOL,
+            ],
+            'tsCreation' => [
+                'type' => static::INT,
+            ],
+            'tsLastsave' => [
+                'type' => static::INT,
+            ],
         ];
     }
 

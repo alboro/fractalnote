@@ -13,6 +13,9 @@ use OCP\AppFramework\Db\Entity as NativeEntity;
 
 abstract class Entity extends NativeEntity
 {
+    const INT = 'integer';
+    const BOOL = 'boolean';
+    const STR = 'string';
 
     abstract public function getPrimaryPropertyName();
 
@@ -21,6 +24,11 @@ abstract class Entity extends NativeEntity
     public function __construct()
     {
         $this->addType($this->getPrimaryPropertyName(), 'integer');
+        foreach ($this->getPropertiesConfig() as $property => $config) {
+            if ($property !== $this->getPrimaryPropertyName()) {
+                $this->addType($property, $config['type']);
+            }
+        }
     }
 
     /**

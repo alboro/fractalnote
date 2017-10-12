@@ -41,13 +41,6 @@ class Relation extends Entity implements JsonSerializable
      */
     private $childRelations = [];
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->addType('fatherId', 'integer');
-        $this->addType('sequence', 'integer');
-    }
-
     public function getNode()
     {
         return $this->node;
@@ -81,7 +74,17 @@ class Relation extends Entity implements JsonSerializable
 
     public function getPropertiesConfig()
     {
-        return ['nodeId' => [], 'fatherId' => [], 'sequence' => []];
+        return [
+            'nodeId' => [
+                'type' => static::INT,
+            ],
+            'fatherId' => [
+                'type' => static::INT,
+            ],
+            'sequence' => [
+                'type' => static::INT,
+            ],
+        ];
     }
 
     public function jsonSerialize()

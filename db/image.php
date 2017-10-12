@@ -42,14 +42,6 @@ class Image extends Entity
     protected $link;
     protected $time;
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->addType('nodeId', 'integer');
-        $this->addType('offset', 'integer');
-        $this->addType('time', 'integer');
-    }
-
     public function getPrimaryPropertyName()
     {
         return 'nodeId';
@@ -58,14 +50,30 @@ class Image extends Entity
     public function getPropertiesConfig()
     {
         return [
-            'nodeId' => [],
-            'offset' => [],
-            'justification' => [],
-            'anchor' => [],
-            'png' => [],
-            'filename' => [],
-            'link' => [],
-            'time' => [],
+            'nodeId' => [
+                'type' => static::INT,
+            ],
+            'offset' => [
+                'type' => static::INT,
+            ],
+            'justification' => [
+                'type' => static::STR,
+            ],
+            'anchor' => [
+                'type' => static::STR,
+            ],
+            'png' => [
+                'type' => static::STR,
+            ],
+            'filename' => [
+                'type' => static::STR,
+            ],
+            'link' => [
+                'type' => static::STR,
+            ],
+            'time' => [
+                'type' => static::INT,
+            ],
         ];
     }
 }
