@@ -15,12 +15,13 @@
         var NodeRepository = function (baseUrl, filePath) {
             this._baseUrl  = baseUrl;
             this._filePath = filePath;
+            this._requestProcessing = false;
         };
 
         NodeRepository.prototype = {
 
             createNode: function (parentId, title, position, modifiedTime) {
-                return $.ajax({
+                return this.makeRequest({
                     url: this._baseUrl + '/notes?f=' + this._filePath,
                     method: 'POST',
                     contentType: 'application/json',
@@ -42,7 +43,7 @@
             },
 
             updateNode: function (nodeData, modifiedTime) {
-                return $.ajax({
+                return this.makeRequest({
                     url: this._baseUrl + '/notes/' + nodeData.id  + '?f=' + this._filePath,
                     method: 'PUT',
                     contentType: 'application/json',
@@ -54,7 +55,7 @@
             },
 
             deleteNode: function (nodeModel, modifiedTime) {
-                return $.ajax({
+                return this.makeRequest({
                     url: this._baseUrl + '/notes/' + nodeModel.id  + '?f=' + this._filePath,
                     method: 'DELETE',
                     contentType: 'application/json',
@@ -67,6 +68,16 @@
 
             getParentId: function (parentId) {
                 return parentId === '#' ? 0 : parentId;
+            },
+
+            makeRequest: function (request) {
+                var self = this;
+                if (this._requestProcessing) {
+                    alert('Cannot make new request. Previous request is still being processed!');
+                    return;
+                }
+                this._requestProcessing = true;
+                return $.ajax(request).always(function () { self._requestProcessing = false; });
             }
         };
 
@@ -165,10 +176,10 @@
                 $(button).addClass('loading');
                 this.nodeRepo.updateNode(requestNode, this.getTime())
                     .done(function (response) {
-                        $(button).removeClass('loading');
-                        var jsTreeNode = self.getTreeInstance().get_node(requestNode.id);
-                        jsTreeNode.data.content = requestNode.content;
                         self.setTime(response[0]);
+                        var node = self.getTreeInstance().get_node(requestNode.id);
+                        node.data.content = requestNode.content;
+                        $(button).removeClass('loading');
                     })
                     .fail(function (e) {
                         $(button).removeClass('loading');
@@ -234,19 +245,16 @@
                     title: node.text,
                     content: null
                 };
-                $(self.selectorSaveButton).addClass('loading');
                 self.nodeRepo.updateNode(requestModel, self.getTime())
                     .done(function (response) {
                         self.setTime(response[0]);
                         if (self.getActiveNode().id === node.id) {
                             $(self.selectorTitle).html(node.text);
                         }
-                        $(self.selectorSaveButton).removeClass('loading');
                     })
                     .fail(function (e) {
-                        var jsTreeNode = data.instance.get_node(requestModel.id);
-                        data.instance.set_text(jsTreeNode, old);
-                        $(self.selectorSaveButton).removeClass('loading');
+                        var node = data.instance.get_node(requestModel.id);
+                        data.instance.set_text(node, old);
                         alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
                     });
             },
@@ -283,16 +291,13 @@
              */
             afterNodeCreate: function (parent, node, position) {
                 var self = this;
-                $(self.selectorSaveButton).addClass('loading');
                 self.nodeRepo.createNode(parent, node.text, position, self.getTime())
                     .done(function (response) {
                         self.setTime(response[0]);
                         self.getTreeInstance().set_id(node.id, response[1]);
-                        $(self.selectorSaveButton).removeClass('loading');
                     })
                     .fail(function (e) {
                         self.getTreeInstance().delete_node(node);
-                        $(self.selectorSaveButton).removeClass('loading');
                         alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
                     });
             },
@@ -310,7 +315,12 @@
                     return;
                 }
                 this.nodeRepo.deleteNode(node, self.getTime())
-                    .done(inst.delete_node.bind(inst, node))
+                    .done(function (response) {
+                        var prevNode = inst.get_node(node.parent);
+                        self.setTime(response[0]);
+                        inst.delete_node(node);
+                        inst.select_node(prevNode);
+                    })
                     .fail(function (e) {
                         alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
                     })

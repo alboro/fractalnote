@@ -148,7 +148,7 @@ class NotesStructure
         }
         $relationMapper = $this->createRelationMapper();
         $relation = $relationMapper->find($nodeId);
-        $this->createNodeMapper()->find($newParentId);
+        $newParentId === 0 || $this->createNodeMapper()->find($newParentId);
 
         $relation->setFatherId($newParentId);
         null !== $sequence && $relation->setSequence($sequence);
@@ -182,7 +182,7 @@ class NotesStructure
             } elseif (isset($newParentId)) {
                 $relationMapper = $this->createRelationMapper();
                 $this->move($nodeId, $newParentId, $sequence);
-                $note->setLevel($relationMapper->calculateLevelByParentId($newParentId));
+                $note->setLevel($relationMapper->calculateLevelByParentId((int)$newParentId));
                 $this->updateChildRelationLevels($note);
             }
             // make changes
