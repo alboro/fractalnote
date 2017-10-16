@@ -92,4 +92,24 @@ class NoteController extends AbstractController
             return [$this->connector->getModifyTime()];
         });
     }
+
+    /**
+     * @NoAdminRequired
+     */
+    public function index()
+    {
+        return new DataResponse([$this->notesStructure->buildTree(), $this->connector->getModifyTime()]);
+    }
+
+    /**
+     * @NoAdminRequired
+     *
+     * @param int $id
+     */
+    public function show($id)
+    {
+        return $this->handleWebErrors(function () use ($id) {
+            return $this->notesStructure->findNode($id);
+        });
+    }
 }

@@ -23,11 +23,8 @@ abstract class Entity extends NativeEntity
 
     public function __construct()
     {
-        $this->addType($this->getPrimaryPropertyName(), 'integer');
         foreach ($this->getPropertiesConfig() as $property => $config) {
-            if ($property !== $this->getPrimaryPropertyName()) {
-                $this->addType($property, $config['type']);
-            }
+            $this->addType($property, $config['type']);
         }
     }
 

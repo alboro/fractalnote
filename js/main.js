@@ -307,9 +307,8 @@
              * @returns {undefined}
              */
             menuDeleteNode: function (data) {
-                var children, ok, self = this, inst = $.jstree.reference(data.reference),
+                var ok, self = this, inst = $.jstree.reference(data.reference),
                     node = inst.get_node(data.reference);
-                children = inst.get_children_dom(node);
                 ok = confirm('Are you sure to delete?');
                 if (!ok) {
                     return;

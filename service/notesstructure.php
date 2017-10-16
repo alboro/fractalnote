@@ -147,7 +147,7 @@ class NotesStructure
             throw new WebException('Passed parent node is out of range');
         }
         $relationMapper = $this->createRelationMapper();
-        $relation = $relationMapper->find($nodeId);
+        $relation = $relationMapper->find($nodeId); /* @var $relation Relation */
         $newParentId === 0 || $this->createNodeMapper()->find($newParentId);
 
         $relation->setFatherId($newParentId);
