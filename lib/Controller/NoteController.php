@@ -12,9 +12,9 @@ namespace OCA\FractalNote\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http\DataResponse;
 use OCA\FractalNote\Service\NotesStructure;
-use OCA\FractalNote\Service\ConflictException;
-use OCA\FractalNote\Service\NotFoundException;
-use OCA\FractalNote\Service\WebException;
+use OCA\FractalNote\Service\Exception\ConflictException;
+use OCA\FractalNote\Service\Exception\NotFoundException;
+use OCA\FractalNote\Service\Exception\WebException;
 use OCA\FractalNote\Controller\AbstractController;
 
 class NoteController extends AbstractController

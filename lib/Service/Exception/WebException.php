@@ -7,7 +7,7 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Service;
+namespace OCA\FractalNote\Service\Exception;
 
 use Exception;
 use OCP\AppFramework\Http;

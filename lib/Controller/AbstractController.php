@@ -13,8 +13,8 @@ use OCP\IRequest;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Controller as BaseController;
-use OCA\FractalNote\Service\WebException;
-use OCA\FractalNote\Service\NotFoundException;
+use OCA\FractalNote\Service\Exception\WebException;
+use OCA\FractalNote\Service\Exception\NotFoundException;
 use OCA\FractalNote\Service\NotesStructure;
 use OCA\FractalNote\Service\Connector;
 

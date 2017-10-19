@@ -7,19 +7,19 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Service;
+namespace OCA\FractalNote\Service\Exception;
 
 use OCP\AppFramework\Http;
 
-class NoChangesException extends WebException
+class NotFoundException extends WebException
 {
     public function getStatus()
     {
-        return Http::STATUS_NOT_MODIFIED;
+        return Http::STATUS_NOT_FOUND;
     }
 
     protected function defaultMessage()
     {
-        return 'No any changes done';
+        return 'Not found';
     }
 }

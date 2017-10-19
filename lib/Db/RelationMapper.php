@@ -9,7 +9,6 @@
  */
 namespace OCA\FractalNote\Db;
 
-use OCA\FractalNote\Service\NotFoundException;
 use OCP\IDBConnection;
 
 class RelationMapper extends Mapper
