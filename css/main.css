@@ -49,6 +49,10 @@
     overflow-y: auto;
 }
 
+.note-editor .input textarea[disabled] {
+    color: black;
+}
+
 .note-navigation .jstree-icon-no-edit {
     background-color: transparent;
     background-image: url("vendor/vakata-jstree/proton/32px.png");

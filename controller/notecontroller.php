@@ -25,21 +25,21 @@ class NoteController extends AbstractController
      * @param integer $mtime
      * @param integer $parentId
      * @param string  $title
-     * @param integer $sequence
+     * @param integer $position
      *
      * @return DataResponse
      */
-    public function create($mtime, $parentId, $title, $sequence)
+    public function create($mtime, $parentId, $title, $position)
     {
-        return $this->handleWebErrors(function () use ($mtime, $parentId, $title, $sequence) {
+        return $this->handleWebErrors(function () use ($mtime, $parentId, $title, $position) {
             if (!$this->connector->isConnected()) {
                 throw new NotFoundException();
             }
             if ($this->connector->getModifyTime() !== $mtime) {
                 throw new ConflictException($title);
             }
-            $relation = $this->notesStructure->create($parentId, $title, $sequence);
-            return [$this->connector->getModifyTime(), $relation->getNodeId()];
+            $nodeIdentifier = $this->notesStructure->createNode($parentId, $title, $position);
+            return [$this->connector->getModifyTime(), $nodeIdentifier];
         });
     }
 
@@ -61,12 +61,12 @@ class NoteController extends AbstractController
             if ($this->connector->getModifyTime() !== $mtime) {
                 throw new ConflictException();
             }
-            $this->notesStructure->update(
+            $this->notesStructure->updateNode(
                 $id,
                 array_key_exists('title', $nodeData) ? $nodeData['title'] : null,
                 array_key_exists('content', $nodeData) ? $nodeData['content'] : null,
                 array_key_exists('newParentId', $nodeData) ? $nodeData['newParentId'] : null,
-                array_key_exists('sequence', $nodeData) ? $nodeData['sequence'] : null
+                array_key_exists('position', $nodeData) ? $nodeData['position'] : null
             );
             return [$this->connector->getModifyTime()];
         });

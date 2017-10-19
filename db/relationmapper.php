@@ -74,4 +74,31 @@ class RelationMapper extends Mapper
         $relation = $this->find($parentId);
         return 1 + $this->calculateLevelByParentId($relation->getFatherId());
     }
+
+    /**
+     * @return Relation[]|array
+     */
+    public function buildTree()
+    {
+        $shuffledChildren = $this->findChildrenWithNodes();
+        $children = [];
+        foreach ($shuffledChildren as $k => $child) {
+            /* @var $child Relation */
+            $children[$child->getNodeId()] = $child;
+        }
+        foreach ($children as $nodeId => $child) {
+            /* @var $child Relation */
+            $fatherId = $child->getFatherId();
+            if ($fatherId && isset($children[$fatherId])) {
+                $father = $children[$fatherId];
+                /* @var $father Relation */
+                $father->addChild($child);
+            }
+        }
+        $children = array_filter($children, function (Relation $v) {
+            return !$v->getFatherId();
+        });
+
+        return array_values($children);
+    }
 }

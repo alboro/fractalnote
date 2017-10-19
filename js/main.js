@@ -29,16 +29,16 @@
                         mtime   : modifiedTime,
                         parentId: this.getParentId(parentId),
                         title   : title,
-                        sequence: position
+                        position: position
                     })
                 });
             },
 
-            moveNode: function (nodeId, newParentId, sequence, modifiedTime) {
+            moveNode: function (nodeId, newParentId, position, modifiedTime) {
                 return this.updateNode({
                         id         : nodeId,
                         newParentId: this.getParentId(newParentId),
-                        sequence   : sequence
+                        position   : position
                 }, modifiedTime);
             },
 
@@ -176,10 +176,13 @@
                 $(button).addClass('loading');
                 this.nodeRepo.updateNode(requestNode, this.getTime())
                     .done(function (response) {
+                        $(button).removeClass('loading');
+                        if (!response) {
+                            return;
+                        }
                         self.setTime(response[0]);
                         var node = self.getTreeInstance().get_node(requestNode.id);
                         node.data.content = requestNode.content;
-                        $(button).removeClass('loading');
                     })
                     .fail(function (e) {
                         $(button).removeClass('loading');

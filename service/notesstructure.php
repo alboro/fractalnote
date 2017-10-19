@@ -40,26 +40,7 @@ class NotesStructure
 
     public function buildTree()
     {
-        $shuffledChildren = $this->createRelationMapper()->findChildrenWithNodes();
-        $children = [];
-        foreach ($shuffledChildren as $k => $child) {
-            /* @var $child Relation */
-            $children[$child->getNodeId()] = $child;
-        }
-        foreach ($children as $nodeId => $child) {
-            /* @var $child Relation */
-            $fatherId = $child->getFatherId();
-            if ($fatherId && isset($children[$fatherId])) {
-                $father = $children[$fatherId];
-                /* @var $father Relation */
-                $father->addChild($child);
-            }
-        }
-        $children = array_filter($children, function (Relation $v) {
-            return !$v->getFatherId();
-        });
-
-        return array_values($children);
+        return $this->createRelationMapper()->buildTree();
     }
 
     public function findNode($id)
@@ -81,57 +62,56 @@ class NotesStructure
     /**
      * @param integer $parentId
      * @param string  $title
-     * @param integer $sequence
+     * @param integer $position
      * @param string  $content
      * @param string  $syntax
      * @param integer $isRich
      *
-     * @return Relation|void
+     * @return mixed node identifier
      */
-    public function create(
+    public function createNode(
         $parentId = 0,
         $title = 'New node',
-        $sequence = 0,
+        $position = 0,
         $content = '',
         $syntax = 'plain-text',
         $isRich = 0
     ) {
-        $note = Node::factory();
-        $note->setName($title);
-        $note->setTxt($content);
-        $note->setSyntax($syntax);
-        $note->setIsRichtxt((bool)$isRich);
-
-        $db = $this->connector->getDb();
-        $nodeMapper = $this->createNodeMapper();
-        $relationMapper = $this->createRelationMapper();
         try {
             $this->connector->lockResource();
-            $db->beginTransaction();
 
+            $db = $this->connector->getDb();
+            $db->beginTransaction();
+            $nodeMapper = $this->createNodeMapper();
+            $relationMapper = $this->createRelationMapper();
+
+            $note = Node::factory();
+            $note->setName($title);
+            $note->setTxt($content);
+            $note->setSyntax($syntax);
+            $note->setIsRichtxt((bool)$isRich);
             $note->setLevel($relationMapper->calculateLevelByParentId($parentId));
             $note->setId($nodeMapper->calculateNextIncrementValue());
-
             $nodeMapper->insert($note);
 
             $child = new Relation();
             $child->setNode($note);
             $child->setFatherId($parentId);
-            $child->setSequence($sequence);
-            $this->createRelationMapper()->insert($child);
+            $child->setSequence($position);
+            $relationMapper->insert($child);
 
             $db->commit();
+            $nodeIdentifier = $child->getNodeId();
 
             $this->connector->unlockResource();
             $this->connector->requireSync();
         } catch (Exception $e) {
-            $db->rollBack();
+            isset($db) && $db->rollBack();
             $this->connector->unlockResource();
-
-            return $this->handleException($e);
+            $this->handleException($e);
         }
 
-        return $child;
+        return $nodeIdentifier;
     }
 
     /**
@@ -153,22 +133,22 @@ class NotesStructure
         $relation->setFatherId($newParentId);
         null !== $sequence && $relation->setSequence($sequence);
         if (!$relation->getUpdatedFields()) {
-            throw new WebException('No any changes done');
+            throw new NoChangesException();
         }
         $relationMapper->update($relation);
 
         return $relation;
     }
 
-    public function update($nodeId, $title, $content, $newParentId, $sequence)
+    public function updateNode($nodeIdentifier, $title, $content, $newParentId, $position)
     {
-        $db = $this->connector->getDb();
         $nodeMapper = $this->createNodeMapper();
         try {
             $this->connector->lockResource();
+            $db = $this->connector->getDb();
             $db->beginTransaction();
 
-            $note = $nodeMapper->find($nodeId); /* @var Node $note */
+            $note = $nodeMapper->find($nodeIdentifier); /* @var Node $note */
 
             if ($newParentId === null) {
                 if (!$note->isEditable()) {
@@ -177,11 +157,11 @@ class NotesStructure
                 null !== $title && $note->setName($title);
                 null !== $content && $note->setTxt($content);
                 if (!$note->getUpdatedFields()) {
-                    throw new WebException('No any changes done');
+                    throw new NoChangesException();
                 }
             } elseif (isset($newParentId)) {
                 $relationMapper = $this->createRelationMapper();
-                $this->move($nodeId, $newParentId, $sequence);
+                $this->move($nodeIdentifier, $newParentId, $position);
                 $note->setLevel($relationMapper->calculateLevelByParentId((int)$newParentId));
                 $this->updateChildRelationLevels($note);
             }
@@ -192,7 +172,7 @@ class NotesStructure
             $this->connector->unlockResource();
             $this->connector->requireSync();
         } catch (Exception $e) {
-            $db->rollBack();
+            isset($db) && $db->rollBack();
             $this->handleException($e);
         }
         return $note;
@@ -215,9 +195,9 @@ class NotesStructure
      */
     public function delete($noteId)
     {
-        $db = $this->connector->getDb();
         try {
             $this->connector->lockResource();
+            $db = $this->connector->getDb();
             $db->beginTransaction();
 
             $this->_delete($noteId);
@@ -226,7 +206,7 @@ class NotesStructure
             $this->connector->unlockResource();
             $this->connector->requireSync();
         } catch (Exception $e) {
-            $db->rollBack();
+            isset($db) && $db->rollBack();
             $this->handleException($e);
         }
     }
