@@ -11,7 +11,7 @@ namespace OCA\FractalNote\Service;
 
 use \OCP\IDBConnection;
 use \OC\Files\Filesystem;
-use \OCA\FractalNote\Db\SqliteConnectionFactory;
+use \OCA\FractalNote\Provider\CherryTree\Db\SqliteConnectionFactory;
 
 class Connector
 {

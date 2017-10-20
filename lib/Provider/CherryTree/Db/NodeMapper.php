@@ -7,16 +7,17 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Db;
 
 use OCP\AppFramework\Db\Entity as NativeEntity;
 use OCP\IDBConnection;
+use OCA\FractalNote\Provider\CherryTree\Db\Node;
 
 class NodeMapper extends Mapper
 {
     public function __construct(IDBConnection $db)
     {
-        parent::__construct($db, 'node', '\OCA\FractalNote\Db\Node');
+        parent::__construct($db, 'node', Node::class);
     }
 
     public function update(NativeEntity $entity)

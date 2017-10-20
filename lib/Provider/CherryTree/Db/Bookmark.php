@@ -7,7 +7,7 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Db;
 
 use JsonSerializable;
 
@@ -19,7 +19,7 @@ use JsonSerializable;
  * @method void setNodeId(integer $nodeId)
  * @method void setSequence(integer $position)
  *
- * @package OCA\FractalNote\Db
+ * @package OCA\FractalNote\Provider\CherryTree\Db
  */
 class Bookmark extends Entity
 {

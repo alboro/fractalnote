@@ -7,24 +7,23 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Db;
 
 use OCP\IDBConnection;
+use OCA\FractalNote\Provider\CherryTree\Db\Relation;
 
 class RelationMapper extends Mapper
 {
-    const RELATED_NODE = '\OCA\FractalNote\Db\Node';
-
     public function __construct(IDBConnection $db)
     {
-        parent::__construct($db, 'children', '\OCA\FractalNote\Db\Relation');
+        parent::__construct($db, 'children', Relation::class);
     }
 
     public function relatedEntityMapping(Entity $entity)
     {
         return [
             // relatedEntityClass => $baseEntityMethod
-            self::RELATED_NODE => 'setNode',
+            Node::class => 'setNode',
         ];
     }
 
@@ -34,7 +33,7 @@ class RelationMapper extends Mapper
             . 'JOIN node n ON n.node_id = c.node_id '
             . 'ORDER BY n.level, c.sequence';
 
-        return $this->findOneToOneEntities([self::RELATED_NODE], $sql);
+        return $this->findOneToOneEntities([Node::class], $sql);
     }
 
     /**
@@ -57,7 +56,7 @@ class RelationMapper extends Mapper
     {
         $sql = 'SELECT * FROM children c JOIN node n ON n.node_id = c.node_id';
         $sql.= ' WHERE c.father_id = ' . $this->db->quote($nodeId);
-        return $this->findOneToOneEntities([self::RELATED_NODE], $sql);
+        return $this->findOneToOneEntities([Node::class], $sql);
     }
 
     /**

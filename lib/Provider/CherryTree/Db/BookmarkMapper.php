@@ -7,16 +7,17 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Db;
 
 use OCP\IDBConnection;
 use OCP\AppFramework\Db\Entity as NativeEntity;
+use OCA\FractalNote\Provider\CherryTree\Db\Bookmark;
 
 class BookmarkMapper extends Mapper
 {
     public function __construct(IDBConnection $db)
     {
-        parent::__construct($db, 'bookmark', '\OCA\FractalNote\Db\Bookmark');
+        parent::__construct($db, 'bookmark', Bookmark::class);
     }
 
     /**

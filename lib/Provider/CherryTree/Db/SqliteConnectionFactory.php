@@ -7,7 +7,7 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Db;
 
 use OC\Db\ConnectionFactory as ConnectionFactory;
 use OC\SystemConfig;

@@ -7,24 +7,25 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Db;
 
 use OCP\IDBConnection;
 use OCP\AppFramework\Db\Entity as NativeEntity;
+use OCA\FractalNote\Provider\CherryTree\Db\Grid;
 
-class CodeboxMapper extends Mapper
+class GridMapper extends Mapper
 {
     public function __construct(IDBConnection $db)
     {
-        parent::__construct($db, 'codebox', '\OCA\FractalNote\Db\Codebox');
+        parent::__construct($db, 'grid', Grid::class);
     }
 
     /**
      * @param integer $nodeId
      *
-     * @return Codebox[]|array
+     * @return Grid[]|array
      */
-    public function findCodeboxes($nodeId)
+    public function findGrids($nodeId)
     {
         $sql = 'SELECT * FROM `' . $this->getTableName() . '` WHERE node_id = ?';
         return $this->findEntities($sql, [$nodeId]);
@@ -34,7 +35,7 @@ class CodeboxMapper extends Mapper
      * {Inheritdoc}
      */
     public function delete(NativeEntity $entity){
-        if (!$entity instanceof Codebox) {
+        if (!$entity instanceof Grid) {
             throw new \Exception('Not supported for ' . get_class($entity));
         }
         $sql = 'DELETE FROM `' . $this->getTableName() . '`'

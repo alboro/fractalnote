@@ -7,24 +7,25 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Db;
 
 use OCP\IDBConnection;
 use OCP\AppFramework\Db\Entity as NativeEntity;
+use OCA\FractalNote\Provider\CherryTree\Db\Image;
 
-class GridMapper extends Mapper
+class ImageMapper extends Mapper
 {
     public function __construct(IDBConnection $db)
     {
-        parent::__construct($db, 'grid', '\OCA\FractalNote\Db\Grid');
+        parent::__construct($db, 'image', Image::class);
     }
 
     /**
      * @param integer $nodeId
      *
-     * @return Grid[]|array
+     * @return Image[]|array
      */
-    public function findGrids($nodeId)
+    public function findImages($nodeId)
     {
         $sql = 'SELECT * FROM `' . $this->getTableName() . '` WHERE node_id = ?';
         return $this->findEntities($sql, [$nodeId]);
@@ -34,7 +35,7 @@ class GridMapper extends Mapper
      * {Inheritdoc}
      */
     public function delete(NativeEntity $entity){
-        if (!$entity instanceof Grid) {
+        if (!$entity instanceof Image) {
             throw new \Exception('Not supported for ' . get_class($entity));
         }
         $sql = 'DELETE FROM `' . $this->getTableName() . '`'

@@ -7,7 +7,7 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Db;
 
 /**
  * Class Grid
@@ -25,7 +25,7 @@ namespace OCA\FractalNote\Db;
  * @method void setColMax(integer $value)
  * @method void setColMin(integer $value)
  *
- * @package OCA\FractalNote\Db
+ * @package OCA\FractalNote\Provider\CherryTree\Db
  */
 class Grid extends Entity
 {

@@ -7,7 +7,7 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Db;
 
 /**
  * Class Codebox
@@ -31,7 +31,7 @@ namespace OCA\FractalNote\Db;
  * @method void setDoHighlBra(integer $value)
  * @method void setDoShowLinenum(integer $value)
  *
- * @package OCA\FractalNote\Db
+ * @package OCA\FractalNote\Provider\CherryTree\Db
  */
 class Codebox extends Entity
 {

@@ -7,7 +7,7 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Db;
 
 /**
  * Class Node
@@ -37,7 +37,7 @@ namespace OCA\FractalNote\Db;
  * @method void setTsCreation(integer $timestamp)
  * @method void setTsLastsave(integer $timestamp)
  *
- * @package OCA\FractalNote\Db
+ * @package OCA\FractalNote\Provider\CherryTree\Db
  */
 class Node extends Entity
 {

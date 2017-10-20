@@ -12,14 +12,14 @@ namespace OCA\FractalNote\Service;
 use Exception;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
-use OCA\FractalNote\Db\CodeboxMapper;
-use OCA\FractalNote\Db\GridMapper;
-use OCA\FractalNote\Db\Node;
-use OCA\FractalNote\Db\NodeMapper;
-use OCA\FractalNote\Db\Relation;
-use OCA\FractalNote\Db\RelationMapper;
-use OCA\FractalNote\Db\ImageMapper;
-use OCA\FractalNote\Db\BookmarkMapper;
+use OCA\FractalNote\Provider\CherryTree\Db\CodeboxMapper;
+use OCA\FractalNote\Provider\CherryTree\Db\GridMapper;
+use OCA\FractalNote\Provider\CherryTree\Db\Node;
+use OCA\FractalNote\Provider\CherryTree\Db\NodeMapper;
+use OCA\FractalNote\Provider\CherryTree\Db\Relation;
+use OCA\FractalNote\Provider\CherryTree\Db\RelationMapper;
+use OCA\FractalNote\Provider\CherryTree\Db\ImageMapper;
+use OCA\FractalNote\Provider\CherryTree\Db\BookmarkMapper;
 use OCA\FractalNote\Service\Exception\WebException;
 use OCA\FractalNote\Service\Exception\NoChangesException;
 use OCA\FractalNote\Service\Exception\NotFoundException;
@@ -179,7 +179,6 @@ class NotesStructure
             isset($db) && $db->rollBack();
             $this->handleException($e);
         }
-        return $note;
     }
 
     public function updateChildRelationLevels(Node $node)
