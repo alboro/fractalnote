@@ -14,7 +14,6 @@ use OCP\AppFramework\App;
 use OCA\FractalNote\Controller\RelationController;
 use OCA\FractalNote\Controller\PageController;
 use OCA\FractalNote\Controller\NoteController;
-use OCA\FractalNote\Service\NotesStructure;
 
 /**
  * Class Application
@@ -56,7 +55,7 @@ class Application extends App {
                 $c->query('AppName'),
                 $c->query('Request'),
                 $c->query('UserId'),
-                $c->query('NotesStructure')
+                $c->query('ProviderFactory')
             );
         };
     }

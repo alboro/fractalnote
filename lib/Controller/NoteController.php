@@ -32,14 +32,14 @@ class NoteController extends AbstractController
     public function create($mtime, $parentId, $title, $position)
     {
         return $this->handleWebErrors(function () use ($mtime, $parentId, $title, $position) {
-            if (!$this->connector->isConnected()) {
+            if (!$this->notesStructure->isConnected()) {
                 throw new NotFoundException();
             }
-            if ($this->connector->getModifyTime() !== $mtime) {
+            if ($this->notesStructure->isExpired($mtime)) {
                 throw new ConflictException($title);
             }
             $nodeIdentifier = $this->notesStructure->createNode($parentId, $title, $position);
-            return [$this->connector->getModifyTime(), $nodeIdentifier];
+            return [$this->notesStructure->getModifyTime(), $nodeIdentifier];
         });
     }
 
@@ -55,10 +55,10 @@ class NoteController extends AbstractController
     {
         return $this->handleWebErrors(function () use ($mtime, $nodeData) {
             $id = array_key_exists('id', $nodeData) ? (int)$nodeData['id'] : null;
-            if (!$id || !$this->connector->isConnected()) {
+            if (!$id || !$this->notesStructure->isConnected()) {
                 throw new NotFoundException();
             }
-            if ($this->connector->getModifyTime() !== $mtime) {
+            if ($this->notesStructure->isExpired($mtime)) {
                 throw new ConflictException();
             }
             $this->notesStructure->updateNode(
@@ -68,7 +68,7 @@ class NoteController extends AbstractController
                 array_key_exists('newParentId', $nodeData) ? $nodeData['newParentId'] : null,
                 array_key_exists('position', $nodeData) ? $nodeData['position'] : null
             );
-            return [$this->connector->getModifyTime()];
+            return [$this->notesStructure->getModifyTime()];
         });
     }
 
@@ -82,14 +82,14 @@ class NoteController extends AbstractController
     {
         return $this->handleWebErrors(function () use ($mtime, $id) {
             $id = (int)$id;
-            if (!$id || !$this->connector->isConnected()) {
+            if (!$id || !$this->notesStructure->isConnected()) {
                 throw new NotFoundException();
             }
-            if ($this->connector->getModifyTime() !== $mtime) {
+            if ($this->notesStructure->isExpired($mtime)) {
                 throw new ConflictException();
             }
             $this->notesStructure->delete($id);
-            return [$this->connector->getModifyTime()];
+            return [$this->notesStructure->getModifyTime()];
         });
     }
 
@@ -98,7 +98,7 @@ class NoteController extends AbstractController
      */
     public function index()
     {
-        return new DataResponse([$this->notesStructure->buildTree(), $this->connector->getModifyTime()]);
+        return new DataResponse([$this->notesStructure->buildTree(), $this->notesStructure->getModifyTime()]);
     }
 
     /**

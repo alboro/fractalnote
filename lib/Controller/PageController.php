@@ -33,7 +33,7 @@ class PageController extends AbstractController
      */
     public function index()
     {
-        if (!$this->connector->isConnected()) {
+        if (!$this->notesStructure->isConnected()) {
             return new TemplateResponse(Application::APP_NAME, '404');
         }
         // Override default CSP
@@ -42,7 +42,7 @@ class PageController extends AbstractController
 
         $params = [
             'tree'  => $this->notesStructure->buildTree(),
-            'mtime' => $this->connector->getModifyTime(),
+            'mtime' => $this->notesStructure->getModifyTime(),
         ];
         $response = new TemplateResponse(Application::APP_NAME, 'main', $params); // templates/main.php
         $response->setContentSecurityPolicy($csp);

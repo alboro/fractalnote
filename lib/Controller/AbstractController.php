@@ -13,10 +13,11 @@ use OCP\IRequest;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Controller as BaseController;
+use OCA\FractalNote\Service\ProviderFactory;
 use OCA\FractalNote\Service\Exception\WebException;
 use OCA\FractalNote\Service\Exception\NotFoundException;
 use OCA\FractalNote\Service\NotesStructure;
-use OCA\FractalNote\Service\Connector;
+use OCP\IDBConnection;
 
 class AbstractController extends BaseController
 {
@@ -24,10 +25,8 @@ class AbstractController extends BaseController
 
     /** @var int */
     protected $userId;
-    /** @var NotesStructure */
+    /** @var null|NotesStructure */
     protected $notesStructure;
-    /** @var Connector */
-    protected $connector;
 
     /**
      * AbstractController constructor.
@@ -37,16 +36,15 @@ class AbstractController extends BaseController
      * @param integer        $userId
      * @param NotesStructure $service
      */
-    public function __construct($AppName, IRequest $request, $userId, NotesStructure $service)
+    public function __construct($AppName, IRequest $request, $userId, ProviderFactory $providerFactory)
     {
         parent::__construct($AppName, $request);
         $this->userId = $userId;
-        $this->notesStructure = $service;
         if ($this->userId) {
-            $this->connector = Connector::run(
+            $this->notesStructure = $providerFactory->createProviderInstance(
+                self::REQUEST_KEY_FILE_PATH,
                 $request->getParam(self::REQUEST_KEY_FILE_PATH)
             );
-            $this->notesStructure->setConnector($this->connector);
         }
     }
 
