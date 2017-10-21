@@ -68,16 +68,16 @@ abstract class NotesStructure
      * @return mixed node identifier
      */
     abstract public function _createNode(
-        $parentId = 0,
-        $title = 'New node',
-        $position = 0,
-        $content = '',
-        $isRich = 0
+        $parentId,
+        $title,
+        $position,
+        $content,
+        $isRich
     );
 
 
     /**
-     * @param integer $parentId
+     * @param mixed   $parentId
      * @param string  $title
      * @param integer $position
      * @param string  $content
@@ -86,9 +86,9 @@ abstract class NotesStructure
      * @return mixed node identifier
      */
     public function createNode(
-        $parentId = 0,
-        $title = 'New node',
-        $position = 0,
+        $parentId,
+        $title,
+        $position,
         $content = '',
         $isRich = 0
     ) {

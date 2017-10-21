@@ -151,7 +151,7 @@ class CherryTreeStructure extends NotesStructure
      * @return mixed node identifier
      */
     public function _createNode(
-        $parentId = 0,
+        $parentId,
         $title = 'New node',
         $position = 0,
         $content = '',
@@ -246,27 +246,6 @@ class CherryTreeStructure extends NotesStructure
             $relation->getNode()->setLevel($parentLevel + 1);
             $this->createNodeMapper()->update($relation->getNode());
             $this->updateChildRelationLevels($relation->getNode());
-        }
-    }
-
-    /**
-     * @param $noteId
-     */
-    public function delete($noteId)
-    {
-        try {
-            $this->lockResource();
-            $db = $this->getDb();
-            $db->beginTransaction();
-
-            $this->_delete($noteId);
-
-            $db->commit();
-            $this->unlockResource();
-            $this->requireSync();
-        } catch (Exception $e) {
-            isset($db) && $db->rollBack();
-            $this->handleException($e);
         }
     }
 
