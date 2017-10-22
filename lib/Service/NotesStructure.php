@@ -19,26 +19,6 @@ abstract class NotesStructure
 
     private $filesystemPathToStructure;
 
-    /**
-     * @param mixed $filesystemPathToStructure
-     *
-     * @return NotesStructure
-     */
-    protected function setFilesystemPathToStructure($filesystemPathToStructure)
-    {
-        $this->filesystemPathToStructure = $filesystemPathToStructure;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFilesystemPathToStructure()
-    {
-        return $this->filesystemPathToStructure;
-    }
-
     abstract public function isConnected();
 
     abstract public function requireSync();
@@ -58,6 +38,13 @@ abstract class NotesStructure
 
     abstract public function buildTree();
 
+    abstract protected function _updateNode($nodeIdentifier, $title, $content, $newParentId, $position);
+
+    /**
+     * @param integer $noteId
+     */
+    abstract protected function _delete($noteId);
+
     /**
      * @param integer $parentId
      * @param string  $title
@@ -67,7 +54,7 @@ abstract class NotesStructure
      *
      * @return mixed node identifier
      */
-    abstract public function _createNode(
+    abstract protected function _createNode(
         $parentId,
         $title,
         $position,
@@ -75,6 +62,14 @@ abstract class NotesStructure
         $isRich
     );
 
+
+    /**
+     * @return mixed
+     */
+    public function getFilesystemPathToStructure()
+    {
+        return $this->filesystemPathToStructure;
+    }
 
     /**
      * @param mixed   $parentId
@@ -89,8 +84,7 @@ abstract class NotesStructure
         $parentId,
         $title,
         $position,
-        $content = '',
-        $isRich = 0
+        $content = ''
     ) {
         try {
             $this->lockResource();
@@ -100,19 +94,17 @@ abstract class NotesStructure
                 $title,
                 $position,
                 $content,
-                $isRich
+                0
             );
 
             $this->unlockResource();
             $this->requireSync();
         } catch (Exception $e) {
-            $this->handleException($e, true);
+            $this->handleException($e);
         }
 
         return $nodeIdentifier;
     }
-
-    abstract public function _updateNode($nodeIdentifier, $title, $content, $newParentId, $position);
 
     public function updateNode($nodeIdentifier, $title, $content, $newParentId, $position)
     {
@@ -143,11 +135,6 @@ abstract class NotesStructure
         }
     }
 
-    /**
-     * @param integer $noteId
-     */
-    abstract protected function _delete($noteId);
-
     protected function handleException($e, $resourceLocked = true)
     {
         if ($resourceLocked) {
@@ -158,5 +145,17 @@ abstract class NotesStructure
         } else {
             throw $e;
         }
+    }
+
+    /**
+     * @param mixed $filesystemPathToStructure
+     *
+     * @return NotesStructure
+     */
+    protected function setFilesystemPathToStructure($filesystemPathToStructure)
+    {
+        $this->filesystemPathToStructure = $filesystemPathToStructure;
+
+        return $this;
     }
 }

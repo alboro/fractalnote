@@ -21,8 +21,6 @@ use OCP\IDBConnection;
 
 class AbstractController extends BaseController
 {
-    const REQUEST_KEY_FILE_PATH = 'f';
-
     /** @var int */
     protected $userId;
     /** @var null|NotesStructure */
@@ -41,9 +39,10 @@ class AbstractController extends BaseController
         parent::__construct($AppName, $request);
         $this->userId = $userId;
         if ($this->userId) {
+            $possibleProvider = $providerFactory->getProviderByRequest($request);
             $this->notesStructure = $providerFactory->createProviderInstance(
-                self::REQUEST_KEY_FILE_PATH,
-                $request->getParam(self::REQUEST_KEY_FILE_PATH)
+                $possibleProvider,
+                $request->getParam($possibleProvider)
             );
         }
     }

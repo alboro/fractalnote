@@ -140,6 +140,18 @@ class CherryTreeStructure extends NotesStructure
         return $node;
     }
 
+    public function updateChildRelationLevels(Node $node)
+    {
+        $relationMapper = $this->createRelationMapper();
+        $parentLevel = $node->getLevel();
+        $childRelations = $relationMapper->findChildRelationsWithNodes($node->getId());
+        foreach ($childRelations as $relation) {
+            $relation->getNode()->setLevel($parentLevel + 1);
+            $this->createNodeMapper()->update($relation->getNode());
+            $this->updateChildRelationLevels($relation->getNode());
+        }
+    }
+
     /**
      * @param integer $parentId
      * @param string  $title
@@ -150,13 +162,12 @@ class CherryTreeStructure extends NotesStructure
      *
      * @return mixed node identifier
      */
-    public function _createNode(
+    protected function _createNode(
         $parentId,
-        $title = 'New node',
-        $position = 0,
-        $content = '',
-        $isRich = 0,
-        $syntax = 'plain-text'
+        $title,
+        $position,
+        $content,
+        $isRich
     ) {
         $db = $this->getDb();
         $db->beginTransaction();
@@ -166,7 +177,7 @@ class CherryTreeStructure extends NotesStructure
         $note = Node::factory();
         $note->setName($title);
         $note->setTxt($content);
-        $note->setSyntax($syntax);
+        $note->setSyntax('plain-text');
         $note->setIsRichtxt((bool)$isRich);
         $note->setLevel($relationMapper->calculateLevelByParentId($parentId));
         $note->setId($nodeMapper->calculateNextIncrementValue());
@@ -208,7 +219,7 @@ class CherryTreeStructure extends NotesStructure
         return $relation;
     }
 
-    public function _updateNode($nodeIdentifier, $title, $content, $newParentId, $position)
+    protected function _updateNode($nodeIdentifier, $title, $content, $newParentId, $position)
     {
         $nodeMapper = $this->createNodeMapper();
         $db = $this->getDb();
@@ -235,18 +246,6 @@ class CherryTreeStructure extends NotesStructure
         $nodeMapper->update($note);
 
         $db->commit();
-    }
-
-    public function updateChildRelationLevels(Node $node)
-    {
-        $relationMapper = $this->createRelationMapper();
-        $parentLevel = $node->getLevel();
-        $childRelations = $relationMapper->findChildRelationsWithNodes($node->getId());
-        foreach ($childRelations as $relation) {
-            $relation->getNode()->setLevel($parentLevel + 1);
-            $this->createNodeMapper()->update($relation->getNode());
-            $this->updateChildRelationLevels($relation->getNode());
-        }
     }
 
     /**
