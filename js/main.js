@@ -22,7 +22,7 @@
 
             createNode: function (parentId, title, position, modifiedTime) {
                 return this.makeRequest({
-                    url: this._baseUrl + '/notes?f=' + this._filePath,
+                    url: this._baseUrl + '/notes?' + this._filePath,
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -44,7 +44,7 @@
 
             updateNode: function (nodeData, modifiedTime) {
                 return this.makeRequest({
-                    url: this._baseUrl + '/notes/' + nodeData.id  + '?f=' + this._filePath,
+                    url: this._baseUrl + '/notes/' + nodeData.id  + '?' + this._filePath,
                     method: 'PUT',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -56,7 +56,7 @@
 
             deleteNode: function (nodeModel, modifiedTime) {
                 return this.makeRequest({
-                    url: this._baseUrl + '/notes/' + nodeModel.id  + '?f=' + this._filePath,
+                    url: this._baseUrl + '/notes/' + nodeModel.id  + '?' + this._filePath,
                     method: 'DELETE',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -454,7 +454,7 @@
 
         var noteRepo = new NodeRepository(
             OC.generateUrl('/apps/fractalnote'),
-            window.document.location.search.substring(3) // @todo
+            window.document.location.search.substring(1)
         );
         new View(noteRepo).render();
     });
