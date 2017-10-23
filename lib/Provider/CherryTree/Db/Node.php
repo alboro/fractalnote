@@ -139,4 +139,16 @@ class Node extends Entity
 
         return $note;
     }
+
+    public static function fromRow(array $mayBeSeveralEntitiesRow)
+    {
+        // default values for the rows, that have been added into ctb format later and may be missing in old documents
+        $mayBeSeveralEntitiesRow = array_merge(
+            ['ts_lastsave' => 0, 'ts_creation' => 0],
+            $mayBeSeveralEntitiesRow
+        );
+        return parent::fromRow($mayBeSeveralEntitiesRow);
+    }
+
+
 }

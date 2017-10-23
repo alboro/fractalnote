@@ -60,9 +60,8 @@ abstract class Entity extends NativeEntity
         }
         $justOneEntityRow = array_intersect_key($mayBeSeveralEntitiesRow, array_flip($columns));
         if ((count($justOneEntityRow)) !== count($propertiesConfig)) {
-            throw new \Exception(
-                'Database row does not contain minimum required columns.'
-            );
+            // @todo: make specuial error type and catch it
+            throw new \Exception('Database row does not contain minimum required columns.');
         }
         return parent::fromRow($justOneEntityRow);
     }
