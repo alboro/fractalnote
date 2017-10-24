@@ -16,6 +16,9 @@ use OCA\FractalNote\Service\Exception\NotFoundException;
 
 abstract class NotesStructure
 {
+    const TYPE_RICH      = 'rich';
+    const TYPE_PLAINTEXT = 'txt';
+    const TYPE_READONLY  = 'readonly';
 
     private $filesystemPathToStructure;
 
@@ -30,15 +33,19 @@ abstract class NotesStructure
     abstract public function getModifyTime();
 
     /**
-     * @param integer $storedExpiration
+     * @param int|string $nodeId
+     * @param integer    $storedExpiration
      *
      * @return mixed
      */
-    abstract public function isExpired($storedExpiration);
+    abstract public function isExpired($nodeId, $storedExpiration);
 
+    /**
+     * @return \JsonSerializable[]
+     */
     abstract public function buildTree();
 
-    abstract protected function _updateNode($nodeIdentifier, $title, $content, $newParentId, $position);
+    abstract protected function _updateNode($nodeId, $title, $content, $newParentId, $position);
 
     /**
      * @param integer $noteId
@@ -46,16 +53,16 @@ abstract class NotesStructure
     abstract protected function _delete($noteId);
 
     /**
-     * @param integer $parentId
-     * @param string  $title
-     * @param integer $position
-     * @param string  $content
-     * @param integer $isRich
+     * @param integer|string $parentNodeId
+     * @param string         $title
+     * @param integer        $position
+     * @param string         $content
+     * @param integer        $isRich
      *
      * @return mixed node identifier
      */
     abstract protected function _createNode(
-        $parentId,
+        $parentNodeId,
         $title,
         $position,
         $content,

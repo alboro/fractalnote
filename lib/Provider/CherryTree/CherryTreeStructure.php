@@ -110,15 +110,19 @@ class CherryTreeStructure extends NotesStructure
     }
 
     /**
-     * @param integer $storedExpiration
+     * @param integer|string $nodeId
+     * @param integer        $storedExpiration
      *
      * @return mixed
      */
-    public function isExpired($storedExpiration)
+    public function isExpired($nodeId, $storedExpiration)
     {
         return $this->getModifyTime() !== $storedExpiration;
     }
 
+    /**
+     * @return Relation[]
+     */
     public function buildTree()
     {
         return $this->createRelationMapper()->buildTree();
@@ -153,7 +157,7 @@ class CherryTreeStructure extends NotesStructure
     }
 
     /**
-     * @param integer $parentId
+     * @param integer $parentNodeId
      * @param string  $title
      * @param integer $position
      * @param string  $content
@@ -163,7 +167,7 @@ class CherryTreeStructure extends NotesStructure
      * @return mixed node identifier
      */
     protected function _createNode(
-        $parentId,
+        $parentNodeId,
         $title,
         $position,
         $content,
@@ -179,13 +183,13 @@ class CherryTreeStructure extends NotesStructure
         $note->setTxt($content);
         $note->setSyntax('plain-text');
         $note->setIsRichtxt((bool)$isRich);
-        $note->setLevel($relationMapper->calculateLevelByParentId($parentId));
+        $note->setLevel($relationMapper->calculateLevelByParentId($parentNodeId));
         $note->setId($nodeMapper->calculateNextIncrementValue());
         $nodeMapper->insert($note);
 
         $child = new Relation();
         $child->setNode($note);
-        $child->setFatherId($parentId);
+        $child->setFatherId($parentNodeId);
         $child->setSequence($position);
         $relationMapper->insert($child);
 
@@ -219,13 +223,13 @@ class CherryTreeStructure extends NotesStructure
         return $relation;
     }
 
-    protected function _updateNode($nodeIdentifier, $title, $content, $newParentId, $position)
+    protected function _updateNode($nodeId, $title, $content, $newParentId, $position)
     {
         $nodeMapper = $this->createNodeMapper();
         $db = $this->getDb();
         $db->beginTransaction();
 
-        $note = $nodeMapper->find($nodeIdentifier); /* @var Node $note */
+        $note = $nodeMapper->find($nodeId); /* @var Node $note */
 
         if ($newParentId === null) {
             if (!$note->isEditable()) {
@@ -238,7 +242,7 @@ class CherryTreeStructure extends NotesStructure
             }
         } elseif (isset($newParentId)) {
             $relationMapper = $this->createRelationMapper();
-            $this->move($nodeIdentifier, $newParentId, $position);
+            $this->move($nodeId, $newParentId, $position);
             $note->setLevel($relationMapper->calculateLevelByParentId((int)$newParentId));
             $this->updateChildRelationLevels($note);
         }

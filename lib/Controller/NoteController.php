@@ -23,7 +23,7 @@ class NoteController extends AbstractController
      * @NoAdminRequired
      *
      * @param integer $mtime
-     * @param integer $parentId
+     * @param mixed   $parentId
      * @param string  $title
      * @param integer $position
      *
@@ -35,7 +35,7 @@ class NoteController extends AbstractController
             if (!$this->notesStructure->isConnected()) {
                 throw new NotFoundException();
             }
-            if ($this->notesStructure->isExpired($mtime)) {
+            if ($this->notesStructure->isExpired($parentId, $mtime)) {
                 throw new ConflictException($title);
             }
             $nodeIdentifier = $this->notesStructure->createNode($parentId, $title, $position);
@@ -54,15 +54,15 @@ class NoteController extends AbstractController
     public function update($mtime, $nodeData)
     {
         return $this->handleWebErrors(function () use ($mtime, $nodeData) {
-            $id = array_key_exists('id', $nodeData) ? (int)$nodeData['id'] : null;
-            if (!$id || !$this->notesStructure->isConnected()) {
+            $nodeId = array_key_exists('id', $nodeData) ? $nodeData['id'] : null;
+            if (!$nodeId || !$this->notesStructure->isConnected()) {
                 throw new NotFoundException();
             }
-            if ($this->notesStructure->isExpired($mtime)) {
+            if ($this->notesStructure->isExpired($nodeId, $mtime)) {
                 throw new ConflictException();
             }
             $this->notesStructure->updateNode(
-                $id,
+                $nodeId,
                 array_key_exists('title', $nodeData) ? $nodeData['title'] : null,
                 array_key_exists('content', $nodeData) ? $nodeData['content'] : null,
                 array_key_exists('newParentId', $nodeData) ? $nodeData['newParentId'] : null,
@@ -74,21 +74,20 @@ class NoteController extends AbstractController
 
     /**
      * @param integer $mtime
-     * @param integer $id
+     * @param integer $nodeId
      *
      * @return DataResponse
      */
-    public function destroy($mtime, $id)
+    public function destroy($mtime, $nodeId)
     {
-        return $this->handleWebErrors(function () use ($mtime, $id) {
-            $id = (int)$id;
-            if (!$id || !$this->notesStructure->isConnected()) {
+        return $this->handleWebErrors(function () use ($mtime, $nodeId) {
+            if (!$nodeId || !$this->notesStructure->isConnected()) {
                 throw new NotFoundException();
             }
-            if ($this->notesStructure->isExpired($mtime)) {
+            if ($this->notesStructure->isExpired($nodeId, $mtime)) {
                 throw new ConflictException();
             }
-            $this->notesStructure->delete($id);
+            $this->notesStructure->delete($nodeId);
             return [$this->notesStructure->getModifyTime()];
         });
     }

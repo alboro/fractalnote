@@ -9,27 +9,34 @@
  */
 namespace OCA\FractalNote\Service;
 
+use OCA\FractalNote\Provider\Folder\FolderStructure;
 use OCA\FractalNote\Service\Exception\NotFoundException;
 use OCA\FractalNote\Service\Exception\WebException;
 use \OCP\IDBConnection;
 use \OCP\IRequest;
 use \OC\Files\Filesystem;
-use \OCA\FractalNote\Service\NotesStructure;
 use \OCA\FractalNote\Provider\CherryTree\CherryTreeStructure;
-use \OCA\FractalNote\Provider\CherryTree\Db\SqliteConnectionFactory;
 
 class ProviderFactory
 {
     const REQUEST_KEY_CHERRYTREE = 'f';
+    const REQUEST_KEY_FOLDER = 'folder';
 
     public function supportedProviders()
     {
         return [
             self::REQUEST_KEY_CHERRYTREE,
+            self::REQUEST_KEY_FOLDER,
         ];
     }
 
-    public function getProviderByRequest(IRequest $request)
+    /**
+     * @param IRequest $request
+     *
+     * @return string
+     * @throws NotFoundException
+     */
+    public function getProviderKeyByRequest(IRequest $request)
     {
         $paramKeys = array_keys($request->getParams());
         foreach ($this->supportedProviders() as $possibleProvider) {
@@ -40,12 +47,25 @@ class ProviderFactory
         throw new NotFoundException();
     }
 
+    /**
+     * @param $providerKey
+     * @param $filesystemPathToStructure
+     *
+     * @return \OCA\FractalNote\Service\NotesStructure
+     * @throws WebException
+     */
     public function createProviderInstance($providerKey, $filesystemPathToStructure)
     {
-        if ($providerKey === self::REQUEST_KEY_CHERRYTREE) {
-            $instance = new CherryTreeStructure(Filesystem::getView(), $filesystemPathToStructure);
-        } else {
-            throw new WebException(sprintf('Unknown key %s', $providerKey));
+        switch ($providerKey) {
+            case self::REQUEST_KEY_CHERRYTREE:
+                $instance = new CherryTreeStructure(Filesystem::getView(), $filesystemPathToStructure);
+                break;
+            case self::REQUEST_KEY_FOLDER:
+                $instance = new FolderStructure(Filesystem::getView(), $filesystemPathToStructure);
+                break;
+            default:
+                throw new WebException(sprintf('Unknown key %s', $providerKey));
+                break;
         }
         return $instance;
     }

@@ -10,6 +10,7 @@
 namespace OCA\FractalNote\Provider\CherryTree\Db;
 
 use JsonSerializable;
+use \OCA\FractalNote\Service\NotesStructure;
 
 /**
  * Class Relation
@@ -91,13 +92,13 @@ class Relation extends Entity implements JsonSerializable
     {
         switch (true) {
             case $this->getNode()->isRich():
-                $iconType = 'rich';
+                $iconType = NotesStructure::TYPE_RICH;
                 break;
             case $this->getNode()->isReadOnly():
-                $iconType = 'readonly';
+                $iconType = NotesStructure::TYPE_READONLY;
                 break;
             default:
-                $iconType = 'txt';
+                $iconType = NotesStructure::TYPE_PLAINTEXT;
                 break;
         }
         $content = $this->getNode()->getTxt();

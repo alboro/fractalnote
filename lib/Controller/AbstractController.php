@@ -39,10 +39,10 @@ class AbstractController extends BaseController
         parent::__construct($AppName, $request);
         $this->userId = $userId;
         if ($this->userId) {
-            $possibleProvider = $providerFactory->getProviderByRequest($request);
+            $possibleProviderKey = $providerFactory->getProviderKeyByRequest($request);
             $this->notesStructure = $providerFactory->createProviderInstance(
-                $possibleProvider,
-                $request->getParam($possibleProvider)
+                $possibleProviderKey,
+                $request->getParam($possibleProviderKey)
             );
         }
     }
