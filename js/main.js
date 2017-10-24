@@ -124,21 +124,6 @@
                 return this.mtime;
             },
 
-            /**
-             * @returns object
-             */
-            getActiveOrEmptyNodeModel: function () {
-                var model = this.getActiveNode();
-                return model ? model : {
-                    id:      '',
-                    title:   null,
-                    content: null,
-                    isEditable: null,
-                    isReadonly: null,
-                    isRich: null
-                }
-            },
-
             getActiveNode: function () {
                 return this.activeNode;
             },
@@ -158,10 +143,11 @@
              * @access {public}
              * @returns {undefined}
              */
-            renderContent: function () {
+            renderEditor: function (nodeToActivate) {
+                this.setActiveNode(nodeToActivate);
                 var areaTemplate = Handlebars.compile(this.contentTplElement.html());
                 this.editorElement.html(
-                    areaTemplate({note: this.getActiveOrEmptyNodeModel()})
+                    areaTemplate({note: this.getActiveNode()})
                 );
                 // handle saves
                 $(this.selectorSaveButton).click(this.saveClick.bind(this));
@@ -266,7 +252,7 @@
              * @access {public}
              * @returns {undefined}
              */
-            menuCreateNode: function (data) {
+            menuCreateNode: function (isSubNodeCreation, data) {
                 var title, newNode,
                     inst = $.jstree.reference(data.reference),
                     obj = inst.get_node(data.reference);
@@ -286,7 +272,7 @@
                     },
                     children: []
                 };
-                inst.create_node(obj, newNode, 'last');
+                inst.create_node(isSubNodeCreation ? obj : obj.parent, newNode, 'last');
             },
 
             /**
@@ -318,10 +304,15 @@
                 }
                 this.nodeRepo.deleteNode(node, self.getTime())
                     .done(function (response) {
-                        var prevNode = inst.get_node(node.parent);
+                        var prevNode;
                         self.setTime(response[0]);
                         inst.delete_node(node);
-                        inst.select_node(prevNode);
+                        if (self.nodeRepo.getParentId(node.parent)) {
+                            prevNode = inst.get_node(node.parent);
+                            inst.select_node(prevNode);
+                        } else {
+                            self.renderEditor(null);
+                        }
                     })
                     .fail(function (e) {
                         alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
@@ -334,7 +325,6 @@
              */
             render: function () {
                 var self = this;
-                this.renderContent();
                 this.parseNodes();
                 this.getNavigation().jstree({
                     "core": {
@@ -370,29 +360,36 @@
                     },
                     "contextmenu": {
                         "items": {
+                            "create" : {
+                                "separator_before"	: false,
+                                "separator_after"	: false,
+                                "_disabled"			: false,
+                                "label"				: "Add Node",
+                                "action"			: this.menuCreateNode.bind(this, false)
+                            },
+                            "sub-create" : {
+                                "separator_before"	: false,
+                                "separator_after"	: false,
+                                "_disabled"			: false,
+                                "label"				: "Add SubNode",
+                                "action"			: this.menuCreateNode.bind(this, true)
+                            },
                             "rename" : {
                                 "separator_before"	: false,
                                 "separator_after"	: false,
                                 "_disabled"			: false,
-                                "label"				: "Rename",
+                                "label"				: "Rename Node",
                                 "shortcut"			: 113,
                                 "shortcut_label"	: 'F2',
                                 "icon"				: "glyphicon glyphicon-leaf",
                                 "action"			: this.menuRenameNode.bind(this)
                             },
-                            "create" : {
-                                "separator_before"	: false,
-                                "separator_after"	: true,
-                                "_disabled"			: false,
-                                "label"				: "Create",
-                                "action"			: this.menuCreateNode.bind(this)
-                            },
                             "remove" : {
-                                "separator_before"	: false,
+                                "separator_before"	: true,
                                 "icon"				: false,
                                 "separator_after"	: false,
                                 "_disabled"			: false,
-                                "label"				: "Delete",
+                                "label"				: "Delete Node",
                                 "action"			: this.menuDeleteNode.bind(this)
                             }
                         }
@@ -413,7 +410,7 @@
                     var selected = data.instance.get_selected();
                     if (selected.length) {
                         var node = data.instance.get_node(selected[0]);
-                        self.setActiveNode({
+                        self.renderEditor({
                             id:      node.id,
                             title:   node.text,
                             content: node.data.content,
@@ -421,12 +418,11 @@
                             isReadonly: node.data.isReadonly,
                             isRich: node.data.isRich
                         });
-                        self.renderContent();
                     }
                 })
                 .on('select_node.jstree', function (e, data) {
                     self.checkChanged();
-                    self.setActiveNode({
+                    self.renderEditor({
                         id:      data.node.id,
                         title:   data.node.text,
                         content: data.node.data.content,
@@ -434,7 +430,6 @@
                         isReadonly: data.node.data.isReadonly,
                         isRich: data.node.data.isRich
                     });
-                    self.renderContent();
                 })
                 .on('move_node.jstree', function (e, data) {
                     self.afterNodeMove(data.node, data.parent, data.position);
