@@ -60,8 +60,8 @@
                     method: 'DELETE',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        mtime   : modifiedTime,
-                        id      : nodeModel.id
+                        mtime : modifiedTime,
+                        nodeId: nodeModel.id
                     })
                 });
             },
