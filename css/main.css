@@ -36,7 +36,7 @@
 }
 
 .note-editor .input {
-    height: calc(100% - 51px);
+    height: calc(100% - 75px);
     width: 100%;
 }
 

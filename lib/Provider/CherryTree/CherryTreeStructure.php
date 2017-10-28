@@ -328,7 +328,7 @@ class CherryTreeStructure extends NotesStructure
         return new CodeboxMapper($this->getDb());
     }
 
-    protected function handleException($e, $resourceLocked)
+    protected function handleException($e, $resourceLocked = true)
     {
         $resourceLocked && $this->getDb()->rollBack();
         parent::handleException($e, $resourceLocked);

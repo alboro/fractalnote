@@ -10,6 +10,7 @@
 namespace OCA\FractalNote\Service;
 
 use Exception;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCA\FractalNote\Service\Exception\NotFoundException;

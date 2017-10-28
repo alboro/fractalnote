@@ -11,9 +11,10 @@ namespace OCA\FractalNote\AppInfo;
 
 use OCP\IContainer;
 use OCP\AppFramework\App;
-use OCA\FractalNote\Controller\RelationController;
+use OCA\FractalNote\Service\ProviderFactory;
 use OCA\FractalNote\Controller\PageController;
 use OCA\FractalNote\Controller\NoteController;
+use OCA\FractalNote\Service\WebExceptionMiddleware;
 
 /**
  * Class Application
@@ -34,9 +35,7 @@ class Application extends App {
         parent::__construct(self::APP_NAME, $urlParams);
 
         $c = $this->getContainer();
-        /**
-         * Controllers
-         */
+        /** Controllers */
         $c->registerService(
             'PageController',
             $this->injectController(\OCA\FractalNote\Controller\PageController::class)
@@ -46,6 +45,12 @@ class Application extends App {
             'NoteController',
             $this->injectController(\OCA\FractalNote\Controller\NoteController::class)
         );
+
+        /** Middleware */
+        $c->registerService('WebExceptionMiddleware', function() {
+            return new WebExceptionMiddleware();
+        });
+        $c->registerMiddleware('WebExceptionMiddleware');
     }
 
     private function injectController($controllerName)

@@ -10,54 +10,33 @@
 namespace OCA\FractalNote\Controller;
 
 use OCP\IRequest;
-use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Controller as BaseController;
 use OCA\FractalNote\Service\ProviderFactory;
-use OCA\FractalNote\Service\Exception\WebException;
-use OCA\FractalNote\Service\Exception\NotFoundException;
 use OCA\FractalNote\Service\NotesStructure;
-use OCP\IDBConnection;
+use OCA\FractalNote\Service\Exception\NotFoundException;
 
 class AbstractController extends BaseController
 {
-    /** @var int */
-    protected $userId;
     /** @var null|NotesStructure */
     protected $notesStructure;
 
     /**
      * AbstractController constructor.
      *
-     * @param string         $AppName
-     * @param IRequest       $request
-     * @param integer        $userId
-     * @param NotesStructure $service
+     * @param string          $AppName
+     * @param IRequest        $request
+     * @param integer         $userId
+     * @param ProviderFactory $providerFactory
      */
     public function __construct($AppName, IRequest $request, $userId, ProviderFactory $providerFactory)
     {
         parent::__construct($AppName, $request);
-        $this->userId = $userId;
-        if ($this->userId) {
-            $possibleProviderKey = $providerFactory->getProviderKeyByRequest($request);
-            $this->notesStructure = $providerFactory->createProviderInstance(
-                $possibleProviderKey,
-                $request->getParam($possibleProviderKey)
-            );
+        if ($userId) {
+            try {
+                $this->notesStructure = $providerFactory->createProviderByRequest($request);
+            } catch (NotFoundException $e) {
+                $this->notesStructure = $providerFactory->createDefaultProvider();
+            }
         }
-    }
-
-    /**
-     * @param \Closure $callback
-     *
-     * @return DataResponse
-     */
-    protected function handleWebErrors(\Closure $callback)
-    {
-        try {
-            $response = $callback();
-        } catch (WebException $webError) {}
-
-        return isset($webError) ? $webError->createResponse() : new DataResponse($response, Http::STATUS_OK);
     }
 }

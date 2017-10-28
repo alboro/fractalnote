@@ -9,20 +9,43 @@
  */
 namespace OCA\FractalNote\Service;
 
+use OCP\IRequest;
+use OCP\AppFramework\Controller;
+use OC\Files\Filesystem;
 use OCA\FractalNote\Provider\Folder\FolderStructure;
 use OCA\FractalNote\Service\Exception\NotFoundException;
 use OCA\FractalNote\Service\Exception\WebException;
-use \OCP\IDBConnection;
-use \OCP\IRequest;
-use \OC\Files\Filesystem;
-use \OCA\FractalNote\Provider\CherryTree\CherryTreeStructure;
+use OCA\FractalNote\Provider\Nothing;
+use OCA\FractalNote\Provider\CherryTree\CherryTreeStructure;
 
 class ProviderFactory
 {
     const REQUEST_KEY_CHERRYTREE = 'f';
-    const REQUEST_KEY_FOLDER = 'folder';
+    const REQUEST_KEY_FOLDER     = 'folder';
 
-    public function supportedProviders()
+    /**
+     * @param IRequest $request
+     *
+     * @return \OCA\FractalNote\Service\NotesStructure
+     * @throws NotFoundException
+     */
+    public function createProviderByRequest(IRequest $request)
+    {
+        $paramKeys = array_keys($request->getParams());
+        foreach ($this->supportedProviders() as $possibleProvider) {
+            if (in_array($possibleProvider, $paramKeys, true)) {
+                return $this->createProvider($possibleProvider, $request->getParam($possibleProvider));
+            }
+        }
+        throw new NotFoundException();
+    }
+
+    public function createDefaultProvider()
+    {
+        return new Nothing();
+    }
+
+    private function supportedProviders()
     {
         return [
             self::REQUEST_KEY_CHERRYTREE,
@@ -31,30 +54,12 @@ class ProviderFactory
     }
 
     /**
-     * @param IRequest $request
-     *
-     * @return string
-     * @throws NotFoundException
-     */
-    public function getProviderKeyByRequest(IRequest $request)
-    {
-        $paramKeys = array_keys($request->getParams());
-        foreach ($this->supportedProviders() as $possibleProvider) {
-            if (in_array($possibleProvider, $paramKeys, true)) {
-                return $possibleProvider;
-            }
-        }
-        throw new NotFoundException();
-    }
-
-    /**
      * @param $providerKey
      * @param $filesystemPathToStructure
      *
      * @return \OCA\FractalNote\Service\NotesStructure
-     * @throws WebException
      */
-    public function createProviderInstance($providerKey, $filesystemPathToStructure)
+    private function createProvider($providerKey, $filesystemPathToStructure)
     {
         switch ($providerKey) {
             case self::REQUEST_KEY_CHERRYTREE:
@@ -62,9 +67,6 @@ class ProviderFactory
                 break;
             case self::REQUEST_KEY_FOLDER:
                 $instance = new FolderStructure(Filesystem::getView(), $filesystemPathToStructure);
-                break;
-            default:
-                throw new WebException(sprintf('Unknown key %s', $providerKey));
                 break;
         }
         return $instance;

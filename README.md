@@ -1,3 +1,5 @@
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/fractaldem)
+
 # What is it?
 _FractalNote_ is online editor of hierarchical notes (or note trees) for Nextcloud/Owncloud server.
 

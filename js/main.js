@@ -242,8 +242,9 @@
                         }
                     })
                     .fail(function (e) {
-                        var node = data.instance.get_node(requestModel.id);
-                        data.instance.set_text(node, old);
+                        var node, jstree = self.getTreeInstance();
+                        node = jstree.get_node(requestModel.id);
+                        jstree.set_text(node, old);
                         alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
                     });
             },

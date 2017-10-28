@@ -31,16 +31,14 @@ class NoteController extends AbstractController
      */
     public function create($mtime, $parentId, $title, $position)
     {
-        return $this->handleWebErrors(function () use ($mtime, $parentId, $title, $position) {
-            if (!$this->notesStructure->isConnected()) {
-                throw new NotFoundException();
-            }
-            if ($this->notesStructure->isExpired($parentId, $mtime)) {
-                throw new ConflictException($title);
-            }
-            $nodeIdentifier = $this->notesStructure->createNode($parentId, $title, $position);
-            return [$this->notesStructure->getModifyTime(), $nodeIdentifier];
-        });
+        if (!$this->notesStructure->isConnected()) {
+            throw new NotFoundException();
+        }
+        if ($this->notesStructure->isExpired($parentId, $mtime)) {
+            throw new ConflictException($title);
+        }
+        $nodeIdentifier = $this->notesStructure->createNode($parentId, $title, $position);
+        return new DataResponse([$this->notesStructure->getModifyTime(), $nodeIdentifier]);
     }
 
     /**
@@ -53,23 +51,21 @@ class NoteController extends AbstractController
      */
     public function update($mtime, $nodeData)
     {
-        return $this->handleWebErrors(function () use ($mtime, $nodeData) {
-            $nodeId = array_key_exists('id', $nodeData) ? $nodeData['id'] : null;
-            if (!$nodeId || !$this->notesStructure->isConnected()) {
-                throw new NotFoundException();
-            }
-            if ($this->notesStructure->isExpired($nodeId, $mtime)) {
-                throw new ConflictException();
-            }
-            $this->notesStructure->updateNode(
-                $nodeId,
-                array_key_exists('title', $nodeData) ? $nodeData['title'] : null,
-                array_key_exists('content', $nodeData) ? $nodeData['content'] : null,
-                array_key_exists('newParentId', $nodeData) ? $nodeData['newParentId'] : null,
-                array_key_exists('position', $nodeData) ? $nodeData['position'] : null
-            );
-            return [$this->notesStructure->getModifyTime()];
-        });
+        $nodeId = array_key_exists('id', $nodeData) ? $nodeData['id'] : null;
+        if (!$nodeId || !$this->notesStructure->isConnected()) {
+            throw new NotFoundException();
+        }
+        if ($this->notesStructure->isExpired($nodeId, $mtime)) {
+            throw new ConflictException();
+        }
+        $this->notesStructure->updateNode(
+            $nodeId,
+            array_key_exists('title', $nodeData) ? $nodeData['title'] : null,
+            array_key_exists('content', $nodeData) ? $nodeData['content'] : null,
+            array_key_exists('newParentId', $nodeData) ? $nodeData['newParentId'] : null,
+            array_key_exists('position', $nodeData) ? $nodeData['position'] : null
+        );
+        return new DataResponse([$this->notesStructure->getModifyTime()]);
     }
 
     /**
@@ -80,16 +76,14 @@ class NoteController extends AbstractController
      */
     public function destroy($mtime, $nodeId)
     {
-        return $this->handleWebErrors(function () use ($mtime, $nodeId) {
-            if (!$nodeId || !$this->notesStructure->isConnected()) {
-                throw new NotFoundException();
-            }
-            if ($this->notesStructure->isExpired($nodeId, $mtime)) {
-                throw new ConflictException();
-            }
-            $this->notesStructure->delete($nodeId);
-            return [$this->notesStructure->getModifyTime()];
-        });
+        if (!$nodeId || !$this->notesStructure->isConnected()) {
+            throw new NotFoundException();
+        }
+        if ($this->notesStructure->isExpired($nodeId, $mtime)) {
+            throw new ConflictException();
+        }
+        $this->notesStructure->delete($nodeId);
+        return new DataResponse([$this->notesStructure->getModifyTime()]);
     }
 
     /**
@@ -103,12 +97,10 @@ class NoteController extends AbstractController
     /**
      * @NoAdminRequired
      *
-     * @param int $id
+     * @param int $nodeId
      */
-    public function show($id)
+    public function show($nodeId)
     {
-        return $this->handleWebErrors(function () use ($id) {
-            return $this->notesStructure->findNode($id);
-        });
+        return new DataResponse($this->notesStructure->findNode($nodeId));
     }
 }
