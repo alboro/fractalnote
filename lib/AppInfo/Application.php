@@ -9,6 +9,7 @@
  */
 namespace OCA\FractalNote\AppInfo;
 
+use OCP\Util;
 use OCP\IContainer;
 use OCP\AppFramework\App;
 use OCA\FractalNote\Service\ProviderFactory;
@@ -80,5 +81,21 @@ class Application extends App {
             ];
         };
         $server->getNavigationManager()->add($navigationEntry);
+    }
+
+    public function registerFrontendScripts()
+    {
+        $c = $this->getContainer();
+        /** @var \OCP\IServerContainer $server */
+        $server = $c->getServer();
+        if ($server->getUserSession()->isLoggedIn()) {
+            $eventDispatcher = $server->getEventDispatcher();
+            $eventDispatcher->addListener(
+                'OCA\Files::loadAdditionalScripts',
+                function() {
+                    Util::addScript(Application::APP_NAME, 'router');
+                }
+            );
+        }
     }
 }

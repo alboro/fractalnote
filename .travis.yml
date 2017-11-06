@@ -1,8 +1,8 @@
 language: php
 php:
-  - 5.4
-  - 5.5
   - 5.6
+  - 7.0
+  - 7.1
   - hhvm
 
 env:
@@ -15,9 +15,9 @@ matrix:
   allow_failures:
     - php: hhvm
   include:
-    - php: 5.4
+    - php: 5.6
       env: DB=sqlite
-    - php: 5.4
+    - php: 5.6
       env: DB=pgsql
 
 
@@ -35,14 +35,14 @@ install:
   # install owncloud
   - cd ..
   - ocdev setup core --dir owncloud --branch $BRANCH --no-history
-  - mv webcherries owncloud/apps
-  - phpenv config-add owncloud/apps/webcherries/tests/travis/php.ini
+  - mv fractalnote owncloud/apps
+  - phpenv config-add owncloud/apps/fractalnote/tests/travis/php.ini
   - cd owncloud
   - ./occ maintenance:install --database-name oc_autotest --database-user oc_autotest --database-pass --admin-user admin --admin-pass admin --database $DB
-  - ./occ app:enable webcherries
+  - ./occ app:enable fractalnote
 
 before_script:
-  - cd apps/webcherries
+  - cd apps/fractalnote
 
 script:
   - phpunit -c phpunit.xml

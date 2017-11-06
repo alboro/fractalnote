@@ -10,17 +10,6 @@
 
 namespace OCA\FractalNote\AppInfo;
 
-use OCP\Util;
-
 $app = new Application();
 $app->registerNavigationEntry();
-
-if (\OCP\User::isLoggedIn()) {
-    $eventDispatcher = \OC::$server->getEventDispatcher();
-    $eventDispatcher->addListener(
-        'OCA\Files::loadAdditionalScripts',
-        function() {
-            Util::addScript(Application::APP_NAME, 'router');
-        }
-    );
-}
+$app->registerFrontendScripts();
