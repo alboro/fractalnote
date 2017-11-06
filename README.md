@@ -42,7 +42,17 @@ Run in the command line:
 occ maintenance:mimetype:update-db --repair-filecache
 ```
 * Place _FractalNote_ in ``[nextcloud/owncloud installation folder]/apps/fractalnote``
-* Enable _FractalNote_ in Nextcloud/Owncloud settings UI
+* [Install composer](https://getcomposer.org/download/)
+* Run
+```
+cd [nextcloud/owncloud installation folder]/apps/fractalnote
+composer install
+```
+* Enable _FractalNote_ in Nextcloud/Owncloud settings UI or by the command
+```
+cd [nextcloud/owncloud installation folder]/apps/fractalnote
+./occ app:enable fractalnote
+```
 
 # Running tests
 After [Installing PHPUnit](http://phpunit.de/getting-started.html) run:
