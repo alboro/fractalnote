@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "442c6c2c22b2c9d332cefa502a4b8cb7",
+    "content-hash": "29551cc57511a61e74335a50742456c9",
     "packages": [
         {
             "name": "components/handlebars.js",
