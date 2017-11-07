@@ -1,21 +1,15 @@
 <?php
-/**
- * NextCloud / ownCloud - fractalnote
- *
- * Licensed under the Apache License, Version 2.0
- *
- * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
- * @copyright Alexander Demchenko 2017
- */
-namespace OCA\FractalNote\Controller;
+
+namespace OCA\FractalNote\Tests\Unit\Controller;
 
 use PHPUnit_Framework_TestCase;
 
 use OCP\AppFramework\Http\TemplateResponse;
 
+use OCA\FractalNote\Controller\PageController;
+
 
 class PageControllerTest extends PHPUnit_Framework_TestCase {
-
 	private $controller;
 	private $userId = 'john';
 
@@ -30,8 +24,8 @@ class PageControllerTest extends PHPUnit_Framework_TestCase {
 	public function testIndex() {
 		$result = $this->controller->index();
 
-		$this->assertEquals(['user' => 'john'], $result->getParams());
-		$this->assertEquals('main', $result->getTemplateName());
+		$this->assertEquals('index', $result->getTemplateName());
 		$this->assertTrue($result instanceof TemplateResponse);
 	}
+
 }
