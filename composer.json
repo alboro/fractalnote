@@ -12,8 +12,6 @@
     "support": {
         "issues": "https://github.com/alboro/fractalnote/issues"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "repositories": [
         { "type": "vcs", "url": "https://github.com/alboro/jstree-bootstrap-theme.git" },
         { "type": "vcs", "url": "https://github.com/alboro/handlebars.js.git" }
