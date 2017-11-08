@@ -32,11 +32,7 @@ class AbstractController extends BaseController
     {
         parent::__construct($AppName, $request);
         if ($userId) {
-            try {
-                $this->notesStructure = $providerFactory->createProviderByRequest($request);
-            } catch (NotFoundException $e) {
-                $this->notesStructure = $providerFactory->createDefaultProvider();
-            }
+            $this->notesStructure = $providerFactory->createProviderByRequest($request);
         }
     }
 }

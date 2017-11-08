@@ -397,7 +397,7 @@
                     }
                 })
                 .on('create_node.jstree', function (e, data) {
-                    self.afterNodeCreate(data.parent, data.node, data.position);
+                    self.afterNodeCreate(data.parent, data.node, data.position + 1);
                 })
                 .on('rename_node.jstree', function (e, data) {
                      self.afterNodeRename(data.node, data.old);
@@ -433,7 +433,7 @@
                     });
                 })
                 .on('move_node.jstree', function (e, data) {
-                    self.afterNodeMove(data.node, data.parent, data.position);
+                    self.afterNodeMove(data.node, data.parent, data.position + 1);
                 });
                 this.allNodes = null;
                 var to = false;

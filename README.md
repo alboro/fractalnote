@@ -31,7 +31,7 @@ It is able to synchronise your private files between all your devices. [More abo
 * Install into your web server [Nextcloud/Owncloud.](https://nextcloud.com/install/#instructions-server)
 * (This step is not required.) To open _[filename].ctb_ from file list nextcloud/owncloud app you need:
 
-Add ``ctb`` file type to the ``[nextcloud/owncloud installation folder]/config/mimetypemapping.json`` like that:
+Add ``ctb`` file type to the ``[(next|own)cloud install folder]/config/mimetypemapping.json`` like that:
 ```
 {
     "ctb": ["application/cherrytree-ctb"]
@@ -39,18 +39,19 @@ Add ``ctb`` file type to the ``[nextcloud/owncloud installation folder]/config/m
 ```
 Run in the command line:
 ```
-occ maintenance:mimetype:update-db --repair-filecache
+cd [(next|own)cloud install folder]
+./occ maintenance:mimetype:update-db --repair-filecache
 ```
-* Place _FractalNote_ in ``[nextcloud/owncloud installation folder]/apps/fractalnote``
+* Place _FractalNote_ in ``[(next|own)cloud install folder]/apps/fractalnote``
 * [Install composer](https://getcomposer.org/download/)
 * Run
 ```
-cd [nextcloud/owncloud installation folder]/apps/fractalnote
+cd [(next|own)cloud install folder]/apps/fractalnote
 composer install
 ```
 * Enable _FractalNote_ in Nextcloud/Owncloud settings UI or by the command
 ```
-cd [nextcloud/owncloud installation folder]/apps/fractalnote
+cd [(next|own)cloud install folder]
 ./occ app:enable fractalnote
 ```
 

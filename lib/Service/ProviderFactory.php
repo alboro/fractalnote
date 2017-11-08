@@ -27,7 +27,6 @@ class ProviderFactory
      * @param IRequest $request
      *
      * @return \OCA\FractalNote\Service\NotesStructure
-     * @throws NotFoundException
      */
     public function createProviderByRequest(IRequest $request)
     {
@@ -37,7 +36,7 @@ class ProviderFactory
                 return $this->createProvider($possibleProvider, $request->getParam($possibleProvider));
             }
         }
-        throw new NotFoundException();
+        return $this->createDefaultProvider();
     }
 
     public function createDefaultProvider()
