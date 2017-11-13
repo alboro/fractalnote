@@ -23,7 +23,7 @@
         "components/handlebars.js": "dev-master#b9bb577d89558cc54edcb6f40f27bf5b264d78ed"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.4"
+        "phpunit/phpunit": "^5.7"
     },
     "autoload": {
         "psr-4": {
