@@ -13,8 +13,8 @@
         "issues": "https://github.com/alboro/fractalnote/issues"
     },
     "repositories": [
-        { "type": "vcs", "url": "https://github.com/alboro/jstree-bootstrap-theme.git" },
-        { "type": "vcs", "url": "https://github.com/components/handlebars.js.git" }
+        { "type": "vcs", "url": "https://github.com/alboro/jstree-bootstrap-theme.git", "no-api": true },
+        { "type": "vcs", "url": "https://github.com/components/handlebars.js.git", "no-api": true }
     ],
     "require": {
         "php": ">=5.6.0",
