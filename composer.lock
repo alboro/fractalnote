@@ -4,19 +4,19 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "605f05ce4121c57eba17d4c108bc89c1",
+    "content-hash": "0d983b01b0a75722de67657f93d71239",
     "packages": [
         {
             "name": "components/handlebars.js",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/alboro/handlebars.js.git",
+                "url": "https://github.com/components/handlebars.js.git",
                 "reference": "b9bb577d89558cc54edcb6f40f27bf5b264d78ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alboro/handlebars.js/zipball/b9bb577d89558cc54edcb6f40f27bf5b264d78ed",
+                "url": "https://api.github.com/repos/components/handlebars.js/zipball/b9bb577d89558cc54edcb6f40f27bf5b264d78ed",
                 "reference": "b9bb577d89558cc54edcb6f40f27bf5b264d78ed",
                 "shasum": ""
             },
@@ -107,12 +107,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/alboro/jstree-bootstrap-theme.git",
-                "reference": "0443c0efc590b382a8e0ad6a521c7ca8635dd23e"
+                "reference": "fbdf58ea6372302a8c4546f254e2c16c2ace9aff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alboro/jstree-bootstrap-theme/zipball/0443c0efc590b382a8e0ad6a521c7ca8635dd23e",
-                "reference": "0443c0efc590b382a8e0ad6a521c7ca8635dd23e",
+                "url": "https://api.github.com/repos/alboro/jstree-bootstrap-theme/zipball/fbdf58ea6372302a8c4546f254e2c16c2ace9aff",
+                "reference": "fbdf58ea6372302a8c4546f254e2c16c2ace9aff",
                 "shasum": ""
             },
             "type": "component",
@@ -130,7 +130,7 @@
                 "issues": "https://github.com/orangehill/jstree-bootstrap-theme/issues",
                 "source": "https://github.com/alboro/jstree-bootstrap-theme/tree/master"
             },
-            "time": "2017-11-06T21:16:18+00:00"
+            "time": "2017-11-06T21:41:51+00:00"
         },
         {
             "name": "vakata/jstree",
@@ -1404,16 +1404,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.3.10",
+            "version": "v3.3.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "8c7bf1e7d5d6b05a690b715729cb4cd0c0a99c46"
+                "reference": "0938408c4faa518d95230deabb5f595bf0de31b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/8c7bf1e7d5d6b05a690b715729cb4cd0c0a99c46",
-                "reference": "8c7bf1e7d5d6b05a690b715729cb4cd0c0a99c46",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/0938408c4faa518d95230deabb5f595bf0de31b9",
+                "reference": "0938408c4faa518d95230deabb5f595bf0de31b9",
                 "shasum": ""
             },
             "require": {
@@ -1455,7 +1455,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-10-05T14:43:42+00:00"
+            "time": "2017-11-10T18:26:04+00:00"
         },
         {
             "name": "webmozart/assert",
