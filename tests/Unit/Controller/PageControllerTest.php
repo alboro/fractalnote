@@ -3,10 +3,9 @@
 namespace OCA\FractalNote\Tests\Unit\Controller;
 
 use PHPUnit_Framework_TestCase;
-
 use OCP\AppFramework\Http\TemplateResponse;
-
 use OCA\FractalNote\Controller\PageController;
+use OCA\FractalNote\Service\ProviderFactory;
 
 
 class PageControllerTest extends PHPUnit_Framework_TestCase {
@@ -15,16 +14,17 @@ class PageControllerTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 		$request = $this->getMockBuilder('OCP\IRequest')->getMock();
+        $providerFactory = $this->getMockBuilder('OCA\FractalNote\Provider\Nothing')->getMock();
 
 		$this->controller = new PageController(
-			'fractalnote', $request, $this->userId
+			'fractalnote', $request, $this->userId, $providerFactory
 		);
 	}
 
 	public function testIndex() {
 		$result = $this->controller->index();
 
-		$this->assertEquals('index', $result->getTemplateName());
+		$this->assertEquals('main', $result->getTemplateName());
 		$this->assertTrue($result instanceof TemplateResponse);
 	}
 

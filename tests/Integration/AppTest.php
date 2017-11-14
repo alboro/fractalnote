@@ -2,22 +2,21 @@
 
 namespace OCA\FractalNote\Tests\Integration\Controller;
 
-use OCP\AppFramework\App;
-use Test\TestCase;
-
+use PHPUnit_Framework_TestCase;
+use \OCA\FractalNote\AppInfo\Application;
 
 /**
  * This test shows how to make a small Integration Test. Query your class
  * directly from the container, only pass in mocks if needed and run your tests
  * against the database
  */
-class AppTest extends TestCase {
+class AppTest extends PHPUnit_Framework_TestCase {
 
     private $container;
 
     public function setUp() {
         parent::setUp();
-        $app = new App('fractalnote');
+        $app = new Application();
         $this->container = $app->getContainer();
     }
 

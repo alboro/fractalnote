@@ -264,6 +264,9 @@ class CherryTreeStructure extends NotesStructure
         $nodeMapper = $this->createNodeMapper();
         $relation = $relationMapper->find($noteId); /** @var $relation Relation */
         $note = $nodeMapper->find($noteId); /** @var $note Node */
+        if ($note->getLevel() === 1) {
+            // todo: ensure, that top node, that is being deleted, is not the only one at top level
+        }
         $childRelations = $relationMapper->findChildRelations($noteId);
         foreach ($childRelations as $childRelation) {
             $childRelation instanceof Relation && $this->_delete($childRelation->getNodeId());
