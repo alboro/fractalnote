@@ -32,7 +32,7 @@
     float: right;
 }
 .note-editor .loading {
-    background: url("vendor/vakata-jstree/default/throbber.gif") center center no-repeat;
+    background: url("../vendor/orangehill/jstree-bootstrap-theme/dist/themes/proton/throbber.gif") center center no-repeat;
 }
 
 .note-editor .input {
@@ -55,7 +55,7 @@
 
 .note-navigation .jstree-icon-no-edit {
     background-color: transparent;
-    background-image: url("vendor/vakata-jstree/proton/32px.png");
+    background-image: url("../vendor/orangehill/jstree-bootstrap-theme/dist/themes/proton/32px.png");
     background-size: 320px 96px;
     background-position: -35px -68px;
     background-repeat: no-repeat;
