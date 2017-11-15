@@ -74,7 +74,7 @@
                 var self = this;
                 if (this._requestProcessing) {
                     alert('Cannot make new request. Previous request is still being processed!');
-                    return;
+                    return $.Deferred(); // todo: trigger .fail callback, pass error instance with message
                 }
                 this._requestProcessing = true;
                 return $.ajax(request).always(function () { self._requestProcessing = false; });

@@ -14,7 +14,9 @@ class PageControllerTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 		$request = $this->getMockBuilder('OCP\IRequest')->getMock();
-        $providerFactory = $this->getMockBuilder('OCA\FractalNote\Provider\Nothing')->getMock();
+        $providerFactory = $this->getMockBuilder('OCA\FractalNote\Provider\Nothing')
+            ->disableOriginalConstructor()
+            ->getMock();
 
 		$this->controller = new PageController(
 			'fractalnote', $request, $this->userId, $providerFactory
@@ -24,7 +26,7 @@ class PageControllerTest extends PHPUnit_Framework_TestCase {
 	public function testIndex() {
 		$result = $this->controller->index();
 
-		$this->assertEquals('main', $result->getTemplateName());
+		$this->assertEquals('404', $result->getTemplateName());
 		$this->assertTrue($result instanceof TemplateResponse);
 	}
 
