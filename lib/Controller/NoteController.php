@@ -69,6 +69,8 @@ class NoteController extends AbstractController
     }
 
     /**
+     * @NoAdminRequired
+     *
      * @param integer $mtime
      * @param integer $nodeId
      *
