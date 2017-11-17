@@ -172,7 +172,7 @@
                     })
                     .fail(function (e) {
                         $(button).removeClass('loading');
-                        alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
+                        alert(e.responseJSON && e.responseJSON.message ? e.responseJSON.message : 'Action failed');
                     });
             },
 
@@ -220,7 +220,7 @@
                         self.setTime(response[0]);
                     })
                     .fail(function (e) {
-                        alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
+                        alert(e.responseJSON && e.responseJSON.message ? e.responseJSON.message : 'Action failed');
                     });
             },
 
@@ -245,7 +245,7 @@
                         var node, jstree = self.getTreeInstance();
                         node = jstree.get_node(requestModel.id);
                         jstree.set_text(node, old);
-                        alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
+                        alert(e.responseJSON && e.responseJSON.message ? e.responseJSON.message : 'Action failed');
                     });
             },
 
@@ -288,7 +288,7 @@
                     })
                     .fail(function (e) {
                         self.getTreeInstance().delete_node(node);
-                        alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
+                        alert(e.responseJSON && e.responseJSON.message ? e.responseJSON.message : 'Action failed');
                     });
             },
 
@@ -315,8 +315,8 @@
                             self.renderEditor(null);
                         }
                     })
-                    .fail(function (e) {
-                        alert(e.responseJSON.message ? e.responseJSON.message : 'Action failed');
+                    .fail(function (e, type, statusText) {
+                        alert(e.responseJSON && e.responseJSON.message ? e.responseJSON.message : 'Action failed');
                     })
             },
 
