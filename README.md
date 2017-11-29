@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/alboro/fractalnote.svg?branch=master)](https://travis-ci.org/alboro/fractalnote)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/fractaldem)
 
 # What is it?
