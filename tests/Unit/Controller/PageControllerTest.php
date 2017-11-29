@@ -17,8 +17,11 @@ class PageControllerTest extends PHPUnit_Framework_TestCase {
         $mockedProvider = $this->getMockBuilder('OCA\FractalNote\Service\NotesStructure')->getMock();
         $providerFactory = $this->getMockBuilder('OCA\FractalNote\Service\ProviderFactory')
             ->disableOriginalConstructor()
-            ->getMock()
-                ->expects($request)->method('createProviderByRequest')->willReturn($mockedProvider);
+            ->getMock();
+        $providerFactory->expects($this->once())
+            ->method('createProviderByRequest')
+            ->with($request)
+            ->willReturn($mockedProvider);
 
 		$this->controller = new PageController('fractalnote', $request, $this->userId, $providerFactory);
 	}
