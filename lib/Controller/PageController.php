@@ -15,7 +15,7 @@ use OCP\IRequest;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\DataResponse;
-use OCA\FractalNote\Service\NotesStructure;
+use OCA\FractalNote\Service\AbstractProvider;
 use OCA\FractalNote\Controller\AbstractController;
 use OCA\FractalNote\AppInfo\Application;
 
@@ -34,7 +34,7 @@ class PageController extends AbstractController
      */
     public function index()
     {
-        if (!$this->notesStructure->isConnected()) {
+        if (!$this->notesProvider->isConnected()) {
             return new TemplateResponse(Application::APP_NAME, '404');
         }
         // Override default CSP
@@ -42,8 +42,8 @@ class PageController extends AbstractController
         $csp->addAllowedChildSrcDomain('blob:');
 
         $params = [
-            'tree'  => $this->notesStructure->buildTree(),
-            'mtime' => $this->notesStructure->getModifyTime(),
+            'tree'  => $this->notesProvider->buildTree(),
+            'mtime' => $this->notesProvider->getModifyTime(),
         ];
         $response = new TemplateResponse(Application::APP_NAME, 'main', $params); // templates/main.php
         $response->setContentSecurityPolicy($csp);

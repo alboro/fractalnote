@@ -7,10 +7,13 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Provider\CherryTree\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Mapper;
 
 use OCP\IDBConnection;
-use OCA\FractalNote\Provider\CherryTree\Db\Relation;
+use OCA\FractalNote\Provider\CherryTree\Db\Mapper;
+use OCA\FractalNote\Provider\CherryTree\Db\Entity;
+use OCA\FractalNote\Provider\CherryTree\Entity\Node;
+use OCA\FractalNote\Provider\CherryTree\Entity\Relation;
 
 class RelationMapper extends Mapper
 {

@@ -12,13 +12,13 @@ namespace OCA\FractalNote\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Controller as BaseController;
 use OCA\FractalNote\Service\ProviderFactory;
-use OCA\FractalNote\Service\NotesStructure;
+use OCA\FractalNote\Service\AbstractProvider;
 use OCA\FractalNote\Service\Exception\NotFoundException;
 
 class AbstractController extends BaseController
 {
-    /** @var null|NotesStructure */
-    protected $notesStructure;
+    /** @var null|AbstractProvider */
+    protected $notesProvider;
 
     /**
      * AbstractController constructor.
@@ -32,7 +32,7 @@ class AbstractController extends BaseController
     {
         parent::__construct($AppName, $request);
         if ($userId) {
-            $this->notesStructure = $providerFactory->createProviderByRequest($request);
+            $this->notesProvider = $providerFactory->createProviderByRequest($request);
         }
     }
 }

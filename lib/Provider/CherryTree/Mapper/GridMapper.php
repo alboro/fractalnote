@@ -7,11 +7,12 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Provider\CherryTree\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Mapper;
 
-use OCP\IDBConnection;
+use OCA\FractalNote\Provider\CherryTree\Entity\Grid;
 use OCP\AppFramework\Db\Entity as NativeEntity;
-use OCA\FractalNote\Provider\CherryTree\Db\Grid;
+use OCP\IDBConnection;
+use OCA\FractalNote\Provider\CherryTree\Db\Mapper;
 
 class GridMapper extends Mapper
 {

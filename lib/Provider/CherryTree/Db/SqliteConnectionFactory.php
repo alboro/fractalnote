@@ -10,6 +10,8 @@
 namespace OCA\FractalNote\Provider\CherryTree\Db;
 
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\DBALException;
+use OCA\FractalNote\Service\Exception\NotFoundException;
 
 class SqliteConnectionFactory
 {
@@ -20,21 +22,26 @@ class SqliteConnectionFactory
      * @param $path
      *
      * @return \OC\DB\Connection
-     * @throws \OC\DatabaseException
+     *
+     * @throws \Doctrine\DBAL\DBALException
      */
     public static function getConnectionByPath($path)
     {
         if (empty(self::$connections[$path])) {
-            self::$connections[$path] = DriverManager::getConnection(
-                [
-                    'adapter'             => '\OC\DB\AdapterSqlite',
-                    'driver'              => 'pdo_sqlite',
-                    'wrapperClass'        => 'OC\DB\Connection',
-                    'tablePrefix'         => '',
-                    'sqlite.journal_mode' => 'DELETE',
-                    'path'                => $path,
-                ]
-            );
+            try {
+                self::$connections[$path] = DriverManager::getConnection(
+                    [
+                        'adapter'             => '\OC\DB\AdapterSqlite',
+                        'driver'              => 'pdo_sqlite',
+                        'wrapperClass'        => 'OC\DB\Connection',
+                        'tablePrefix'         => '',
+                        'sqlite.journal_mode' => 'DELETE',
+                        'path'                => $path,
+                    ]
+                );
+            } catch (DBALException $dbalException) {
+                throw new NotFoundException($dbalException->getMessage());
+            }
         }
         return self::$connections[$path];
     }

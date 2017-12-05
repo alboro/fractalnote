@@ -15,7 +15,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCA\FractalNote\Service\Exception\NotFoundException;
 
-abstract class NotesStructure
+abstract class AbstractProvider
 {
     const TYPE_RICH      = 'rich';
     const TYPE_PLAINTEXT = 'txt';
@@ -158,7 +158,7 @@ abstract class NotesStructure
     /**
      * @param mixed $filesystemPathToStructure
      *
-     * @return NotesStructure
+     * @return AbstractProvider
      */
     protected function setFilesystemPathToStructure($filesystemPathToStructure)
     {

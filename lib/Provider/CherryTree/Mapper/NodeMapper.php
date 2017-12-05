@@ -7,11 +7,12 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Provider\CherryTree\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Mapper;
 
+use OCA\FractalNote\Provider\CherryTree\Entity\Node;
 use OCP\AppFramework\Db\Entity as NativeEntity;
 use OCP\IDBConnection;
-use OCA\FractalNote\Provider\CherryTree\Db\Node;
+use OCA\FractalNote\Provider\CherryTree\Db\Mapper;
 
 class NodeMapper extends Mapper
 {

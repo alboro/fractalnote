@@ -15,11 +15,11 @@ use OCA\FractalNote\Service\Exception\WebException;
 use OCA\FractalNote\Service\Exception\NoChangesException;
 use OCA\FractalNote\Service\Exception\NotFoundException;
 use OCA\FractalNote\Service\Exception\NotEditableException;
-use OCA\FractalNote\Service\NotesStructure;
-use \OCA\FractalNote\Provider\Folder\Node;
+use OCA\FractalNote\Service\AbstractProvider;
+use OCA\FractalNote\Provider\Folder\Node;
 use OC\Files\View;
 
-class FolderStructure extends NotesStructure
+class FolderProvider extends AbstractProvider
 {
 
     /** @var View */

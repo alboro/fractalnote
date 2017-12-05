@@ -7,7 +7,9 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Provider\CherryTree\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Entity;
+
+use OCA\FractalNote\Provider\CherryTree\Db\Entity;
 
 /**
  * Class Grid

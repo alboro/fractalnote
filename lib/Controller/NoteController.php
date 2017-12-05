@@ -11,7 +11,7 @@ namespace OCA\FractalNote\Controller;
 
 use OCP\IRequest;
 use OCP\AppFramework\Http\DataResponse;
-use OCA\FractalNote\Service\NotesStructure;
+use OCA\FractalNote\Service\AbstractProvider;
 use OCA\FractalNote\Service\Exception\ConflictException;
 use OCA\FractalNote\Service\Exception\NotFoundException;
 use OCA\FractalNote\Service\Exception\WebException;
@@ -31,14 +31,14 @@ class NoteController extends AbstractController
      */
     public function create($mtime, $parentId, $title, $position)
     {
-        if (!$this->notesStructure->isConnected()) {
+        if (!$this->notesProvider->isConnected()) {
             throw new NotFoundException();
         }
-        if ($this->notesStructure->isExpired($parentId, $mtime)) {
+        if ($this->notesProvider->isExpired($parentId, $mtime)) {
             throw new ConflictException($title);
         }
-        $nodeIdentifier = $this->notesStructure->createNode($parentId, $title, $position);
-        return new DataResponse([$this->notesStructure->getModifyTime(), $nodeIdentifier]);
+        $nodeIdentifier = $this->notesProvider->createNode($parentId, $title, $position);
+        return new DataResponse([$this->notesProvider->getModifyTime(), $nodeIdentifier]);
     }
 
     /**
@@ -51,21 +51,24 @@ class NoteController extends AbstractController
      */
     public function update($mtime, $nodeData)
     {
-        $nodeId = array_key_exists('id', $nodeData) ? $nodeData['id'] : null;
-        if (!$nodeId || !$this->notesStructure->isConnected()) {
+        if (!$this->notesProvider->isConnected()) {
             throw new NotFoundException();
         }
-        if ($this->notesStructure->isExpired($nodeId, $mtime)) {
+        $nodeId = array_key_exists('id', $nodeData) ? $nodeData['id'] : null;
+        if (!$nodeId) {
+            throw new NotFoundException(); // @todo create exception for not existing node
+        }
+        if ($this->notesProvider->isExpired($nodeId, $mtime)) {
             throw new ConflictException();
         }
-        $this->notesStructure->updateNode(
+        $this->notesProvider->updateNode(
             $nodeId,
             array_key_exists('title', $nodeData) ? $nodeData['title'] : null,
             array_key_exists('content', $nodeData) ? $nodeData['content'] : null,
             array_key_exists('newParentId', $nodeData) ? $nodeData['newParentId'] : null,
             array_key_exists('position', $nodeData) ? $nodeData['position'] : null
         );
-        return new DataResponse([$this->notesStructure->getModifyTime()]);
+        return new DataResponse([$this->notesProvider->getModifyTime()]);
     }
 
     /**
@@ -78,14 +81,14 @@ class NoteController extends AbstractController
      */
     public function destroy($mtime, $nodeId)
     {
-        if (!$nodeId || !$this->notesStructure->isConnected()) {
+        if (!$nodeId || !$this->notesProvider->isConnected()) {
             throw new NotFoundException();
         }
-        if ($this->notesStructure->isExpired($nodeId, $mtime)) {
+        if ($this->notesProvider->isExpired($nodeId, $mtime)) {
             throw new ConflictException();
         }
-        $this->notesStructure->delete($nodeId);
-        return new DataResponse([$this->notesStructure->getModifyTime()]);
+        $this->notesProvider->delete($nodeId);
+        return new DataResponse([$this->notesProvider->getModifyTime()]);
     }
 
     /**
@@ -93,7 +96,7 @@ class NoteController extends AbstractController
      */
     public function index()
     {
-        return new DataResponse([$this->notesStructure->buildTree(), $this->notesStructure->getModifyTime()]);
+        return new DataResponse([$this->notesProvider->buildTree(), $this->notesProvider->getModifyTime()]);
     }
 
     /**
@@ -103,6 +106,6 @@ class NoteController extends AbstractController
      */
     public function show($nodeId)
     {
-        return new DataResponse($this->notesStructure->findNode($nodeId));
+        return new DataResponse($this->notesProvider->findNode($nodeId));
     }
 }

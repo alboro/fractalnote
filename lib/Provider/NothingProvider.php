@@ -9,9 +9,9 @@
  */
 namespace OCA\FractalNote\Provider;
 
-use \OCA\FractalNote\Service\NotesStructure;
+use OCA\FractalNote\Service\AbstractProvider;
 
-class Nothing extends NotesStructure
+class NothingProvider extends AbstractProvider
 {
     public function isConnected()
     {

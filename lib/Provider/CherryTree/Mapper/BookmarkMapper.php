@@ -7,11 +7,11 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Provider\CherryTree\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Mapper;
 
 use OCP\IDBConnection;
-use OCP\AppFramework\Db\Entity as NativeEntity;
-use OCA\FractalNote\Provider\CherryTree\Db\Bookmark;
+use OCA\FractalNote\Provider\CherryTree\Entity\Bookmark;
+use OCA\FractalNote\Provider\CherryTree\Db\Mapper;
 
 class BookmarkMapper extends Mapper
 {

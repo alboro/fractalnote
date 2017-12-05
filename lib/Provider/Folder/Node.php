@@ -10,8 +10,8 @@
 namespace OCA\FractalNote\Provider\Folder;
 
 use JsonSerializable;
-use \OCA\FractalNote\Service\NotesStructure;
-use \OC\Files\FileInfo;
+use OCA\FractalNote\Service\AbstractProvider;
+use OC\Files\FileInfo;
 
 /**
  * Class Node
@@ -80,10 +80,10 @@ class Node implements JsonSerializable
     {
         switch (true) {
             case $this->isPlainText():
-                $iconType = NotesStructure::TYPE_PLAINTEXT;
+                $iconType = AbstractProvider::TYPE_PLAINTEXT;
                 break;
             default:
-                $iconType = NotesStructure::TYPE_READONLY;
+                $iconType = AbstractProvider::TYPE_READONLY;
                 break;
         }
         return [

@@ -7,11 +7,12 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Provider\CherryTree\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Mapper;
 
 use OCP\IDBConnection;
 use OCP\AppFramework\Db\Entity as NativeEntity;
-use OCA\FractalNote\Provider\CherryTree\Db\Codebox;
+use OCA\FractalNote\Provider\CherryTree\Entity\Codebox;
+use OCA\FractalNote\Provider\CherryTree\Db\Mapper;
 
 class CodeboxMapper extends Mapper
 {
@@ -34,7 +35,8 @@ class CodeboxMapper extends Mapper
     /**
      * {Inheritdoc}
      */
-    public function delete(NativeEntity $entity){
+    public function delete(NativeEntity $entity)
+    {
         if (!$entity instanceof Codebox) {
             throw new \Exception('Not supported for ' . get_class($entity));
         }

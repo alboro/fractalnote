@@ -7,7 +7,9 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Provider\CherryTree\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Entity;
+
+use OCA\FractalNote\Provider\CherryTree\Db\Entity;
 
 /**
  * Class Node
@@ -140,6 +142,13 @@ class Node extends Entity
         return $note;
     }
 
+    /**
+     * @todo: i don't like this override
+     *
+     * @param array $mayBeSeveralEntitiesRow
+     *
+     * @return static
+     */
     public static function fromRow(array $mayBeSeveralEntitiesRow)
     {
         // default values for the rows, that have been added into ctb format later and may be missing in old documents

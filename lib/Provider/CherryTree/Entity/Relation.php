@@ -7,10 +7,11 @@
  * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Provider\CherryTree\Db;
+namespace OCA\FractalNote\Provider\CherryTree\Entity;
 
 use JsonSerializable;
-use \OCA\FractalNote\Service\NotesStructure;
+use OCA\FractalNote\Service\AbstractProvider;
+use OCA\FractalNote\Provider\CherryTree\Db\Entity;
 
 /**
  * Class Relation
@@ -92,13 +93,13 @@ class Relation extends Entity implements JsonSerializable
     {
         switch (true) {
             case $this->getNode()->isRich():
-                $iconType = NotesStructure::TYPE_RICH;
+                $iconType = AbstractProvider::TYPE_RICH;
                 break;
             case $this->getNode()->isReadOnly():
-                $iconType = NotesStructure::TYPE_READONLY;
+                $iconType = AbstractProvider::TYPE_READONLY;
                 break;
             default:
-                $iconType = NotesStructure::TYPE_PLAINTEXT;
+                $iconType = AbstractProvider::TYPE_PLAINTEXT;
                 break;
         }
         $content = $this->getNode()->getTxt();

@@ -10,40 +10,51 @@
 namespace OCA\FractalNote\Provider\CherryTree;
 
 use Exception;
-use OCP\IDBConnection;
-use OCA\FractalNote\Provider\CherryTree\Db\CodeboxMapper;
-use OCA\FractalNote\Provider\CherryTree\Db\GridMapper;
-use OCA\FractalNote\Provider\CherryTree\Db\Node;
-use OCA\FractalNote\Provider\CherryTree\Db\NodeMapper;
-use OCA\FractalNote\Provider\CherryTree\Db\Relation;
-use OCA\FractalNote\Provider\CherryTree\Db\RelationMapper;
-use OCA\FractalNote\Provider\CherryTree\Db\ImageMapper;
-use OCA\FractalNote\Provider\CherryTree\Db\BookmarkMapper;
-use OCA\FractalNote\Provider\CherryTree\Db\SqliteConnectionFactory;
 use OC\Files\Filesystem;
-use OCA\FractalNote\Service\Exception\WebException;
-use OCA\FractalNote\Service\Exception\NoChangesException;
-use OCA\FractalNote\Service\Exception\NotFoundException;
-use OCA\FractalNote\Service\Exception\NotEditableException;
-use OCA\FractalNote\Service\NotesStructure;
 use OC\Files\View;
+use OCA\FractalNote\Provider\CherryTree\Mapper\BookmarkMapper;
+use OCA\FractalNote\Provider\CherryTree\Mapper\CodeboxMapper;
+use OCA\FractalNote\Provider\CherryTree\Mapper\GridMapper;
+use OCA\FractalNote\Provider\CherryTree\Mapper\ImageMapper;
+use OCA\FractalNote\Provider\CherryTree\Mapper\NodeMapper;
+use OCA\FractalNote\Provider\CherryTree\Mapper\RelationMapper;
+use OCA\FractalNote\Provider\CherryTree\Db\SqliteConnectionFactory;
+use OCA\FractalNote\Provider\CherryTree\Entity\Node;
+use OCA\FractalNote\Provider\CherryTree\Entity\Relation;
+use OCA\FractalNote\Service\AbstractProvider;
+use OCA\FractalNote\Service\Exception\NoChangesException;
+use OCA\FractalNote\Service\Exception\NotEditableException;
+use OCA\FractalNote\Service\Exception\NotFoundException;
+use OCA\FractalNote\Service\Exception\WebException;
+use OCP\IDBConnection;
 
-class CherryTreeStructure extends NotesStructure
+class CherryTreeProvider extends AbstractProvider
 {
 
     private $db;
     /** @var View */
     private $viewer;
 
+    /**
+     * CherryTreeProvider constructor.
+     *
+     * @param View $view
+     * @param      $filePath
+     *
+     * @throws NotFoundException
+     */
     public function __construct(View $view, $filePath)
     {
         $this->viewer = $view;
         $this->setDbByFilePath($filePath);
     }
 
+    /**
+     * @return bool
+     */
     public function isConnected()
     {
-        return $this->getFilesystemPathToStructure() && $this->getDb() instanceof IDBConnection;
+        return true;
     }
 
     /**
@@ -57,7 +68,7 @@ class CherryTreeStructure extends NotesStructure
     /**
      * @param IDBConnection $db
      *
-     * @return NotesStructure
+     * @return AbstractProvider
      */
     public function setDb(IDBConnection $db)
     {
@@ -71,12 +82,14 @@ class CherryTreeStructure extends NotesStructure
      * @param string $file
      *
      * @return void
+     *
+     * @throws NotFoundException
      */
-    public function setDbByFilePath($file)
+    private function setDbByFilePath($file)
     {
         $this->setFilesystemPathToStructure($file);
         if (!$file || !$this->viewer->is_file($file)) {
-            return;
+            throw new NotFoundException();
         }
         $postFix = ($file[strlen($file) -1] === '/') ? '/' : '';
         $relativeFilePath = $this->viewer->getAbsolutePath($file);
@@ -84,8 +97,9 @@ class CherryTreeStructure extends NotesStructure
             $relativeFilePath . $postFix
         );
         $filePath = $storage->getLocalFile($internalPath);
-        $db = SqliteConnectionFactory::getConnectionByPath($filePath);
-        $this->setDb($db);
+        $this->setDb(
+            SqliteConnectionFactory::getConnectionByPath($filePath)
+        );
     }
 
     public function requireSync()
