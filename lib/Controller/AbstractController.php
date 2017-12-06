@@ -25,7 +25,7 @@ class AbstractController extends BaseController
      *
      * @param string          $AppName
      * @param IRequest        $request
-     * @param integer         $userId
+     * @param string          $userId
      * @param ProviderFactory $providerFactory
      */
     public function __construct($AppName, IRequest $request, $userId, ProviderFactory $providerFactory)
