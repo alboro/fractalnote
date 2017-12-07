@@ -14,7 +14,11 @@ use OCP\AppFramework\Db\Entity as NativeEntity;
 
 abstract class Mapper extends NativeMapper
 {
-    
+    /**
+     * @param Entity $entity
+     *
+     * @return array
+     */
     public function relatedEntityMapping(Entity $entity)
     {
         return [];
@@ -52,7 +56,7 @@ abstract class Mapper extends NativeMapper
 
     /**
      * Runs a sql query and returns an array of entities
-     * @return array all fetched entities
+     * @return Entity[]|array
      */
     protected function findOneToOneEntities(
         array $relatedEntityClassNames,

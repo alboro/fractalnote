@@ -16,6 +16,11 @@ use OCA\FractalNote\Provider\CherryTree\Db\Mapper;
 
 class ImageMapper extends Mapper
 {
+    /**
+     * ImageMapper constructor.
+     *
+     * @param IDBConnection $db
+     */
     public function __construct(IDBConnection $db)
     {
         parent::__construct($db, 'image', Image::class);

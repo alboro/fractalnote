@@ -16,11 +16,22 @@ use OCA\FractalNote\Provider\CherryTree\Db\Mapper;
 
 class NodeMapper extends Mapper
 {
+    /**
+     * NodeMapper constructor.
+     *
+     * @param IDBConnection $db
+     */
     public function __construct(IDBConnection $db)
     {
         parent::__construct($db, 'node', Node::class);
     }
 
+    /**
+     * @param NativeEntity $entity
+     *
+     * @return NativeEntity
+     * @throws \Exception
+     */
     public function update(NativeEntity $entity)
     {
         if (!$entity instanceof Node) {

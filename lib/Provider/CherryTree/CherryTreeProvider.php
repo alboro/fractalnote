@@ -105,7 +105,6 @@ class CherryTreeProvider extends AbstractProvider
     public function requireSync()
     {
         $this->viewer->touch($this->getFilesystemPathToStructure());
-        // $viewer->putFileInfo($this->getFilesystemPathToStructure(), array('mtime' => time()));
     }
 
     public function lockResource()
@@ -278,8 +277,8 @@ class CherryTreeProvider extends AbstractProvider
         $nodeMapper = $this->createNodeMapper();
         $relation = $relationMapper->find($noteId); /** @var $relation Relation */
         $note = $nodeMapper->find($noteId); /** @var $note Node */
-        if ($note->getLevel() === 1) {
-            // todo: ensure, that top node, that is being deleted, is not the only one at top level
+        if ($note->getLevel() === 0 && $relationMapper->countChildRelations(0) === 1) {
+            throw new \LogicException('The only one top node cannot be deleted.');
         }
         $childRelations = $relationMapper->findChildRelations($noteId);
         foreach ($childRelations as $childRelation) {

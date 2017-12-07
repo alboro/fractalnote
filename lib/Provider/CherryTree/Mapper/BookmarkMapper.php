@@ -15,6 +15,11 @@ use OCA\FractalNote\Provider\CherryTree\Db\Mapper;
 
 class BookmarkMapper extends Mapper
 {
+    /**
+     * BookmarkMapper constructor.
+     *
+     * @param IDBConnection $db
+     */
     public function __construct(IDBConnection $db)
     {
         parent::__construct($db, 'bookmark', Bookmark::class);

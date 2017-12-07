@@ -27,7 +27,7 @@ It is able to synchronise your private files between all your devices. [More abo
 # Installation
 ## Server requirements
 * PHP ``>= 5.6``
-* Nextcloud ``>= 12.0`` _OR_ OwnCloud ``>= 8.1``
+* Nextcloud ``>= 12.0`` _OR_ OwnCloud ``>= 9.1``
 ## Steps
 * Install into your web server [Nextcloud/Owncloud.](https://nextcloud.com/install/#instructions-server)
 * (This step is not required.) To open _[filename].ctb_ from file list nextcloud/owncloud app you need:

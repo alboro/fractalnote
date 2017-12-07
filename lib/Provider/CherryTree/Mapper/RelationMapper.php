@@ -17,11 +17,21 @@ use OCA\FractalNote\Provider\CherryTree\Entity\Relation;
 
 class RelationMapper extends Mapper
 {
+    /**
+     * RelationMapper constructor.
+     *
+     * @param IDBConnection $db
+     */
     public function __construct(IDBConnection $db)
     {
         parent::__construct($db, 'children', Relation::class);
     }
 
+    /**
+     * @param Entity $entity
+     *
+     * @return array
+     */
     public function relatedEntityMapping(Entity $entity)
     {
         return [
@@ -30,6 +40,9 @@ class RelationMapper extends Mapper
         ];
     }
 
+    /**
+     * @return Relation[]|array
+     */
     public function findChildrenWithNodes()
     {
         $sql = 'SELECT * FROM children c '
@@ -48,6 +61,18 @@ class RelationMapper extends Mapper
     {
         $sql = 'SELECT * FROM children WHERE father_id = ?';
         return $this->findEntities($sql, [$nodeId]);
+    }
+
+    /**
+     * @param integer $nodeId
+     *
+     * @return integer
+     */
+    public function countChildRelations($nodeId)
+    {
+        $sql = 'SELECT count(*) as count FROM children WHERE father_id = ?';
+        $row = $this->execute($sql, [$nodeId])->fetch();
+        return isset($row['count']) ? (int) $row['count'] : 0;
     }
 
     /**

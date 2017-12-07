@@ -16,6 +16,11 @@ use OCA\FractalNote\Provider\CherryTree\Db\Mapper;
 
 class GridMapper extends Mapper
 {
+    /**
+     * GridMapper constructor.
+     *
+     * @param IDBConnection $db
+     */
     public function __construct(IDBConnection $db)
     {
         parent::__construct($db, 'grid', Grid::class);

@@ -16,6 +16,11 @@ use OCA\FractalNote\Provider\CherryTree\Db\Mapper;
 
 class CodeboxMapper extends Mapper
 {
+    /**
+     * CodeboxMapper constructor.
+     *
+     * @param IDBConnection $db
+     */
     public function __construct(IDBConnection $db)
     {
         parent::__construct($db, 'codebox', Codebox::class);

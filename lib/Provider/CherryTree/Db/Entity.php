@@ -17,10 +17,19 @@ abstract class Entity extends NativeEntity
     const BOOL = 'boolean';
     const STR = 'string';
 
+    /**
+     * @return mixed
+     */
     abstract public function getPrimaryPropertyName();
 
+    /**
+     * @return mixed
+     */
     abstract public function getPropertiesConfig();
 
+    /**
+     * Entity constructor.
+     */
     public function __construct()
     {
         foreach ($this->getPropertiesConfig() as $property => $config) {
@@ -45,11 +54,20 @@ abstract class Entity extends NativeEntity
         return $this->getter($this->getPrimaryPropertyName());
     }
 
+    /**
+     * @return string
+     */
     public function getPrimaryColumn()
     {
         return $this->propertyToColumn($this->getPrimaryPropertyName());
     }
 
+    /**
+     * @param array $mayBeSeveralEntitiesRow
+     *
+     * @return static
+     * @throws \Exception
+     */
     public static function fromRow(array $mayBeSeveralEntitiesRow)
     {
         $tmpEntity = (new static);

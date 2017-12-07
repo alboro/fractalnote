@@ -273,7 +273,9 @@
                     },
                     children: []
                 };
-                inst.create_node(isSubNodeCreation ? obj : obj.parent, newNode, 'last');
+                inst.create_node(isSubNodeCreation ? obj : obj.parent, newNode, 'last', function (newNodeObj) {
+                    inst.select_node(newNodeObj);
+                });
             },
 
             /**
