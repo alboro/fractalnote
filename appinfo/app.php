@@ -11,5 +11,4 @@
 namespace OCA\FractalNote\AppInfo;
 
 $app = new Application();
-$app->registerNavigationEntry();
 $app->registerFrontendScripts();

@@ -66,23 +66,6 @@ class Application extends App {
         };
     }
 
-    public function registerNavigationEntry()
-    {
-        $c = $this->getContainer();
-        /** @var \OCP\IServerContainer $server */
-        $server = $c->getServer();
-        $navigationEntry = function () use ($c, $server) {
-            return [
-                'id' => $c->getAppName(),
-                'order' => 10,
-                'name' => $server->getL10N($c->getAppName())->t('FractalNote'),
-                'href' => $server->getURLGenerator()->linkToRoute($c->getAppName() . '.page.index'),
-                'icon' => $server->getURLGenerator()->imagePath($c->getAppName(), 'app.svg'),
-            ];
-        };
-        $server->getNavigationManager()->add($navigationEntry);
-    }
-
     public function registerFrontendScripts()
     {
         $c = $this->getContainer();
