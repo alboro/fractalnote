@@ -273,9 +273,7 @@
                     },
                     children: []
                 };
-                inst.create_node(isSubNodeCreation ? obj : obj.parent, newNode, 'last', function (newNodeObj) {
-                    inst.select_node(newNodeObj);
-                });
+                inst.create_node(isSubNodeCreation ? obj : obj.parent, newNode, 'last');
             },
 
             /**
@@ -285,8 +283,10 @@
                 var self = this;
                 self.nodeRepo.createNode(parent, node.text, position, self.getTime())
                     .done(function (response) {
+                        var inst = self.getTreeInstance();
                         self.setTime(response[0]);
-                        self.getTreeInstance().set_id(node, response[1]);
+                        inst.set_id(node, response[1]);
+                        inst.select_node(node);
                     })
                     .fail(function (e) {
                         self.getTreeInstance().delete_node(node);
