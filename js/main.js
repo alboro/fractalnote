@@ -286,7 +286,7 @@
                 self.nodeRepo.createNode(parent, node.text, position, self.getTime())
                     .done(function (response) {
                         self.setTime(response[0]);
-                        self.getTreeInstance().set_id(node.id, response[1]);
+                        self.getTreeInstance().set_id(node, response[1]);
                     })
                     .fail(function (e) {
                         self.getTreeInstance().delete_node(node);
