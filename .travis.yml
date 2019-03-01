@@ -15,6 +15,8 @@ env:
 matrix:
     allow_failures:
         - env: DB=pgsql CORE_BRANCH=master
+        - env: DB=mysql CORE_BRANCH=stable14
+        - env: DB=mysql CORE_BRANCH=stable15
     include:
         - php: 7.1
           env: DB=sqlite
@@ -22,6 +24,12 @@ matrix:
           env: DB=mysql
         - php: 7.1
           env: DB=pgsql CORE_BRANCH=master
+        - php: 7.1
+          env: DB=mysql CORE_BRANCH=stable13
+        - php: 7.1
+          env: DB=mysql CORE_BRANCH=stable14
+        - php: 7.1
+          env: DB=mysql CORE_BRANCH=stable15
     fast_finish: true
 
 
