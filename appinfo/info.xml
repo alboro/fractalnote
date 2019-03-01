@@ -17,8 +17,8 @@ You can view/edit CherryTree (*.ctb) files with it in browser.]]></description>
     <bugs>https://github.com/alboro/fractalnote/issues</bugs>
     <dependencies>
         <php min-version="5.6" max-version="7"/>
-        <owncloud min-version="9.1" max-version="10" />
-        <nextcloud min-version="10" max-version="12" />
+        <owncloud min-version="9.1" />
+        <nextcloud min-version="10" />
     </dependencies>
     <repair-steps>
         <install>
