@@ -1,4 +1,8 @@
-.note-app-content-wrapper {
+.note-app {
+    width: 100%
+}
+
+.note-app-content, .note-app-content-wrapper {
     height: 100%;
 }
 
