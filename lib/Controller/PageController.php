@@ -39,6 +39,7 @@ class PageController extends AbstractController
         }
         // Override default CSP
         $csp = new ContentSecurityPolicy();
+        $csp->allowEvalScript(true);
         $csp->addAllowedChildSrcDomain('blob:');
 
         $params = [
