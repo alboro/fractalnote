@@ -19,8 +19,8 @@
     "require": {
         "php": ">=5.6.0",
         "vakata/jstree": ">=3.3.4",
-        "orangehill/jstree-bootstrap-theme": "dev-master#fbdf58ea6372302a8c4546f254e2c16c2ace9aff",
-        "components/handlebars.js": "dev-master#b9bb577d89558cc54edcb6f40f27bf5b264d78ed",
+        "orangehill/jstree-bootstrap-theme": "dev-master",
+        "components/handlebars.js": "^v4.0",
         "doctrine/dbal": "^2.5"
     },
     "require-dev": {

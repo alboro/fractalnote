@@ -72,7 +72,10 @@ overflow-y: scroll;
 .note-app-settings {
     display: none;
 }
-/* Compactability fixes. Disable nextcloud/ownCloud styles, force jstree styles: */
+
+/* Compactability fixes. */
+
+/* Disable nextcloud/ownCloud styles, force jstree styles: */
 #app-navigation.note-navigation li.jstree-node > a.jstree-anchor {
     display: inline-block;
     width: auto;
@@ -89,4 +92,10 @@ overflow-y: scroll;
 }
 #app-navigation.note-navigation input.jstree-rename-input {
     height: 20px !important;
+}
+
+/* Arrange layers correctly. Jstree context menu fix: */
+.vakata-context,
+.vakata-context ul {
+    z-index: 600;
 }
