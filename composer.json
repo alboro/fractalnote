@@ -1,5 +1,5 @@
 {
-    "name": "alboro/fractal-note",
+    "name": "alboro/fractalnote",
     "description": "Online editor of note trees for Nextcloud/Owncloud server with Cherrytree (*.ctb) support",
     "type": "project",
     "license": "Apache-2.0",
