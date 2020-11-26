@@ -87,7 +87,6 @@ class RelationMapper extends Mapper
             ->from($this->getTableName(), 'c')
             ->join('c', 'node', 'n', 'n.node_id = c.node_id')
             ->where('c.father_id = ' . $this->db->quote($nodeId))
-            ->orderBy()
         ;
         return $this->findOneToOneEntities([Node::class], $q);
     }
