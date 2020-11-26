@@ -28,11 +28,9 @@ class RelationMapper extends Mapper
     }
 
     /**
-     * @param Entity $entity
-     *
      * @return array
      */
-    public function relatedEntityMapping(Entity $entity)
+    public function relatedEntityMapping(Entity $entity): array
     {
         return [
             // relatedEntityClass => $baseEntityMethod
@@ -45,54 +43,56 @@ class RelationMapper extends Mapper
      */
     public function findChildrenWithNodes()
     {
-        $sql = 'SELECT * FROM children c '
-            . 'JOIN node n ON n.node_id = c.node_id '
-            . 'ORDER BY n.level, c.sequence';
-
-        return $this->findOneToOneEntities([Node::class], $sql);
+        $q = $this->db->getQueryBuilder()
+            ->select('*')
+            ->from($this->getTableName(), 'c')
+            ->join('c', 'node', 'n', 'n.node_id = c.node_id')
+            ->orderBy('n.level', 'ASC')
+            ->addOrderBy('c.sequence', 'ASC')
+        ;
+        return $this->findOneToOneEntities([Node::class], $q);
     }
 
     /**
-     * @param integer $nodeId
-     *
-     * @return Relation[]|array
+     * @return Relation[]
      */
-    public function findChildRelations($nodeId)
+    public function findChildRelations(int $nodeId): array
     {
-        $sql = 'SELECT * FROM children WHERE father_id = ?';
-        return $this->findEntities($sql, [$nodeId]);
+        return $this->findEntities(
+            $this->db->getQueryBuilder()
+                ->select('*')
+                ->from($this->getTableName())
+                ->where('father_id = ' . $this->db->quote($nodeId))
+        );
     }
 
-    /**
-     * @param integer $nodeId
-     *
-     * @return integer
-     */
-    public function countChildRelations($nodeId)
+    public function countChildRelations(int $nodeId): int
     {
-        $sql = 'SELECT count(*) as count FROM children WHERE father_id = ?';
-        $row = $this->execute($sql, [$nodeId])->fetch();
+        $q = $this->db->getQueryBuilder()
+            ->select('count(*) as count')
+            ->from($this->getTableName())
+            ->where('father_id = ' . $this->db->quote($nodeId))
+        ;
+        $row = $q->execute()->fetch();
         return isset($row['count']) ? (int) $row['count'] : 0;
     }
 
     /**
      * @param integer $nodeId
-     *
-     * @return Relation[]|array
      */
-    public function findChildRelationsWithNodes($nodeId)
+    public function findChildRelationsWithNodes($nodeId): array
     {
-        $sql = 'SELECT * FROM children c JOIN node n ON n.node_id = c.node_id';
-        $sql.= ' WHERE c.father_id = ' . $this->db->quote($nodeId);
-        return $this->findOneToOneEntities([Node::class], $sql);
+        $q = $this->db->getQueryBuilder()
+            ->select('*')
+            ->from($this->getTableName(), 'c')
+            ->join('c', 'node', 'n', 'n.node_id = c.node_id')
+            ->where('c.father_id = ' . $this->db->quote($nodeId))
+            ->orderBy()
+        ;
+        return $this->findOneToOneEntities([Node::class], $q);
     }
 
-    /**
-     * @param integer $parentId
-     *
-     * @return integer
-     */
-    public function calculateLevelByParentId($parentId)
+    public function calculateLevelByParentId(int $parentId): int
     {
         if ($parentId === 0) {
             return 0;
@@ -102,13 +102,13 @@ class RelationMapper extends Mapper
     }
 
     /**
-     * @return Relation[]|array
+     * @return Relation[]
      */
-    public function buildTree()
+    public function buildTree(): array
     {
         $shuffledChildren = $this->findChildrenWithNodes();
         $children = [];
-        foreach ($shuffledChildren as $k => $child) {
+        foreach ($shuffledChildren as $child) {
             /* @var $child Relation */
             $children[$child->getNodeId()] = $child;
         }

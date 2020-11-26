@@ -19,10 +19,11 @@ class WebExceptionMiddleware extends Middleware
     /**
      * @inheritdoc
      */
-    public function afterException($controller, $methodName, \Exception $exception){
-        if (!$exception instanceof WebException) {
-            throw $exception;
+    public function afterException($controller, $methodName, \Exception $exception)
+    {
+        if ($exception instanceof WebException) {
+            return $exception->createResponse();
         }
-        return $exception->createResponse();
+        throw $exception;
     }
 }

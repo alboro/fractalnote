@@ -31,43 +31,26 @@ class NoteController extends AbstractController
      */
     public function create($mtime, $parentId, $title, $position)
     {
-        if (!$this->notesProvider->isConnected()) {
-            throw new NotFoundException();
-        }
-        if ($this->notesProvider->isExpired($parentId, $mtime)) {
-            throw new ConflictException($title);
-        }
-        $nodeIdentifier = $this->notesProvider->createNode($parentId, $title, $position);
-        return new DataResponse([$this->notesProvider->getModifyTime(), $nodeIdentifier]);
+         return new DataResponse(
+            [
+                $this->notesProvider->getModifyTime(),
+                $this->notesProvider->createNode(
+                    (string) $parentId,
+                    (string) $title,
+                    (int) $position,
+                    (int) $mtime
+                )
+            ]
+        );
     }
 
     /**
      * @NoAdminRequired
-     *
-     * @param integer $mtime
-     * @param array   $nodeData
-     *
-     * @return DataResponse
      */
-    public function update($mtime, $nodeData)
+    public function update(int $mtime, array $nodeData): DataResponse
     {
-        if (!$this->notesProvider->isConnected()) {
-            throw new NotFoundException();
-        }
-        $nodeId = array_key_exists('id', $nodeData) ? $nodeData['id'] : null;
-        if (!$nodeId) {
-            throw new NotFoundException(); // @todo create exception for not existing node
-        }
-        if ($this->notesProvider->isExpired($nodeId, $mtime)) {
-            throw new ConflictException();
-        }
-        $this->notesProvider->updateNode(
-            $nodeId,
-            array_key_exists('title', $nodeData) ? $nodeData['title'] : null,
-            array_key_exists('content', $nodeData) ? $nodeData['content'] : null,
-            array_key_exists('newParentId', $nodeData) ? $nodeData['newParentId'] : null,
-            array_key_exists('position', $nodeData) ? $nodeData['position'] : null
-        );
+        $this->notesProvider->updateNode($mtime, $nodeData);
+
         return new DataResponse([$this->notesProvider->getModifyTime()]);
     }
 

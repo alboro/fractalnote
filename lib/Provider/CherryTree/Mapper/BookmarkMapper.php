@@ -26,21 +26,22 @@ class BookmarkMapper extends Mapper
     }
 
     /**
-     * @return Bookmark[]|array
+     * @return Bookmark[]
      */
-    public function findBookmarks()
+    public function findBookmarks(): array
     {
-        $sql = 'SELECT * FROM `' . $this->getTableName() . '`';
-        return $this->findEntities($sql);
+        return $this->findEntities(
+            $this->db->getQueryBuilder()->select('*')->from($this->getTableName())
+        );
     }
 
-    /**
-     * @param $nodeId
-     * @return Bookmark|null
-     */
-    public function findBookmark($nodeId)
+    public function findBookmark($nodeId): ?Bookmark
     {
-        $sql = 'SELECT * FROM `' . $this->getTableName() . '` WHERE `node_id` = ?';
-        return current($this->findEntities($sql, [$nodeId])) ? : null;
+        $q = $this->db->getQueryBuilder()
+            ->select('*')
+            ->from($this->getTableName())
+            ->where('node_id = ' . $this->db->quote($nodeId))
+        ;
+        return current($this->findEntities($q)) ? : null;
     }
 }

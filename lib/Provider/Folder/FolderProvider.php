@@ -122,12 +122,12 @@ class FolderProvider extends AbstractProvider
     }
 
     protected function _createNode(
-        $parentNodeId,
-        $title,
-        $position,
-        $content,
-        $isRich
-    ) {
-        // TODO: Implement _createNode() method.
+        string $parentNodeId,
+        string $title,
+        int $position,
+        string $content,
+        bool $isRich
+    ): string {
+        return '';
     }
 }

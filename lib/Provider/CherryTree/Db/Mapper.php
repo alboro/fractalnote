@@ -9,34 +9,32 @@
  */
 namespace OCA\FractalNote\Provider\CherryTree\Db;
 
-use OCP\AppFramework\Db\Mapper as NativeMapper;
+use OCA\FractalNote\Provider\CherryTree\Db\Entity as AppEntity;
 use OCP\AppFramework\Db\Entity as NativeEntity;
+use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\QueryBuilder\IQueryBuilder;
 
-abstract class Mapper extends NativeMapper
+abstract class Mapper extends QBMapper
 {
-    /**
-     * @param Entity $entity
-     *
-     * @return array
-     */
-    public function relatedEntityMapping(Entity $entity)
+    public function relatedEntityMapping(AppEntity $entity): array
     {
         return [];
     }
 
-    /**
-     * @param integer $id
-     *
-     * @return Entity
-     */
-    public function find($id)
+    public function find(int $id): NativeEntity
     {
-        $tmpEntity = new $this->entityClass; /* @var $tmpEntity Entity */
-        if (!$tmpEntity instanceof Entity) {
+        $tmpEntity = new $this->entityClass;
+        if (!$tmpEntity instanceof AppEntity) {
             throw new \Exception('Find method not implemented for ' . self::class . 'entity');
         }
-        $sql = 'SELECT * FROM `' . $this->getTableName() . '` WHERE `' . $tmpEntity->getPrimaryColumn() . '`=? LIMIT 1';
-        return $this->findEntity($sql, [$id]);
+        $q = $this->db->getQueryBuilder();
+        $q->select('*')
+            ->from($this->getTableName())
+            ->where($tmpEntity->getPrimaryColumn() . ' = :id')
+            ->setParameter(':id', $id)
+            ->setMaxResults(1)
+        ;
+        return $this->findEntity($q);
     }
 
     /**
@@ -46,9 +44,9 @@ abstract class Mapper extends NativeMapper
      * @param string $entityClassName
      * @return Entity the entity
      */
-    protected function mapRowToEntity($row, $entityClassName = null)
+    protected function mapRowToEntity(array $row, string $entityClassName = null): NativeEntity
     {
-        return call_user_func(
+        return \call_user_func(
             ($entityClassName ? : $this->entityClass) . '::fromRow',
             $row
         );
@@ -56,22 +54,19 @@ abstract class Mapper extends NativeMapper
 
     /**
      * Runs a sql query and returns an array of entities
-     * @return Entity[]|array
+     *
+     * @return Entity[]
      */
     protected function findOneToOneEntities(
         array $relatedEntityClassNames,
-        $sql,
-        array $params = [],
-        $limit = null,
-        $offset = null
-    )
-    {
-        $stmt = $this->execute($sql, $params, $limit, $offset);
+        IQueryBuilder $queryBuilder
+    ): array {
+        $stmt = $queryBuilder->execute();
         $entities = [];
 
         while ($row = $stmt->fetch()) {
             $baseEntity = $this->mapRowToEntity($row);
-            // search for relation entites in the result row
+            // search for relation entities in the result row
             if ($baseEntity instanceof Entity
             && ($relEntityMapping = $this->relatedEntityMapping($baseEntity))) {
                 if ($relatedEntityClassNames) {
@@ -94,82 +89,52 @@ abstract class Mapper extends NativeMapper
         return $entities;
     }
 
-    /**
-     * {Inheritdoc}
-     */
-    public function delete(NativeEntity $entity){
-        if (!$entity instanceof Entity) {
-            return parent::delete($entity);
-        }
-        $sql = 'DELETE FROM `' . $this->getTableName() . '`'
-            . ' WHERE `' . $entity->getPrimaryColumn() . '` = ?';
-        $stmt = $this->execute($sql, [$entity->getId()]);
-        $stmt->closeCursor();
-        return $entity;
-    }
-
-    /**
-     * {Inheritdoc}
-     */
-    public function update(NativeEntity $entity){
-        if (!$entity instanceof Entity) {
-            return parent::update($entity);
-        }
-        // if entity wasn't changed it makes no sense to run a db query
-        $properties = $entity->getUpdatedFields();
-        if(count($properties) === 0) {
-            return $entity;
-        }
-
-        // entity needs an id
-        $id = $entity->getId();
-        if($id === null){
-            throw new \InvalidArgumentException(
-                'Entity which should be updated has no id');
-        }
-
-        // get updated fields to save, fields have to be set using a setter to
-        // be saved
-        // do not update the id field
-        unset($properties[$entity->getPrimaryColumn()]);
-
-        $columns = '';
-        $params = [];
-
-        // build the fields
-        $i = 0;
-        foreach($properties as $property => $updated) {
-
-            $column = $entity->propertyToColumn($property);
-            $getter = 'get' . ucfirst($property);
-
-            $columns .= '`' . $column . '` = ?';
-
-            // only append colon if there are more entries
-            if($i < count($properties)-1){
-                $columns .= ',';
+    public function update(NativeEntity $entity): NativeEntity
+    {
+        if ($entity instanceof AppEntity) {
+            // if entity wasn't changed it makes no sense to run a db query
+            $properties = $entity->getUpdatedFields();
+            if(count($properties) === 0) {
+                return $entity;
             }
 
-            $params[] = $entity->$getter();
-            $i++;
+            // entity needs an id
+            $id = $entity->getId();
+            if($id === null){
+                throw new \InvalidArgumentException(
+                    'Entity which should be updated has no id');
+            }
+
+            // get updated fields to save, fields have to be set using a setter to
+            // be saved
+            // do not update the id field
+            unset($properties[$entity->getPrimaryColumn()]);
+
+            $qb = $this->db->getQueryBuilder();
+            $qb->update($this->tableName);
+
+            // build the fields
+            foreach($properties as $property => $updated) {
+                $column = $entity->propertyToColumn($property);
+                $getter = 'get' . ucfirst($property);
+                $value = $entity->$getter();
+
+                $qb->set($column, $qb->createNamedParameter($value));
+            }
+
+            $qb->where(
+                $qb->expr()->eq($entity->getPrimaryColumn(), $qb->createNamedParameter($id))
+            );
+            $qb->execute();
+
+            return $entity;
         }
-
-        $sql = 'UPDATE `' . $this->getTableName() . '` SET ' .
-            $columns . ' WHERE `' . $entity->getPrimaryColumn() . '` = ?';
-        $params[] = $id;
-
-        $stmt = $this->execute($sql, $params);
-        $stmt->closeCursor();
-
-        return $entity;
+        return parent::update($entity);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function insert(NativeEntity $entity)
+    public function insert(NativeEntity $entity): NativeEntity
     {
-        if (!$entity instanceof Entity) {
+        if (!$entity instanceof AppEntity) {
             return parent::insert($entity);
         }
         $id = $entity->getId();
@@ -178,18 +143,35 @@ abstract class Mapper extends NativeMapper
         return $result;
     }
 
-    /**
-     * @param $propertyName
-     *
-     * @return integer
-     */
-    public function calculateNextIncrementValue($propertyName = null)
+    public function delete(NativeEntity $entity): NativeEntity
     {
-        $tmpEntity = new $this->entityClass; /* @var $tmpEntity Entity */
+        if (!$entity instanceof AppEntity) {
+            return parent::delete($entity);
+        }
+        $q = $this->db->getQueryBuilder();
+        $q->delete($this->getTableName())
+            ->where($q->expr()->eq($entity->getPrimaryColumn(), $q->createNamedParameter($entity->getId())))
+        ;
+        $q->execute();
+        return $entity;
+    }
+
+    public function calculateNextIncrementValue($propertyName = null): int
+    {
+        $tmpEntity = new $this->entityClass;
+        if (!$tmpEntity instanceof AppEntity) {
+            throw new \Exception('calculateNextIncrementValue method not implemented for ' . get_class($tmpEntity));
+        }
         $columnName = $propertyName ? $tmpEntity->propertyToColumn($propertyName) : $tmpEntity->getPrimaryColumn();
-        $sql = 'select ' . $columnName . ' from `' . $this->getTableName() . '`'
-            . ' order by ' . $columnName . ' desc limit 1';
-        $row = $this->findOneQuery($sql);
+
+        $q = $this->db->getQueryBuilder();
+        $q->select('*')
+            ->from($this->getTableName())
+            ->where($columnName . ' = :id')
+            ->orderBy($columnName, 'DESC')
+            ->setMaxResults(1)
+        ;
+        $row = $this->findOneQuery($q);
         return isset($row[$columnName]) ? 1 + (int)$row[$columnName] : 1;
     }
 }

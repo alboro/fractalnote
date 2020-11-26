@@ -10,7 +10,7 @@
 namespace OCA\FractalNote\Service;
 
 use Exception;
-use OCP\AppFramework\Http\DataResponse;
+use OCA\FractalNote\Service\Exception\ConflictException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCA\FractalNote\Service\Exception\NotFoundException;
@@ -63,12 +63,12 @@ abstract class AbstractProvider
      * @return mixed node identifier
      */
     abstract protected function _createNode(
-        $parentNodeId,
-        $title,
-        $position,
-        $content,
-        $isRich
-    );
+        string $parentNodeId,
+        string $title,
+        int $position,
+        string $content,
+        bool $isRich
+    ): string;
 
 
     /**
@@ -79,21 +79,20 @@ abstract class AbstractProvider
         return $this->filesystemPathToStructure;
     }
 
-    /**
-     * @param mixed   $parentId
-     * @param string  $title
-     * @param integer $position
-     * @param string  $content
-     * @param integer $isRich
-     *
-     * @return mixed node identifier
-     */
     public function createNode(
-        $parentId,
-        $title,
-        $position,
-        $content = ''
-    ) {
+        string $parentId,
+        string $title,
+        int $position,
+        int $mtime,
+        string $content = ''
+    ): string {
+        if (!$this->isConnected()) {
+            throw new NotFoundException();
+        }
+        if ($this->isExpired($parentId, $mtime)) {
+            throw new ConflictException($title);
+        }
+
         try {
             $this->lockResource();
 
@@ -102,7 +101,7 @@ abstract class AbstractProvider
                 $title,
                 $position,
                 $content,
-                0
+                false
             );
 
             $this->unlockResource();
@@ -114,13 +113,28 @@ abstract class AbstractProvider
         return $nodeIdentifier;
     }
 
-    public function updateNode($nodeIdentifier, $title, $content, $newParentId, $position)
+    public function updateNode(int $mtime, array $nodeData)
     {
+        if (!$this->isConnected()) {
+            throw new NotFoundException();
+        }
+        $nodeId = array_key_exists('id', $nodeData) ? $nodeData['id'] : null;
+        if (!$nodeId) {
+            throw new NotFoundException();
+        }
+        if ($this->isExpired($nodeId, $mtime)) {
+            throw new ConflictException();
+        }
         try {
             $this->lockResource();
 
-            $this->_updateNode($nodeIdentifier, $title, $content, $newParentId, $position);
-
+            $this->_updateNode(
+                $nodeId,
+                $nodeData['title'] ?? null,
+                $nodeData['content'] ?? null,
+                $nodeData['newParentId'] ?? null,
+                $nodeData['position'] ?? null
+            );
             $this->unlockResource();
             $this->requireSync();
         } catch (Exception $e) {

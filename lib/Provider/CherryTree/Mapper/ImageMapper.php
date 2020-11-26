@@ -33,22 +33,24 @@ class ImageMapper extends Mapper
      */
     public function findImages($nodeId)
     {
-        $sql = 'SELECT * FROM `' . $this->getTableName() . '` WHERE node_id = ?';
-        return $this->findEntities($sql, [$nodeId]);
+        $q = $this->db->getQueryBuilder()
+            ->select('*')
+            ->from($this->getTableName())
+            ->where('node_id = ' . $this->db->quote($nodeId))
+        ;
+        return $this->findEntities($q);
     }
 
-    /**
-     * {Inheritdoc}
-     */
-    public function delete(NativeEntity $entity){
+    public function delete(NativeEntity $entity): NativeEntity {
         if (!$entity instanceof Image) {
             throw new \Exception('Not supported for ' . get_class($entity));
         }
-        $sql = 'DELETE FROM `' . $this->getTableName() . '`'
-            . ' WHERE `' . $entity->getPrimaryColumn() . '` = ?'
-            . ' AND `offset` = ?';
-        $stmt = $this->execute($sql, [$entity->getId(), $entity->getOffset()]);
-        $stmt->closeCursor();
+        $q = $this->db->getQueryBuilder();
+        $q->delete($this->tableName)
+            ->where($q->expr()->eq($entity->getPrimaryColumn(), $q->createNamedParameter($entity->getId())))
+            ->andWhere($q->expr()->eq('offset', $q->createNamedParameter($entity->getOffset())))
+        ;
+        $q->execute();
         return $entity;
     }
 }

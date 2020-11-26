@@ -46,9 +46,6 @@ abstract class Entity extends NativeEntity
         $this->setter($this->getPrimaryPropertyName(), [$id]);
     }
 
-    /**
-     * @return integer
-     */
     public function getId()
     {
         return $this->getter($this->getPrimaryPropertyName());

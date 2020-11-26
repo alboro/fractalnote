@@ -2,7 +2,7 @@
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/fractaldem)
 
 # What is it?
-_FractalNote_ is online editor of hierarchical notes (or note trees) for Nextcloud/Owncloud server.
+_FractalNote_ is online editor of hierarchical notes (or note trees) for Nextcloud server.
 
 You can view/edit CherryTree (*.ctb) files with it in browser.
 
@@ -10,29 +10,29 @@ Current development phase is ``pre-alpha``. Just nodes of plain text are editabl
 
 [See FractalNote in action](http://cloud.aldem.ru/index.php/apps/fractalnote?f=/demo.ctb)
 
-# About Nextcloud/Owncloud
+# About Nextcloud
 This is self-hosted Dropbox/Google Drive analog.
 It is able to synchronise your private files between all your devices. [More about...](https://nextcloud.com/install/)
 
 # How to use _FractalNote_?
 * Use [CherryTree program](https://www.giuspen.com/cherrytree/#downl) for windows/linux desktop computers to create hierarchical notes.
 * Save your hierarchical note tree as _[filename].ctb_ with [CherryTree program.](https://www.giuspen.com/cherrytree/)
-* Upload _[filename].ctb_ to Nextcloud/Owncloud
+* Upload _[filename].ctb_ to Nextcloud
 * Edit uploaded file online: ``https://[your-cloud-server]/index.php/apps/fractalnote?f=[filename].ctb``
-* Install Nextcloud/Owncloud desktop [synchronisation client.](https://nextcloud.com/install/#install-clients)
-* Put _[filename].ctb_ under Nextcloud/Owncloud synchronisation folder of your desktop computer. From now the file will be uploaded into server automatically after every saving.
+* Install Nextcloud desktop [synchronisation client.](https://nextcloud.com/install/#install-clients)
+* Put _[filename].ctb_ under Nextcloud synchronisation folder of your desktop computer. From now the file will be uploaded into server automatically after every saving.
 * In CherryTree program preferences keep checked autosave option and Edit->Preferences->Miscellaneous->``Reload after external update to CT* file`` option. From now file changes made online will be downloaded automatically even while you navigating through the file with CherryTree program.
 * _[filename].ctb_ size should not be big (about ``<= 5MB``), because for now the full file gets loaded with every page refresh in browser. 
 
 # Installation
 ## Server requirements
 * PHP ``>= 5.6``
-* Nextcloud ``>= 12.0`` _OR_ OwnCloud ``>= 9.1``
+* Nextcloud ``>= 15.0``
 ## Steps
-* Install into your web server [Nextcloud/Owncloud.](https://nextcloud.com/install/#instructions-server)
-* (This step is not required.) To open _[filename].ctb_ from file list nextcloud/owncloud app you need:
+* Install into your web server [Nextcloud](https://nextcloud.com/install/#instructions-server)
+* (This step is not required.) To open _[filename].ctb_ from file list nextcloud app you need:
 
-Add ``ctb`` file type to the ``[(next|own)cloud install folder]/config/mimetypemapping.json`` like that:
+Add ``ctb`` file type to the ``[nextcloud install folder]/config/mimetypemapping.json`` like that:
 ```
 {
     "ctb": ["application/cherrytree-ctb"]
@@ -40,19 +40,19 @@ Add ``ctb`` file type to the ``[(next|own)cloud install folder]/config/mimetypem
 ```
 Run in the command line:
 ```
-cd [(next|own)cloud install folder]
+cd [nextcloud install folder]
 ./occ maintenance:mimetype:update-db --repair-filecache
 ```
-* Place _FractalNote_ in ``[(next|own)cloud install folder]/apps/fractalnote``
+* Place _FractalNote_ in ``[nextcloud install folder]/apps/fractalnote``
 * [Install composer](https://getcomposer.org/download/)
 * Run
 ```
-cd [(next|own)cloud install folder]/apps/fractalnote
+cd [nextcloud install folder]/apps/fractalnote
 composer install
 ```
-* Enable _FractalNote_ in Nextcloud/Owncloud settings UI or by the command
+* Enable _FractalNote_ in Nextcloud settings UI or by the command
 ```
-cd [(next|own)cloud install folder]
+cd [nextcloud install folder]
 ./occ app:enable fractalnote
 ```
 

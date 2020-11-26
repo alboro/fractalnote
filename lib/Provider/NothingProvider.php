@@ -44,10 +44,10 @@ class NothingProvider extends AbstractProvider
     protected function _delete($noteId) {}
 
     protected function _createNode(
-        $parentNodeId,
-        $title,
-        $position,
-        $content,
-        $isRich
-    ) {}
+        string $parentNodeId,
+        string $title,
+        int $position,
+        string $content,
+        bool $isRich
+    ): string { return ''; }
 }

@@ -169,23 +169,13 @@ class CherryTreeProvider extends AbstractProvider
         }
     }
 
-    /**
-     * @param integer $parentNodeId
-     * @param string  $title
-     * @param integer $position
-     * @param string  $content
-     * @param integer $isRich
-     * @param string  $syntax
-     *
-     * @return mixed node identifier
-     */
     protected function _createNode(
-        $parentNodeId,
-        $title,
-        $position,
-        $content,
-        $isRich
-    ) {
+        string $parentNodeId,
+        string $title,
+        int $position,
+        string $content,
+        bool $isRich
+    ): string {
         $db = $this->getDb();
         $db->beginTransaction();
         $nodeMapper = $this->createNodeMapper();
@@ -195,7 +185,7 @@ class CherryTreeProvider extends AbstractProvider
         $note->setName($title);
         $note->setTxt($content);
         $note->setSyntax('plain-text');
-        $note->setIsRichtxt((bool)$isRich);
+        $note->setIsRichtxt($isRich);
         $note->setLevel($relationMapper->calculateLevelByParentId($parentNodeId));
         $note->setId($nodeMapper->calculateNextIncrementValue());
         $nodeMapper->insert($note);
@@ -207,7 +197,7 @@ class CherryTreeProvider extends AbstractProvider
         $relationMapper->insert($child);
 
         $db->commit();
-        return $child->getNodeId();
+        return (string) $child->getNodeId();
     }
 
     /**

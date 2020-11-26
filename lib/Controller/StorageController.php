@@ -9,13 +9,7 @@
  */
 namespace OCA\FractalNote\Controller;
 
-use OCP\IRequest;
 use OCP\AppFramework\Http\DataResponse;
-use OCA\FractalNote\Service\AbstractProvider;
-use OCA\FractalNote\Service\Exception\ConflictException;
-use OCA\FractalNote\Service\Exception\NotFoundException;
-use OCA\FractalNote\Service\Exception\WebException;
-use OCA\FractalNote\Controller\AbstractController;
 
 class StorageController extends AbstractController
 {

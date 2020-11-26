@@ -13,7 +13,6 @@ use OCP\IRequest;
 use OCP\AppFramework\Controller as BaseController;
 use OCA\FractalNote\Service\ProviderFactory;
 use OCA\FractalNote\Service\AbstractProvider;
-use OCA\FractalNote\Service\Exception\NotFoundException;
 
 class AbstractController extends BaseController
 {

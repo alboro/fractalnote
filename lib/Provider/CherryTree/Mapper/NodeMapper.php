@@ -32,7 +32,7 @@ class NodeMapper extends Mapper
      * @return NativeEntity
      * @throws \Exception
      */
-    public function update(NativeEntity $entity)
+    public function update(NativeEntity $entity): NativeEntity
     {
         if (!$entity instanceof Node) {
             throw new \Exception('Not supported for ' . get_class($entity));

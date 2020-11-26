@@ -11,12 +11,8 @@
 
 namespace OCA\FractalNote\Controller;
 
-use OCP\IRequest;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\AppFramework\Http\DataResponse;
-use OCA\FractalNote\Service\AbstractProvider;
-use OCA\FractalNote\Controller\AbstractController;
 use OCA\FractalNote\AppInfo\Application;
 
 class PageController extends AbstractController
