@@ -26,7 +26,7 @@ It is able to synchronise your private files between all your devices. [More abo
 
 # Installation
 ## Server requirements
-* PHP ``>= 5.6``
+* PHP ``>= 7.2``
 * Nextcloud ``>= 15.0``
 ## Steps
 * Install into your web server [Nextcloud](https://nextcloud.com/install/#instructions-server)
