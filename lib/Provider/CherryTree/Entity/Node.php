@@ -1,6 +1,6 @@
 <?php
 /**
- * NextCloud / ownCloud - fractalnote
+ * NextCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -10,6 +10,7 @@
 namespace OCA\FractalNote\Provider\CherryTree\Entity;
 
 use OCA\FractalNote\Provider\CherryTree\Db\Entity;
+use OCA\FractalNote\Service\AbstractProvider;
 
 /**
  * Class Node
@@ -115,6 +116,13 @@ class Node extends Entity
         return $this->isRichtxt;
     }
 
+    public function getContent()
+    {
+        $content = $this->getTxt();
+
+        return $this->isRich() ? html_entity_decode(strip_tags($content)) : $content;
+    }
+
     public function isReadOnly()
     {
         return $this->isRo;
@@ -123,6 +131,18 @@ class Node extends Entity
     public function isEditable()
     {
         return !$this->isReadOnly() && !$this->isRich();
+    }
+
+    public function getIconType(): string
+    {
+        switch (true) {
+            case $this->isRich():
+                return AbstractProvider::TYPE_RICH;
+            case $this->isReadOnly():
+                return AbstractProvider::TYPE_READONLY;
+            default:
+                return AbstractProvider::TYPE_PLAINTEXT;
+        }
     }
 
     public static function factory()
@@ -142,14 +162,7 @@ class Node extends Entity
         return $note;
     }
 
-    /**
-     * @todo: i don't like this override
-     *
-     * @param array $mayBeSeveralEntitiesRow
-     *
-     * @return static
-     */
-    public static function fromRow(array $mayBeSeveralEntitiesRow)
+    public static function fromRow(array $mayBeSeveralEntitiesRow): self
     {
         // default values for the rows, that have been added into ctb format later and may be missing in old documents
         $mayBeSeveralEntitiesRow = array_merge(

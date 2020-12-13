@@ -1,6 +1,6 @@
 <?php
 /**
- * NextCloud / ownCloud - fractalnote
+ * NextCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -106,7 +106,7 @@ abstract class AbstractProvider
 
             $this->unlockResource();
             $this->requireSync();
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             $this->handleException($e);
         }
 
@@ -157,7 +157,7 @@ abstract class AbstractProvider
         }
     }
 
-    protected function handleException($e, $resourceLocked = true)
+    protected function handleException(\Throwable $e, $resourceLocked = true)
     {
         if ($resourceLocked) {
             $this->unlockResource();

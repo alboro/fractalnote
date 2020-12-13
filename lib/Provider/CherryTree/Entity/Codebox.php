@@ -1,6 +1,6 @@
 <?php
 /**
- * NextCloud / ownCloud - fractalnote
+ * NextCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -9,12 +9,12 @@
  */
 namespace OCA\FractalNote\Provider\CherryTree\Entity;
 
+use OCA\FractalNote\lib\Provider\CherryTree\Entity\OffsetEntityInterface;
 use OCA\FractalNote\Provider\CherryTree\Db\Entity;
 
 /**
  * Class Codebox
  *
- * @method integer getOffset()
  * @method string getJustification()
  * @method string getTxt()
  * @method string getSyntax()
@@ -35,7 +35,7 @@ use OCA\FractalNote\Provider\CherryTree\Db\Entity;
  *
  * @package OCA\FractalNote\Provider\CherryTree\Db
  */
-class Codebox extends Entity
+class Codebox extends Entity implements OffsetEntityInterface
 {
     protected $nodeId;
     protected $offset;
@@ -87,5 +87,10 @@ class Codebox extends Entity
                 'type' => static::INT,
             ],
         ];
+    }
+
+    public function getOffset(): int
+    {
+        return $this->offset;
     }
 }

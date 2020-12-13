@@ -22,7 +22,8 @@
         "orangehill/jstree-bootstrap-theme": "dev-master",
         "components/handlebars.js": "^v4.0",
         "doctrine/dbal": "^2.5",
-        "ext-json": "*"
+        "ext-json": "*",
+        "duncan3dc/domparser": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",

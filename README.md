@@ -41,7 +41,7 @@ Add ``ctb`` file type to the ``[nextcloud install folder]/config/mimetypemapping
 Run in the command line:
 ```
 cd [nextcloud install folder]
-./occ maintenance:mimetype:update-db --repair-filecache
+sudo -u www-data ./occ maintenance:mimetype:update-db --repair-filecache
 ```
 * Place _FractalNote_ in ``[nextcloud install folder]/apps/fractalnote``
 * [Install composer](https://getcomposer.org/download/)
@@ -53,7 +53,7 @@ composer install
 * Enable _FractalNote_ in Nextcloud settings UI or by the command
 ```
 cd [nextcloud install folder]
-./occ app:enable fractalnote
+sudo -u www-data ./occ app:enable fractalnote
 ```
 
 # Running tests

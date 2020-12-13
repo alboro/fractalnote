@@ -1,6 +1,6 @@
 <?php
 /**
- * NextCloud / ownCloud - fractalnote
+ * NextCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -167,7 +167,6 @@ abstract class Mapper extends QBMapper
         $q = $this->db->getQueryBuilder();
         $q->select('*')
             ->from($this->getTableName())
-            ->where($columnName . ' = :id')
             ->orderBy($columnName, 'DESC')
             ->setMaxResults(1)
         ;

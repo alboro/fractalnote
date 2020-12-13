@@ -1,6 +1,6 @@
 <?php
 /**
- * NextCloud / ownCloud - fractalnote
+ * NextCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -91,24 +91,12 @@ class Relation extends Entity implements JsonSerializable
 
     public function jsonSerialize()
     {
-        switch (true) {
-            case $this->getNode()->isRich():
-                $iconType = AbstractProvider::TYPE_RICH;
-                break;
-            case $this->getNode()->isReadOnly():
-                $iconType = AbstractProvider::TYPE_READONLY;
-                break;
-            default:
-                $iconType = AbstractProvider::TYPE_PLAINTEXT;
-                break;
-        }
-        $content = $this->getNode()->getTxt();
         return [
             'id'       => $this->nodeId,
-            'type'     => $iconType,
+            'type'     => $this->getNode()->getIconType(),
             'text'     => $this->getNode()->getName(),
             'data'     => [
-                'content'    => $this->getNode()->isRich() ? html_entity_decode(strip_tags($content)) : $content,
+                'content'    => $this->getNode()->getContent(),
                 'isEditable' => $this->getNode()->isEditable(),
                 'isReadonly' => $this->getNode()->isReadOnly(),
                 'isRich'     => $this->getNode()->isRich(),

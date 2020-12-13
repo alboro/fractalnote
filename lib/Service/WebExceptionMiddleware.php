@@ -1,6 +1,6 @@
 <?php
 /**
- * NextCloud / ownCloud - fractalnote
+ * NextCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -11,7 +11,6 @@ namespace OCA\FractalNote\Service;
 
 use OCA\FractalNote\Service\Exception\WebException;
 use OCP\AppFramework\Middleware;
-use OCP\AppFramework\Controller;
 
 class WebExceptionMiddleware extends Middleware
 {

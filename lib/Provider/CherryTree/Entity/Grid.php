@@ -1,6 +1,6 @@
 <?php
 /**
- * NextCloud / ownCloud - fractalnote
+ * NextCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -9,13 +9,13 @@
  */
 namespace OCA\FractalNote\Provider\CherryTree\Entity;
 
+use OCA\FractalNote\lib\Provider\CherryTree\Entity\OffsetEntityInterface;
 use OCA\FractalNote\Provider\CherryTree\Db\Entity;
 
 /**
  * Class Grid
  *
  * @method integer getNodeId()
- * @method integer getOffset()
  * @method string getJustification()
  * @method string getTxt()
  * @method integer getColMax()
@@ -29,7 +29,7 @@ use OCA\FractalNote\Provider\CherryTree\Db\Entity;
  *
  * @package OCA\FractalNote\Provider\CherryTree\Db
  */
-class Grid extends Entity
+class Grid extends Entity implements OffsetEntityInterface
 {
     protected $nodeId;
     protected $offset;
@@ -65,5 +65,10 @@ class Grid extends Entity
                 'type' => static::INT,
             ],
         ];
+    }
+
+    public function getOffset(): int
+    {
+        return $this->offset;
     }
 }

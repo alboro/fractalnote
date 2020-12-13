@@ -1,6 +1,6 @@
 <?php
 /**
- * NextCloud / ownCloud - fractalnote
+ * NextCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -10,7 +10,6 @@
 namespace OCA\FractalNote\Service\Exception;
 
 use OCP\AppFramework\Http;
-use Throwable;
 
 class ConflictException extends WebException
 {

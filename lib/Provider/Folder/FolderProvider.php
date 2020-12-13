@@ -1,6 +1,6 @@
 <?php
 /**
- * NextCloud / ownCloud - fractalnote
+ * NextCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -9,14 +9,8 @@
  */
 namespace OCA\FractalNote\Provider\Folder;
 
-use Exception;
 use OC\Files\Filesystem;
-use OCA\FractalNote\Service\Exception\WebException;
-use OCA\FractalNote\Service\Exception\NoChangesException;
-use OCA\FractalNote\Service\Exception\NotFoundException;
-use OCA\FractalNote\Service\Exception\NotEditableException;
 use OCA\FractalNote\Service\AbstractProvider;
-use OCA\FractalNote\Provider\Folder\Node;
 use OC\Files\View;
 
 class FolderProvider extends AbstractProvider

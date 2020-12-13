@@ -1,6 +1,6 @@
 <?php
 /**
- * NextCloud / ownCloud - fractalnote
+ * NextCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -83,12 +83,10 @@ class NoteController extends AbstractController
     }
 
     /**
-     * @NoAdminRequired
-     *
-     * @param int $nodeId
+     * Not in use for now
      */
     public function show($nodeId)
     {
-        return new DataResponse($this->notesProvider->findNode($nodeId));
+        // return new DataResponse($this->notesProvider->findNode($nodeId));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * NextCloud / ownCloud - fractalnote
+ * NextCloud - fractalnote
  *
  * Licensed under the Apache License, Version 2.0
  *
@@ -141,7 +141,10 @@ class CherryTreeProvider extends AbstractProvider
         return $this->createRelationMapper()->buildTree();
     }
 
-    public function findNode($id)
+    /**
+     * Not in use for now
+     */
+    public function findNode($id): Node
     {
         try {
             $node = $this->createNodeMapper()->find($id);
@@ -157,7 +160,7 @@ class CherryTreeProvider extends AbstractProvider
         return $node;
     }
 
-    public function updateChildRelationLevels(Node $node)
+    public function updateChildRelationLevels(Node $node): void
     {
         $relationMapper = $this->createRelationMapper();
         $parentLevel = $node->getLevel();
@@ -204,10 +207,8 @@ class CherryTreeProvider extends AbstractProvider
      * @param integer $nodeId
      * @param integer $newParentId
      * @param integer $sequence
-     *
-     * @return Relation
      */
-    protected function move($nodeId, $newParentId, $sequence)
+    protected function move($nodeId, $newParentId, $sequence): Relation
     {
         if ((int)$newParentId < 0) {
             throw new WebException('Passed parent node is out of range');
@@ -226,7 +227,7 @@ class CherryTreeProvider extends AbstractProvider
         return $relation;
     }
 
-    protected function _updateNode($nodeId, $title, $content, $newParentId, $position)
+    protected function _updateNode($nodeId, $title, $content, $newParentId, $position): void
     {
         $nodeMapper = $this->createNodeMapper();
         $db = $this->getDb();
@@ -258,7 +259,7 @@ class CherryTreeProvider extends AbstractProvider
     /**
      * @param integer $noteId
      */
-    protected function _delete($noteId)
+    protected function _delete($noteId): void
     {
         $db = $this->getDb();
         $db->beginTransaction();
@@ -283,19 +284,19 @@ class CherryTreeProvider extends AbstractProvider
         if ($note->isRich()) {
 
             $imageMapper = $this->createImageMapper();
-            $images = $imageMapper->findImages($note->getId());
+            $images = $imageMapper->findAllByNodeId($note->getId());
             foreach ($images as $image) {
                 $imageMapper->delete($image);
             }
 
             $codeMapper = $this->createCodeMapper();
-            $codeboxes = $codeMapper->findCodeboxes($note->getId());
+            $codeboxes = $codeMapper->findAllByNodeId($note->getId());
             foreach ($codeboxes as $codebox) {
                 $codeMapper->delete($codebox);
             }
 
             $gridMapper = $this->createGridMapper();
-            $grids = $gridMapper->findGrids($note->getId());
+            $grids = $gridMapper->findAllByNodeId($note->getId());
             foreach ($grids as $grid) {
                 $gridMapper->delete($grid);
             }
@@ -304,32 +305,32 @@ class CherryTreeProvider extends AbstractProvider
         $db->commit();
     }
 
-    protected function createNodeMapper()
+    protected function createNodeMapper(): NodeMapper
     {
         return new NodeMapper($this->getDb());
     }
 
-    protected function createRelationMapper()
+    protected function createRelationMapper(): RelationMapper
     {
         return new RelationMapper($this->getDb());
     }
 
-    protected function createImageMapper()
+    protected function createImageMapper(): ImageMapper
     {
         return new ImageMapper($this->getDb());
     }
 
-    protected function createBookmarkMapper()
+    protected function createBookmarkMapper(): BookmarkMapper
     {
         return new BookmarkMapper($this->getDb());
     }
 
-    protected function createGridMapper()
+    protected function createGridMapper(): GridMapper
     {
         return new GridMapper($this->getDb());
     }
 
-    protected function createCodeMapper()
+    protected function createCodeMapper(): CodeboxMapper
     {
         return new CodeboxMapper($this->getDb());
     }
