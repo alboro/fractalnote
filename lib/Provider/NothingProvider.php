@@ -34,7 +34,7 @@ class NothingProvider extends AbstractProvider
         return false;
     }
 
-    public function buildTree()
+    public function buildTree(): array
     {
         return [];
     }

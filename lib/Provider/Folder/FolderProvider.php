@@ -72,7 +72,7 @@ class FolderProvider extends AbstractProvider
     /**
      * @return Node[]
      */
-    public function buildTree()
+    public function buildTree(): array
     {
         return $this->readFolder($this->getFilesystemPathToStructure());
     }

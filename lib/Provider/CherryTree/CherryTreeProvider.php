@@ -136,7 +136,7 @@ class CherryTreeProvider extends AbstractProvider
     /**
      * @return Relation[]
      */
-    public function buildTree()
+    public function buildTree(): array
     {
         return $this->createRelationMapper()->buildTree();
     }

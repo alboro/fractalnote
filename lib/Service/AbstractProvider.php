@@ -17,9 +17,9 @@ use OCA\FractalNote\Service\Exception\NotFoundException;
 
 abstract class AbstractProvider
 {
-    const TYPE_RICH      = 'rich';
-    const TYPE_PLAINTEXT = 'txt';
-    const TYPE_READONLY  = 'readonly';
+    public const TYPE_RICH      = 'rich';
+    public const TYPE_PLAINTEXT = 'txt';
+    public const TYPE_READONLY  = 'readonly';
 
     private $filesystemPathToStructure;
 
@@ -42,9 +42,9 @@ abstract class AbstractProvider
     abstract public function isExpired($nodeId, $storedExpiration);
 
     /**
-     * @return \JsonSerializable[]
+     * @return \JsonSerializable[]|array
      */
-    abstract public function buildTree();
+    abstract public function buildTree(): array;
 
     abstract protected function _updateNode($nodeId, $title, $content, $newParentId, $position);
 
