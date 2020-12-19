@@ -9,7 +9,6 @@
  */
 namespace OCA\FractalNote\Provider\CherryTree\Entity;
 
-use OCA\FractalNote\lib\Provider\CherryTree\Entity\OffsetEntityInterface;
 use OCA\FractalNote\Provider\CherryTree\Db\Entity;
 
 /**

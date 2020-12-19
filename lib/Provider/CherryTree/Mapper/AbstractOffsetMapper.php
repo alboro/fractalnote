@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace OCA\FractalNote\lib\Provider\CherryTree\Mapper;
+namespace OCA\FractalNote\Provider\CherryTree\Mapper;
 
-use OCA\FractalNote\lib\Provider\CherryTree\Entity\OffsetEntityInterface;
+use OCA\FractalNote\Provider\CherryTree\Entity\OffsetEntityInterface;
 use OCA\FractalNote\Provider\CherryTree\Db\Mapper;
 use OCA\FractalNote\Provider\CherryTree\Db\Entity as CherryEntity;
 use OCA\FractalNote\Provider\CherryTree\Entity\Image;
@@ -13,14 +13,11 @@ use OCP\IDBConnection;
 
 abstract class AbstractOffsetMapper extends Mapper
 {
-    /**
-     * ImageMapper constructor.
-     *
-     * @param IDBConnection $db
-     */
     public function __construct(IDBConnection $db)
     {
-        parent::__construct($db, $this->getTableName(), get_class($this));
+        $class = get_class($this);
+        $arr = explode('\\', $class);
+        parent::__construct($db, str_replace('mapper', '', strtolower(end($arr))), $class);
     }
 
     /**
@@ -40,10 +37,7 @@ abstract class AbstractOffsetMapper extends Mapper
 
     public function delete(NativeEntity $entity): NativeEntity
     {
-        if (!$entity instanceof CherryEntity) {
-            throw new \Exception('Not supported for ' . get_class($entity));
-        }
-        if (!$entity instanceof OffsetEntityInterface) {
+        if (!$entity instanceof CherryEntity || !$entity instanceof OffsetEntityInterface) {
             throw new \Exception('Not supported for ' . get_class($entity));
         }
         $q = $this->db->getQueryBuilder();

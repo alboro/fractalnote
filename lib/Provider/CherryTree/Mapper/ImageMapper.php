@@ -9,8 +9,6 @@
  */
 namespace OCA\FractalNote\Provider\CherryTree\Mapper;
 
-use OCA\FractalNote\lib\Provider\CherryTree\Mapper\AbstractOffsetMapper;
-
 class ImageMapper extends AbstractOffsetMapper
 {
 }

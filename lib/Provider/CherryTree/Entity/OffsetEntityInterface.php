@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OCA\FractalNote\lib\Provider\CherryTree\Entity;
+namespace OCA\FractalNote\Provider\CherryTree\Entity;
 
 interface OffsetEntityInterface
 {

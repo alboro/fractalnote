@@ -236,11 +236,13 @@ class CherryTreeProvider extends AbstractProvider
         $note = $nodeMapper->find($nodeId); /* @var Node $note */
 
         if ($newParentId === null) {
-            if (!$note->isEditable()) {
-                throw new NotEditableException($note->isRich(), $note->isReadOnly());
-            }
             null !== $title && $note->setName($title);
-            null !== $content && $note->setTxt($content);
+            if (null !== $content) {
+                if (!$note->isEditable()) {
+                    throw new NotEditableException($note->isRich(), $note->isReadOnly());
+                }
+                $note->setTxt($content);
+            }
             if (!$note->getUpdatedFields()) {
                 throw new NoChangesException();
             }
