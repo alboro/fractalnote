@@ -31,15 +31,16 @@ class NoteController extends AbstractController
      */
     public function create($mtime, $parentId, $title, $position)
     {
+        $nodeId = $this->notesProvider->createNode(
+            (string) $parentId,
+            (string) $title,
+            (int) $position,
+            (int) $mtime
+        );
          return new DataResponse(
             [
                 $this->notesProvider->getModifyTime(),
-                $this->notesProvider->createNode(
-                    (string) $parentId,
-                    (string) $title,
-                    (int) $position,
-                    (int) $mtime
-                )
+                $nodeId
             ]
         );
     }
