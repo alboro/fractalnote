@@ -9,6 +9,13 @@
  */
 namespace OCA\FractalNote\Provider\CherryTree\Mapper;
 
+use OCA\FractalNote\Provider\CherryTree\Entity\Image;
+use OCP\IDBConnection;
+
 class ImageMapper extends AbstractOffsetMapper
 {
+    public function __construct(IDBConnection $db)
+    {
+        parent::__construct($db, 'image', Image::class);
+    }
 }

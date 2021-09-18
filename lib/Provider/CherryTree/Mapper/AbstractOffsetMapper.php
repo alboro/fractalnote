@@ -13,11 +13,9 @@ use OCP\IDBConnection;
 
 abstract class AbstractOffsetMapper extends Mapper
 {
-    public function __construct(IDBConnection $db)
+    public function __construct(IDBConnection $db, $tableName, $entityClass)
     {
-        $class = get_class($this);
-        $arr = explode('\\', $class);
-        parent::__construct($db, str_replace('mapper', '', strtolower(end($arr))), $class);
+        parent::__construct($db, $tableName, $entityClass);
     }
 
     /**

@@ -9,6 +9,13 @@
  */
 namespace OCA\FractalNote\Provider\CherryTree\Mapper;
 
+use OCA\FractalNote\Provider\CherryTree\Entity\Grid;
+use OCP\IDBConnection;
+
 class GridMapper  extends AbstractOffsetMapper
 {
+    public function __construct(IDBConnection $db)
+    {
+        parent::__construct($db, 'grid', Grid::class);
+    }
 }

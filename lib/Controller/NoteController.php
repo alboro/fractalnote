@@ -9,13 +9,9 @@
  */
 namespace OCA\FractalNote\Controller;
 
-use OCP\IRequest;
 use OCP\AppFramework\Http\DataResponse;
-use OCA\FractalNote\Service\AbstractProvider;
 use OCA\FractalNote\Service\Exception\ConflictException;
 use OCA\FractalNote\Service\Exception\NotFoundException;
-use OCA\FractalNote\Service\Exception\WebException;
-use OCA\FractalNote\Controller\AbstractController;
 
 class NoteController extends AbstractController
 {
@@ -31,15 +27,16 @@ class NoteController extends AbstractController
      */
     public function create($mtime, $parentId, $title, $position)
     {
+        $nodeId = $this->notesProvider->createNode(
+            (string) $parentId,
+            (string) $title,
+            (int) $position,
+            (int) $mtime
+        );
          return new DataResponse(
             [
                 $this->notesProvider->getModifyTime(),
-                $this->notesProvider->createNode(
-                    (string) $parentId,
-                    (string) $title,
-                    (int) $position,
-                    (int) $mtime
-                )
+                $nodeId
             ]
         );
     }
