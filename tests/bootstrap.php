@@ -1,19 +1,9 @@
 <?php
 
-if (!defined('PHPUNIT_RUN')) {
-    define('PHPUNIT_RUN', 1);
-}
+declare(strict_types=1);
 
-require_once __DIR__.'/../../../lib/base.php';
+require_once __DIR__ . '/../../../tests/bootstrap.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-// Fix for "Autoload path not allowed: .../tests/lib/testcase.php"
-\OC::$loader->addValidRoot(OC::$SERVERROOT . '/tests');
-
-// Fix for "Autoload path not allowed: .../fractalnote/tests/testcase.php"
-\OC_App::loadApp('fractalnote');
-
-if(!class_exists('PHPUnit_Framework_TestCase')) {
-    require_once('PHPUnit/Autoload.php');
-}
-
+\OC_App::loadApp(OCA\FractalNote\AppInfo\Application::APP_ID);
 OC_Hook::clear();

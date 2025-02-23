@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="OCA\FractalNote\Model\Image"
+            table="image"
+            repository-class="OCA\FractalNote\Repository\ImageRepository">
+        <many-to-one field="node" target-entity="OCA\FractalNote\Model\Node">
+            <join-column name="node_id" referenced-column-name="node_id" nullable="false" />
+        </many-to-one>
+        <field name="offset" type="integer" column="offset"/>
+        <field name="justification" type="string" column="justification"/>
+        <field name="anchor" type="string" column="anchor"/>
+        <field name="png" type="blob" column="png"/>
+        <field name="filename" type="string" column="filename"/>
+        <field name="link" type="string" column="link"/>
+        <field name="time" type="integer" column="time"/>
+    </entity>
+</doctrine-mapping>

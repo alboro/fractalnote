@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="OCA\FractalNote\Model\Node"
+            table="node"
+            repository-class="OCA\FractalNote\Repository\NodeRepository">
+        <id name="nodeId" type="integer" column="node_id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="name" type="string" column="name"/>
+        <field name="txt" type="string" column="txt"/>
+        <field name="syntax" type="string" column="syntax"/>
+        <field name="tags" type="string" column="tags"/>
+        <field name="isRo" type="integer" column="is_ro"/>
+        <field name="isRichTxt" type="integer" column="is_richtxt"/>
+        <field name="hasCodebox" type="integer" column="has_codebox"/>
+        <field name="hasTable" type="integer" column="has_table"/>
+        <field name="hasImage" type="integer" column="has_image"/>
+        <field name="level" type="integer" column="level"/>
+        <field name="tsCreation" type="integer" column="ts_creation"/>
+        <field name="tsLastSave" type="integer" column="ts_lastsave"/>
+
+        <one-to-many field="images"
+                     target-entity="OCA\FractalNote\Model\Image"
+                     mapped-by="node"
+                     fetch="EXTRA_LAZY">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <one-to-many field="grids"
+                     target-entity="OCA\FractalNote\Model\Grid"
+                     mapped-by="node"
+                     fetch="EXTRA_LAZY">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <one-to-many field="codeboxes"
+                     target-entity="OCA\FractalNote\Model\Codebox"
+                     mapped-by="node"
+                     fetch="EXTRA_LAZY">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <one-to-one field="relation"
+                    target-entity="OCA\FractalNote\Model\Relation"
+                    inversed-by="node">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-one>
+
+        <one-to-one field="bookmark"
+                    target-entity="OCA\FractalNote\Model\Bookmark"
+                    inversed-by="node">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-one>
+
+        <!-- Add the one-to-one relation for "fatherRelation" -->
+        <one-to-one field="parentRelation"
+                    target-entity="OCA\FractalNote\Model\Relation"
+                    mapped-by="parent">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-one>
+    </entity>
+</doctrine-mapping>

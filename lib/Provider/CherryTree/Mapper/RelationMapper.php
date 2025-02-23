@@ -4,7 +4,7 @@
  *
  * Licensed under the Apache License, Version 2.0
  *
- * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
+ * @author Alexander Demchenko <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
 namespace OCA\FractalNote\Provider\CherryTree\Mapper;
@@ -15,6 +15,9 @@ use OCA\FractalNote\Provider\CherryTree\Db\Entity;
 use OCA\FractalNote\Provider\CherryTree\Entity\Node;
 use OCA\FractalNote\Provider\CherryTree\Entity\Relation;
 
+/**
+ * @deprecated
+ */
 class RelationMapper extends Mapper
 {
     /**
@@ -38,9 +41,6 @@ class RelationMapper extends Mapper
         ];
     }
 
-    /**
-     * @return Relation[]|array
-     */
     public function findChildrenWithNodes()
     {
         $q = $this->db->getQueryBuilder()
@@ -56,7 +56,7 @@ class RelationMapper extends Mapper
     /**
      * @return Relation[]
      */
-    public function findChildRelations(int $nodeId): array
+    public function findrelations(int $nodeId): array
     {
         return $this->findEntities(
             $this->db->getQueryBuilder()
@@ -66,7 +66,7 @@ class RelationMapper extends Mapper
         );
     }
 
-    public function countChildRelations(int $nodeId): int
+    public function countrelations(int $nodeId): int
     {
         $q = $this->db->getQueryBuilder()
             ->select('count(*) as count')
@@ -80,7 +80,7 @@ class RelationMapper extends Mapper
     /**
      * @param integer $nodeId
      */
-    public function findChildRelationsWithNodes($nodeId): array
+    public function findrelationsWithNodes($nodeId): array
     {
         $q = $this->db->getQueryBuilder()
             ->select('*')

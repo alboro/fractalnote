@@ -4,7 +4,7 @@
  *
  * Licensed under the Apache License, Version 2.0
  *
- * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
+ * @author Alexander Demchenko <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
 namespace OCA\FractalNote\Controller;
@@ -17,15 +17,8 @@ class NoteController extends AbstractController
 {
     /**
      * @NoAdminRequired
-     *
-     * @param integer $mtime
-     * @param mixed   $parentId
-     * @param string  $title
-     * @param integer $position
-     *
-     * @return DataResponse
      */
-    public function create($mtime, $parentId, $title, $position)
+    public function create($mtime, $parentId, $title, $position): DataResponse
     {
         $nodeId = $this->notesProvider->createNode(
             (string) $parentId,
@@ -53,37 +46,31 @@ class NoteController extends AbstractController
 
     /**
      * @NoAdminRequired
-     *
-     * @param integer $mtime
-     * @param integer $nodeId
-     *
-     * @return DataResponse
      */
-    public function destroy($mtime, $nodeId)
+    public function destroy($mtime, $nodeId): DataResponse
     {
-        if (!$nodeId || !$this->notesProvider->isConnected()) {
+        if (!$nodeId) {
             throw new NotFoundException();
         }
         if ($this->notesProvider->isExpired($nodeId, $mtime)) {
             throw new ConflictException();
         }
-        $this->notesProvider->delete($nodeId);
+        $this->notesProvider->delete((int) $nodeId);
         return new DataResponse([$this->notesProvider->getModifyTime()]);
     }
 
     /**
      * @NoAdminRequired
      */
-    public function index()
+    public function index(): DataResponse
     {
-        return new DataResponse([$this->notesProvider->buildTree(), $this->notesProvider->getModifyTime()]);
+        return new DataResponse([$this->notesProvider->buildRelationTree(), $this->notesProvider->getModifyTime()]);
     }
 
     /**
      * Not in use for now
      */
-    public function show($nodeId)
+    public function show($nodeId): void
     {
-        // return new DataResponse($this->notesProvider->findNode($nodeId));
     }
 }

@@ -35,6 +35,7 @@
             },
 
             moveNode: function (nodeId, newParentId, position, modifiedTime) {
+                window.console.log('moveNode');
                 return this.updateNode({
                         id         : nodeId,
                         newParentId: this.getParentId(newParentId),
@@ -147,6 +148,7 @@
                 this.setActiveNode(nodeToActivate);
                 var areaTemplate = Handlebars.compile(this.contentTplElement.html());
                 this.editorElement.html(
+                    // this.contentTplElement.html()
                     areaTemplate({note: this.getActiveNode()})
                 );
                 // handle saves
@@ -160,6 +162,7 @@
                 var self = this, button = $(this.selectorSaveButton), requestNode = this.getActiveNode();
                 requestNode.content = $(this.selectorText).val();
                 $(button).addClass('loading');
+                window.console.log('saveclick');
                 this.nodeRepo.updateNode(requestNode, this.getTime())
                     .done(function (response) {
                         $(button).removeClass('loading');
@@ -181,16 +184,6 @@
              */
             getTreeInstance: function () {
                 return this.getNavigation().jstree(true);
-            },
-
-            checkChanged: function () {
-                var node = this.getActiveNode();
-                if (node) {
-                    var currentValue = $(this.selectorText).val();
-                    if (node.content != currentValue) {
-                        $(this.selectorSaveButton).click();
-                    }
-                }
             },
 
             /**
@@ -234,6 +227,7 @@
                     title: node.text,
                     content: null
                 };
+                window.console.log('afterNodeRename');
                 self.nodeRepo.updateNode(requestModel, self.getTime())
                     .done(function (response) {
                         self.setTime(response[0]);
@@ -424,15 +418,21 @@
                     }
                 })
                 .on('select_node.jstree', function (e, data) {
-                    self.checkChanged();
-                    self.renderEditor({
-                        id:      data.node.id,
-                        title:   data.node.text,
-                        content: data.node.data.content,
-                        isEditable: data.node.data.isEditable,
-                        isReadonly: data.node.data.isReadonly,
-                        isRich: data.node.data.isRich
-                    });
+                    if (null === self.getActiveNode() || self.getActiveNode().id !== data.node.id) {
+                        if (self.getActiveNode()) {
+                            if (self.getActiveNode().content !== $(this.selectorText).val()) {
+                                $(this.selectorSaveButton).click();
+                            }
+                        }
+                        self.renderEditor({
+                            id:      data.node.id,
+                            title:   data.node.text,
+                            content: data.node.data.content,
+                            isEditable: data.node.data.isEditable,
+                            isReadonly: data.node.data.isReadonly,
+                            isRich: data.node.data.isRich
+                        });
+                    }
                 })
                 .on('move_node.jstree', function (e, data) {
                     self.afterNodeMove(data.node, data.parent, data.position + 1);
@@ -458,3 +458,4 @@
     });
 
 })(OC, window, jQuery, Handlebars);
+alert(1);

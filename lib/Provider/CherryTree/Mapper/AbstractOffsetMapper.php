@@ -11,6 +11,9 @@ use OCA\FractalNote\Provider\CherryTree\Entity\Image;
 use OCP\AppFramework\Db\Entity as NativeEntity;
 use OCP\IDBConnection;
 
+/**
+ * @deprecated
+ */
 abstract class AbstractOffsetMapper extends Mapper
 {
     public function __construct(IDBConnection $db, $tableName, $entityClass)

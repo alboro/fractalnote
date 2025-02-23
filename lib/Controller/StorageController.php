@@ -4,7 +4,7 @@
  *
  * Licensed under the Apache License, Version 2.0
  *
- * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
+ * @author Alexander Demchenko <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
 namespace OCA\FractalNote\Controller;
@@ -15,30 +15,8 @@ class StorageController extends AbstractController
 {
     /**
      * @NoAdminRequired
-     *
-     * @return DataResponse
      */
-    public function create()
-    {
-        return new DataResponse();
-    }
-
-    /**
-     * @NoAdminRequired
-     *
-     * @return DataResponse
-     */
-    public function update()
-    {
-        return new DataResponse();
-    }
-
-    /**
-     * @NoAdminRequired
-     *
-     * @return DataResponse
-     */
-    public function destroy()
+    public function create(): DataResponse
     {
         return new DataResponse();
     }
@@ -46,16 +24,31 @@ class StorageController extends AbstractController
     /**
      * @NoAdminRequired
      */
-    public function index()
+    public function update(): DataResponse
     {
         return new DataResponse();
     }
 
     /**
      * @NoAdminRequired
-     *
      */
-    public function show()
+    public function destroy(): DataResponse
+    {
+        return new DataResponse();
+    }
+
+    /**
+     * @NoAdminRequired
+     */
+    public function index(): DataResponse
+    {
+        return new DataResponse();
+    }
+
+    /**
+     * @NoAdminRequired
+     */
+    public function show(): DataResponse
     {
         return new DataResponse();
     }

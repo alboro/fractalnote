@@ -5,7 +5,7 @@
  *
  * Licensed under the Apache License, Version 2.0
  *
- * @author    Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
+ * @author    Alexander Demchenko <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
 
@@ -28,11 +28,8 @@ class PageController extends AbstractController
      * @NoAdminRequired
      * @NoCSRFRequired
      */
-    public function index()
+    public function index(): TemplateResponse
     {
-        if (!$this->notesProvider->isConnected()) {
-            return new TemplateResponse(Application::APP_NAME, '404');
-        }
         // Override default CSP
         $csp = new ContentSecurityPolicy();
         $csp->allowEvalScript(true);
@@ -42,7 +39,7 @@ class PageController extends AbstractController
             'tree'  => $this->notesProvider->buildTree(),
             'mtime' => $this->notesProvider->getModifyTime(),
         ];
-        $response = new TemplateResponse(Application::APP_NAME, 'main', $params); // templates/main.php
+        $response = new TemplateResponse(Application::APP_ID, 'main', $params); // templates/main.php
         $response->setContentSecurityPolicy($csp);
         return $response;
     }

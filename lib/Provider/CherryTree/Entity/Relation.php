@@ -4,13 +4,12 @@
  *
  * Licensed under the Apache License, Version 2.0
  *
- * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
+ * @author Alexander Demchenko <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
 namespace OCA\FractalNote\Provider\CherryTree\Entity;
 
 use JsonSerializable;
-use OCA\FractalNote\Service\AbstractProvider;
 use OCA\FractalNote\Provider\CherryTree\Db\Entity;
 
 /**
@@ -41,7 +40,7 @@ class Relation extends Entity implements JsonSerializable
      *
      * @var Relation[]
      */
-    private $childRelations = [];
+    private $relations = [];
 
     public function getNode()
     {
@@ -57,14 +56,14 @@ class Relation extends Entity implements JsonSerializable
         return $this;
     }
 
-    public function getChildRelations()
+    public function getrelations()
     {
-        return $this->childRelations;
+        return $this->relations;
     }
 
     public function addChild(Relation $child)
     {
-        $this->childRelations[] = $child;
+        $this->relations[] = $child;
 
         return $this;
     }
@@ -74,7 +73,7 @@ class Relation extends Entity implements JsonSerializable
         return 'nodeId';
     }
 
-    public function getPropertiesConfig()
+    protected function getPropertiesConfig()
     {
         return [
             'nodeId' => [
@@ -101,7 +100,7 @@ class Relation extends Entity implements JsonSerializable
                 'isReadonly' => $this->getNode()->isReadOnly(),
                 'isRich'     => $this->getNode()->isRich(),
             ],
-            'children' => $this->getChildRelations(),
+            'children' => $this->getrelations(),
         ];
     }
 

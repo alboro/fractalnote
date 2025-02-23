@@ -13,7 +13,7 @@ class PageControllerTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp()
     {
-        $provider = $this->getMockBuilder('OCA\FractalNote\Service\AbstractProvider')->getMock();
+        $provider = $this->getMockBuilder('OCA\FractalNote\Provider\CherryTree\CherryTreeProvider')->getMock();
         $request = $this->getMockBuilder('OCP\IRequest')->getMock();
         $providerFactory = $this->getMockBuilder('OCA\FractalNote\Service\ProviderFactory')
             ->disableOriginalConstructor()

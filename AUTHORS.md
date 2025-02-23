@@ -1,4 +1,4 @@
 # Authors
 
-* Alexander Demchenko: <a.demchenko@aldem.ru>, <https://github.com/alboro>
+* Alexander Demchenko: <https://github.com/alboro>
 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="OCA\FractalNote\Model\Relation"
+            table="children"
+            repository-class="OCA\FractalNote\Repository\RelationRepository">
+        <id name="node" type="integer" column="node_id" />
+        <field name="sequence" type="integer" column="sequence"/>
+
+        <one-to-one field="node"
+                    target-entity="OCA\FractalNote\Model\Node"
+                    mapped-by="relation">
+            <join-column name="node_id" referenced-column-name="node_id"/>
+        </one-to-one>
+
+        <one-to-one field="parent"
+                    target-entity="OCA\FractalNote\Model\Node"
+                    mapped-by="parentRelation"
+                    fetch="EXTRA_LAZY">
+            <join-column name="father_id" referenced-column-name="node_id"/>
+        </one-to-one>
+    </entity>
+</doctrine-mapping>

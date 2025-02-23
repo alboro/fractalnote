@@ -4,13 +4,12 @@
  *
  * Licensed under the Apache License, Version 2.0
  *
- * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
+ * @author Alexander Demchenko <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
 namespace OCA\FractalNote\Provider\CherryTree\Entity;
 
 use OCA\FractalNote\Provider\CherryTree\Db\Entity;
-use OCA\FractalNote\Service\AbstractProvider;
 
 /**
  * Class Node
@@ -45,6 +44,10 @@ use OCA\FractalNote\Service\AbstractProvider;
 class Node extends Entity
 {
 
+    public const TYPE_RICH      = 'rich';
+    public const TYPE_PLAINTEXT = 'txt';
+    public const TYPE_READONLY  = 'readonly';
+
     protected $nodeId;
     protected $name;
     protected $txt;
@@ -66,7 +69,7 @@ class Node extends Entity
         return 'nodeId';
     }
 
-    public function getPropertiesConfig()
+    protected function getPropertiesConfig()
     {
         return [
             'nodeId' => [
@@ -137,11 +140,11 @@ class Node extends Entity
     {
         switch (true) {
             case $this->isRich():
-                return AbstractProvider::TYPE_RICH;
+                return Node::TYPE_RICH;
             case $this->isReadOnly():
-                return AbstractProvider::TYPE_READONLY;
+                return Node::TYPE_READONLY;
             default:
-                return AbstractProvider::TYPE_PLAINTEXT;
+                return Node::TYPE_PLAINTEXT;
         }
     }
 
@@ -171,6 +174,4 @@ class Node extends Entity
         );
         return parent::fromRow($mayBeSeveralEntitiesRow);
     }
-
-
 }

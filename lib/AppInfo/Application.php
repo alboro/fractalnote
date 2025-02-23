@@ -4,13 +4,17 @@
  *
  * Licensed under the Apache License, Version 2.0
  *
- * @author    Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
+ * @author    Alexander Demchenko <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
 namespace OCA\FractalNote\AppInfo;
 
+use OC\App\AppManager;
+use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\Bootstrap\IBootstrap;
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\Util;
-use OCP\IContainer;
+use Psr\Container\ContainerInterface;
 use OCP\AppFramework\App;
 use OCA\FractalNote\Service\ProviderFactory;
 use OCA\FractalNote\Controller\PageController;
@@ -22,9 +26,9 @@ use OCA\FractalNote\Service\WebExceptionMiddleware;
  *
  * @package OCA\FractalNote\AppInfo
  */
-class Application extends App {
+class Application extends App implements IBootstrap {
 
-    const APP_NAME = 'fractalnote';
+    public const APP_ID = 'fractalnote';
 
     /**
      * Constructor
@@ -33,30 +37,12 @@ class Application extends App {
      */
     public function __construct(array $urlParams = [])
     {
-        parent::__construct(self::APP_NAME, $urlParams);
-
-        $c = $this->getContainer();
-        /** Controllers */
-        $c->registerService(
-            'PageController',
-            $this->injectController(\OCA\FractalNote\Controller\PageController::class)
-        );
-
-        $c->registerService(
-            'NoteController',
-            $this->injectController(\OCA\FractalNote\Controller\NoteController::class)
-        );
-
-        /** Middleware */
-        $c->registerService('WebExceptionMiddleware', function() {
-            return new WebExceptionMiddleware();
-        });
-        $c->registerMiddleware('WebExceptionMiddleware');
+        parent::__construct(self::APP_ID, $urlParams);
     }
 
-    private function injectController($controllerName)
+    private function injectController($controllerName): \Closure
     {
-        return function (IContainer $c) use ($controllerName) {
+        return function (ContainerInterface $c) use ($controllerName) {
             new $controllerName(
                 $c->query('AppName'),
                 $c->query('Request'),
@@ -66,19 +52,42 @@ class Application extends App {
         };
     }
 
-    public function registerFrontendScripts()
+    public function register(IRegistrationContext $context): void
     {
+        /** Controllers */
+        $context->registerService(
+            'PageController',
+            $this->injectController(PageController::class)
+        );
+
+        $context->registerService(
+            'NoteController',
+            $this->injectController(NoteController::class)
+        );
+
+        /** Middleware */
+        $context->registerService('WebExceptionMiddleware', function() {
+            return new WebExceptionMiddleware();
+        });
+        $context->registerMiddleware(WebExceptionMiddleware::class);
+    }
+
+    public function boot(IBootContext $context): void
+    {
+        Util::addScript(Application::APP_ID, 'test');
+//        \OC::$server->getMimeTypeDetector()->registerType('ctb', 'application/cherrytree-ctb');
+
         $c = $this->getContainer();
-        /** @var \OCP\IServerContainer $server */
-        $server = $c->getServer();
-        if ($server->getUserSession()->isLoggedIn()) {
-            $eventDispatcher = $server->getEventDispatcher();
-            $eventDispatcher->addListener(
-                'OCA\Files::loadAdditionalScripts',
-                function() {
-                    Util::addScript(Application::APP_NAME, 'router');
-                }
-            );
+        if ($c->get(\OCP\IUserSession::class)->isLoggedIn() /*&& $c->get(AppManager::class)->isEnabledForUser('files')*/) {
+            // Util::addScript(Application::APP_ID, 'router');
+//            $server = $c->getServer();
+//            $eventDispatcher = $server->getEventDispatcher();
+//            $eventDispatcher->addListener(
+//                'OCA\Files::loadAdditionalScripts',
+//                function() {
+//                    Util::addScript(Application::APP_NAME, 'router');
+//                }
+//            );
         }
     }
 }

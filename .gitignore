@@ -1,4 +1,6 @@
 /nbproject/
 /.idea/
 /vendor/
+/vendor-bin/*/vendor/
 composer.lock
+composer.phar

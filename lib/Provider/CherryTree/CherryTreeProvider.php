@@ -4,90 +4,168 @@
  *
  * Licensed under the Apache License, Version 2.0
  *
- * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
+ * @author Alexander Demchenko <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
 namespace OCA\FractalNote\Provider\CherryTree;
 
-use Exception;
-use OC\Files\Filesystem;
+use Closure;
+use Throwable;
+use Doctrine\ORM\EntityManager;
 use OC\Files\View;
-use OCA\FractalNote\Provider\CherryTree\Mapper\BookmarkMapper;
-use OCA\FractalNote\Provider\CherryTree\Mapper\CodeboxMapper;
-use OCA\FractalNote\Provider\CherryTree\Mapper\GridMapper;
-use OCA\FractalNote\Provider\CherryTree\Mapper\ImageMapper;
-use OCA\FractalNote\Provider\CherryTree\Mapper\NodeMapper;
-use OCA\FractalNote\Provider\CherryTree\Mapper\RelationMapper;
-use OCA\FractalNote\Provider\CherryTree\Db\SqliteConnectionFactory;
-use OCA\FractalNote\Provider\CherryTree\Entity\Node;
-use OCA\FractalNote\Provider\CherryTree\Entity\Relation;
-use OCA\FractalNote\Service\AbstractProvider;
-use OCA\FractalNote\Service\Exception\NoChangesException;
-use OCA\FractalNote\Service\Exception\NotEditableException;
+use OCA\FractalNote\Factory\DatabaseConnectionFactory;
+use OCA\FractalNote\Model\Bookmark;
+use OCA\FractalNote\Model\Relation;
+use OCA\FractalNote\Model\Codebox;
+use OCA\FractalNote\Model\Grid;
+use OCA\FractalNote\Model\GridRepository;
+use OCA\FractalNote\Model\Image;
+use OCA\FractalNote\Model\Node;
+use OCA\FractalNote\Repository\BookmarkRepository;
+use OCA\FractalNote\Repository\RelationRepository;
+use OCA\FractalNote\Repository\CodeboxRepository;
+use OCA\FractalNote\Repository\ImageRepository;
+use OCA\FractalNote\Repository\NodeRepository;
+use OCA\FractalNote\Service\Exception\ConflictException;
 use OCA\FractalNote\Service\Exception\NotFoundException;
-use OCA\FractalNote\Service\Exception\WebException;
-use OCP\IDBConnection;
 
-class CherryTreeProvider extends AbstractProvider
+class CherryTreeProvider
 {
-
-    private $db;
-    /** @var View */
-    private $viewer;
+    private View $viewer;
+    private EntityManager $entityManager;
 
     /**
      * CherryTreeProvider constructor.
      *
-     * @param View $view
-     * @param      $filePath
-     *
      * @throws NotFoundException
      */
-    public function __construct(View $view, $filePath)
+    public function __construct(View $view, string $filePath)
     {
         $this->viewer = $view;
-        $this->setDbByFilePath($filePath);
+        $this->setFilesystemPathToStructure($filePath);
+        if (!$filePath || !$this->viewer->is_file($filePath)) {
+            throw new NotFoundException();
+        }
+        $this->entityManager = DatabaseConnectionFactory::createEntityManager($filePath);
     }
 
-    /**
-     * @return bool
-     */
-    public function isConnected()
+    private string $filesystemPathToStructure;
+
+    public function getFilesystemPathToStructure(): string
     {
-        return true;
+        return $this->filesystemPathToStructure;
     }
 
-    /**
-     * @return IDBConnection
-     */
-    public function getDb()
+    private function decorateWithDbTransaction(Closure $closure): mixed
     {
-        return $this->db;
+        $db = $this->entityManager();
+        $db->beginTransaction();
+        try {
+            $result = $closure();
+        } catch (Throwable $throwable) {
+            $db->rollBack();
+
+            throw $throwable;
+        }
+        $db->commit();
+
+        return $result;
     }
 
-    /**
-     * @param IDBConnection $db
-     *
-     * @return AbstractProvider
-     */
-    public function setDb(IDBConnection $db)
-    {
-        $this->db = $db;
+    public function createNode(
+        string $parentId,
+        string $title,
+        int $position,
+        int $mtime,
+        string $content = ''
+    ): string {
+        if ($this->isExpired($parentId, $mtime)) {
+            throw new ConflictException($title);
+        }
 
-        return $this;
+        try {
+            $this->lockResource();
+
+            $nodeIdentifier = $this->decorateWithDbTransaction(
+                static function () use ($parentId, $title, $position, $content) {
+                    return $this->_createNode(
+                        (int) $parentId,
+                        $title,
+                        $position,
+                        $content,
+                        false
+                    );
+                }
+            );
+
+            $this->unlockResource();
+            $this->requireSync();
+        } catch (Throwable $e) {
+            $this->handleException($e);
+        }
+
+        return $nodeIdentifier;
     }
 
-
-    /**
-     * @param string $file
-     *
-     * @return void
-     *
-     * @throws NotFoundException
-     */
-    private function setDbByFilePath($file)
+    public function updateNode(int $mtime, array $nodeData): void
     {
-        $this->setFilesystemPathToStructure($file);
+        $nodeId = array_key_exists('id', $nodeData) ? $nodeData['id'] : null;
+        if (!$nodeId) {
+            throw new NotFoundException();
+        }
+        if ($this->isExpired($nodeId, $mtime)) {
+            throw new ConflictException();
+        }
+        try {
+            $this->lockResource();
+
+            $this->decorateWithDbTransaction(
+                static function () use ($nodeId, $nodeData) {
+                    $this->_updateNode(
+                        $nodeId,
+                        $nodeData['title'] ?? null,
+                        $nodeData['content'] ?? null,
+                        $nodeData['newParentId'] ?? null,
+                        $nodeData['position'] ?? null
+                    );
+                }
+            );
+
+            $this->unlockResource();
+            $this->requireSync();
+        } catch (Throwable $e) {
+            $this->handleException($e);
+        }
+    }
+
+    public function delete(int $nodeId): void
+    {
+        try {
+            $this->lockResource();
+            $this->decorateWithDbTransaction(
+                static function () use ($nodeId) {
+                    $this->_delete($nodeId);
+                }
+            );
+            $this->unlockResource();
+            $this->requireSync();
+        } catch (Throwable $e) {
+            $this->handleException($e);
+        }
+    }
+
+    protected function setFilesystemPathToStructure(string $filesystemPathToStructure): void
+    {
+        $this->filesystemPathToStructure = $filesystemPathToStructure;
+    }
+
+    private function entityManager(): EntityManager
+    {
+        return $this->entityManager;
+    }
+
+    /*private function getAbsolutePath($file): string
+    {
         if (!$file || !$this->viewer->is_file($file)) {
             throw new NotFoundException();
         }
@@ -96,11 +174,9 @@ class CherryTreeProvider extends AbstractProvider
         list($storage, $internalPath) = Filesystem::resolvePath(
             $relativeFilePath . $postFix
         );
-        $filePath = $storage->getLocalFile($internalPath);
-        $this->setDb(
-            SqliteConnectionFactory::getConnectionByPath($filePath)
-        );
-    }
+
+        return $storage->getLocalFile($internalPath);
+    }*/
 
     public function requireSync()
     {
@@ -136,210 +212,148 @@ class CherryTreeProvider extends AbstractProvider
     /**
      * @return Relation[]
      */
-    public function buildTree(): array
+    public function buildRelationTree(): array
     {
-        return $this->createRelationMapper()->buildTree();
+        return $this->createRelationRepository()->buildTree();
     }
 
-    /**
-     * Not in use for now
-     */
-    public function findNode($id): Node
+    private function updateRelationLevels(Node $node): void
     {
-        try {
-            $node = $this->createNodeMapper()->find($id);
+        $relationMapper = $this->createRelationRepository();
+        $parentLevel = $node->level();
+        $relations = $relationMapper->findByParent($node->nodeId());
+        foreach ($relations as $relation) {
+            $node = $relation->node();
+            $node->assignLevelValue($parentLevel + 1);
 
-            // in order to be able to plug in different storage backends like files
-            // for instance it is a good idea to turn storage related exceptions
-            // into service related exceptions so controllers and service users
-            // have to deal with only one type of exception
-        } catch (Exception $e) {
-            $this->handleException($e, false);
-        }
-
-        return $node;
-    }
-
-    public function updateChildRelationLevels(Node $node): void
-    {
-        $relationMapper = $this->createRelationMapper();
-        $parentLevel = $node->getLevel();
-        $childRelations = $relationMapper->findChildRelationsWithNodes($node->getId());
-        foreach ($childRelations as $relation) {
-            $relation->getNode()->setLevel($parentLevel + 1);
-            $this->createNodeMapper()->update($relation->getNode());
-            $this->updateChildRelationLevels($relation->getNode());
+            $this->createNodeRepository()->save($node);
+            $this->updateRelationLevels($node);
         }
     }
 
     protected function _createNode(
-        string $parentNodeId,
+        int $parentNodeId,
         string $title,
         int $position,
         string $content,
         bool $isRich
     ): string {
-        $db = $this->getDb();
-        $db->beginTransaction();
-        $nodeMapper = $this->createNodeMapper();
-        $relationMapper = $this->createRelationMapper();
+        $nodeMapper = $this->createNodeRepository();
+        $relationMapper = $this->createRelationRepository();
 
-        $note = Node::factory();
-        $note->setName($title);
-        $note->setTxt($content);
-        $note->setSyntax('plain-text');
-        $note->setIsRichtxt($isRich);
-        $note->setLevel($relationMapper->calculateLevelByParentId($parentNodeId));
-        $note->setId($nodeMapper->calculateNextIncrementValue());
-        $nodeMapper->insert($note);
+        if ($parentNodeId !== 0) {
+            $parentNode = $nodeMapper->findById($parentNodeId);
+            if (null === $parentNode) {
+                throw new NotFoundException();
+            }
+        }
+        $id = $nodeMapper->calculateNextIncrementValue();
+        $level = $relationMapper->calculateLevelByParentId($parentNodeId);
+        $node = new Node(
+            $id,
+            $title,
+            $content,
+            'plain-text',
+            '',
+            false,
+            $isRich,
+            false,
+            false,
+            false,
+            $level,
+            time(),
+            time(),
+        );
+        $nodeMapper->save($node);
+        $relation = new Relation($node, $parentNodeId, $position);
+        $relationMapper->save($relation);
 
-        $child = new Relation();
-        $child->setNode($note);
-        $child->setFatherId($parentNodeId);
-        $child->setSequence($position);
-        $relationMapper->insert($child);
-
-        $db->commit();
-        return (string) $child->getNodeId();
+        return (string) $id;
     }
 
-    /**
-     * @param integer $nodeId
-     * @param integer $newParentId
-     * @param integer $sequence
-     */
-    protected function move($nodeId, $newParentId, $sequence): Relation
-    {
-        if ((int)$newParentId < 0) {
-            throw new WebException('Passed parent node is out of range');
-        }
-        $relationMapper = $this->createRelationMapper();
-        $relation = $relationMapper->find($nodeId); /* @var $relation Relation */
-        $newParentId === 0 || $this->createNodeMapper()->find($newParentId);
+    protected function _updateNode(
+        int $nodeId,
+        ?string $title,
+        ?string $content,
+        ?string $newParentId,
+        ?string $position,
+    ): void {
+        $nodeMapper = $this->createNodeRepository();
 
-        $relation->setFatherId($newParentId);
-        null !== $sequence && $relation->setSequence($sequence);
-        if (!$relation->getUpdatedFields()) {
-            throw new NoChangesException();
-        }
-        $relationMapper->update($relation);
-
-        return $relation;
-    }
-
-    protected function _updateNode($nodeId, $title, $content, $newParentId, $position): void
-    {
-        $nodeMapper = $this->createNodeMapper();
-        $db = $this->getDb();
-        $db->beginTransaction();
-
-        $note = $nodeMapper->find($nodeId); /* @var Node $note */
+        $node = $nodeMapper->findById($nodeId);
 
         if ($newParentId === null) {
-            null !== $title && $note->setName($title);
-            if (null !== $content) {
-                if (!$note->isEditable()) {
-                    throw new NotEditableException($note->isRich(), $note->isReadOnly());
+            $node->update($title, $content);
+            $nodeMapper->save($node);
+        } else {
+            $newParentNode = null;
+            if ($newParentId !== 0) {
+                $newParentNode = $nodeMapper->findById($newParentId);
+                if (null === $newParentNode) {
+                    throw new NotFoundException();
                 }
-                $note->setTxt($content);
             }
-            if (!$note->getUpdatedFields()) {
-                throw new NoChangesException();
-            }
-        } elseif (isset($newParentId)) {
-            $relationMapper = $this->createRelationMapper();
-            $this->move($nodeId, $newParentId, $position);
-            $note->setLevel($relationMapper->calculateLevelByParentId((int)$newParentId));
-            $this->updateChildRelationLevels($note);
+            $node->relation()->move($newParentNode, (int) $position);
+            $relationMapper = $this->createRelationRepository();
+            $node->assignLevelValue(
+                $relationMapper->calculateLevelByParentId((int) $newParentId)
+            );
+            $nodeMapper->save($node);
+            $this->updateRelationLevels($node);
         }
-        // make changes
-        $nodeMapper->update($note);
-
-        $db->commit();
     }
 
-    /**
-     * @param integer $noteId
-     */
-    protected function _delete($noteId): void
+    protected function _delete(int $nodeId): void
     {
-        $db = $this->getDb();
-        $db->beginTransaction();
+        $relationMapper = $this->createRelationRepository();
+        $nodeMapper = $this->createNodeRepository();
+        $node = $nodeMapper->findById($nodeId);
 
-        $relationMapper = $this->createRelationMapper();
-        $nodeMapper = $this->createNodeMapper();
-        $relation = $relationMapper->find($noteId); /** @var $relation Relation */
-        $note = $nodeMapper->find($noteId); /** @var $note Node */
-        if ($note->getLevel() === 0 && $relationMapper->countChildRelations(0) === 1) {
+        if ($node->level() === 0 && count($relationMapper->findByParent(0)) === 1) {
             throw new \LogicException('The only one top node cannot be deleted.');
         }
-        $childRelations = $relationMapper->findChildRelations($noteId);
-        foreach ($childRelations as $childRelation) {
-            $childRelation instanceof Relation && $this->_delete($childRelation->getNodeId());
+        $childrenRelations = $relationMapper->findByParent($nodeId);
+        foreach ($childrenRelations as $relation) {
+            $relation instanceof Relation && $this->_delete($relation->node()->nodeId());
         }
-        $relationMapper->delete($relation);
+        $nodeMapper->delete($node);
+    }
 
-        $bookmarkMapper = $this->createBookmarkMapper();
-        $bookmark = $bookmarkMapper->findBookmark($note->getId());
-        $bookmark && $bookmarkMapper->delete($bookmark);
+    protected function createNodeRepository(): NodeRepository
+    {
+        return $this->entityManager->getRepository(Node::class);
+    }
 
-        if ($note->isRich()) {
+    protected function createRelationRepository(): RelationRepository
+    {
+        return $this->entityManager->getRepository(Relation::class);
+    }
 
-            $imageMapper = $this->createImageMapper();
-            $images = $imageMapper->findAllByNodeId($note->getId());
-            foreach ($images as $image) {
-                $imageMapper->delete($image);
-            }
+    protected function createImageRepository():  ImageRepository
+    {
+        return $this->entityManager->getRepository(Image::class);
+    }
 
-            $codeMapper = $this->createCodeMapper();
-            $codeboxes = $codeMapper->findAllByNodeId($note->getId());
-            foreach ($codeboxes as $codebox) {
-                $codeMapper->delete($codebox);
-            }
+    protected function createBookmarkRepository(): BookmarkRepository
+    {
+        return $this->entityManager->getRepository(Bookmark::class);
+    }
 
-            $gridMapper = $this->createGridMapper();
-            $grids = $gridMapper->findAllByNodeId($note->getId());
-            foreach ($grids as $grid) {
-                $gridMapper->delete($grid);
-            }
+    protected function createGridRepository(): GridRepository
+    {
+        return $this->entityManager->getRepository(Grid::class);
+    }
+
+    protected function createCodeRepository(): CodeboxRepository
+    {
+        return $this->entityManager->getRepository(Codebox::class);
+    }
+
+    protected function handleException(Throwable $e, $resourceLocked = true)
+    {
+        if ($resourceLocked) {
+            $this->unlockResource();
         }
-        $nodeMapper->delete($note);
-        $db->commit();
-    }
-
-    protected function createNodeMapper(): NodeMapper
-    {
-        return new NodeMapper($this->getDb());
-    }
-
-    protected function createRelationMapper(): RelationMapper
-    {
-        return new RelationMapper($this->getDb());
-    }
-
-    protected function createImageMapper(): ImageMapper
-    {
-        return new ImageMapper($this->getDb());
-    }
-
-    protected function createBookmarkMapper(): BookmarkMapper
-    {
-        return new BookmarkMapper($this->getDb());
-    }
-
-    protected function createGridMapper(): GridMapper
-    {
-        return new GridMapper($this->getDb());
-    }
-
-    protected function createCodeMapper(): CodeboxMapper
-    {
-        return new CodeboxMapper($this->getDb());
-    }
-
-    protected function handleException($e, $resourceLocked = true)
-    {
-        $resourceLocked && $this->getDb()->rollBack();
-        parent::handleException($e, $resourceLocked);
+        throw new NotFoundException($e->getMessage());
     }
 }

@@ -4,7 +4,7 @@
  *
  * Licensed under the Apache License, Version 2.0
  *
- * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
+ * @author Alexander Demchenko <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
 namespace OCA\FractalNote\Provider\CherryTree\Entity;
@@ -43,7 +43,7 @@ class Grid extends Entity implements OffsetEntityInterface
         return 'nodeId';
     }
 
-    public function getPropertiesConfig()
+    protected function getPropertiesConfig()
     {
         return [
             'nodeId' => [

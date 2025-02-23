@@ -5,13 +5,13 @@ use OCA\FractalNote\AppInfo\Application;
 
 $jsTreeThemeName = 'proton'; //default
 
-vendor_style(Application::APP_NAME,
+vendor_style(Application::APP_ID,
     'orangehill/jstree-bootstrap-theme/dist/themes/' . $jsTreeThemeName . '/style.min');
-style(Application::APP_NAME, 'main');
+style(Application::APP_ID, 'main');
 
-vendor_script(Application::APP_NAME,	'vakata/jstree/dist/jstree.min');
-vendor_script(Application::APP_NAME,	'components/handlebars.js/handlebars.min');
-script(Application::APP_NAME, 'main');
+vendor_script(Application::APP_ID,	'vakata/jstree/dist/jstree.min');
+vendor_script(Application::APP_ID,	'components/handlebars.js/handlebars.min');
+\OCP\Util::addScript(Application::APP_ID, 'main');
 
 ?>
 <div id="app" class="note-app">

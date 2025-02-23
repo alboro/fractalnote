@@ -4,10 +4,10 @@
  *
  * Licensed under the Apache License, Version 2.0
  *
- * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
+ * @author Alexander Demchenko <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
-namespace OCA\FractalNote\Provider\CherryTree\Entity;
+namespace OCA\FractalNote\Model;
 
 use JsonSerializable;
 use OCA\FractalNote\Provider\CherryTree\Db\Entity;
@@ -33,7 +33,7 @@ class Bookmark extends Entity
         return 'nodeId';
     }
 
-    public function getPropertiesConfig()
+    protected function getPropertiesConfig()
     {
         return [
             'nodeId' => [

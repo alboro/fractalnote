@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="OCA\FractalNote\Model\Grid"
+            table="grid"
+            repository-class="OCA\FractalNote\Model\GridRepository">
+        <many-to-one field="node" target-entity="OCA\FractalNote\Model\Node">
+            <join-column name="node_id" referenced-column-name="node_id" nullable="false" />
+        </many-to-one>
+        <field name="offset" type="integer" column="offset"/>
+        <field name="justification" type="string" column="justification"/>
+        <field name="txt" type="string" column="txt"/>
+        <field name="colMin" type="integer" column="col_min"/>
+        <field name="colMax" type="integer" column="col_max"/>
+    </entity>
+</doctrine-mapping>

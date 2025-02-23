@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="OCA\FractalNote\Model\Bookmark"
+            table="bookmark"
+            repository-class="OCA\FractalNote\Repository\BookmarkRepository">
+        <one-to-one field="node" target-entity="OCA\FractalNote\Model\Node">
+            <join-column name="node_id" referenced-column-name="node_id"/>
+        </one-to-one>
+        <field name="sequence" type="integer" column="sequence"/>
+    </entity>
+</doctrine-mapping>

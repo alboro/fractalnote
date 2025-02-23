@@ -4,14 +4,13 @@
  *
  * Licensed under the Apache License, Version 2.0
  *
- * @author Alexander Demchenko <a.demchenko@aldem.ru>, <https://github.com/alboro>
+ * @author Alexander Demchenko <https://github.com/alboro>
  * @copyright Alexander Demchenko 2017
  */
 namespace OCA\FractalNote\Service;
 
 use OCP\IRequest;
 use OC\Files\Filesystem;
-use OCA\FractalNote\Provider\Folder\FolderProvider;
 use OCA\FractalNote\Service\Exception\NotFoundException;
 use OCA\FractalNote\Provider\NothingProvider;
 use OCA\FractalNote\Provider\CherryTree\CherryTreeProvider;
@@ -19,25 +18,21 @@ use OCA\FractalNote\Provider\CherryTree\CherryTreeProvider;
 class ProviderFactory
 {
     const REQUEST_KEY_CHERRYTREE = 'f';
-    const REQUEST_KEY_FOLDER     = 'folder';
 
     /**
      * @param IRequest $request
-     *
-     * @return \OCA\FractalNote\Service\AbstractProvider
      */
-    public function createProviderByRequest(IRequest $request)
+    public function createProviderByRequest(IRequest $request): ?CherryTreeProvider
     {
         $paramKeys = array_keys($request->getParams());
         try {
             foreach ($this->supportedProviders() as $possibleProvider) {
                 if (in_array($possibleProvider, $paramKeys, true)) {
-                    return $this->createProvider($possibleProvider, $request->getParam($possibleProvider));
+                    return $this->createProvider($possibleProvider, (string) $request->getParam($possibleProvider));
                 }
             }
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
         }
-        return $this->createDefaultProvider();
     }
 
     public function createDefaultProvider()
@@ -49,7 +44,6 @@ class ProviderFactory
     {
         return [
             self::REQUEST_KEY_CHERRYTREE,
-            self::REQUEST_KEY_FOLDER,
         ];
     }
 
@@ -57,18 +51,15 @@ class ProviderFactory
      * @param $providerKey
      * @param $filesystemPathToStructure
      *
-     * @return \OCA\FractalNote\Service\AbstractProvider
+     * @return \OCA\FractalNote\Provider\CherryTree\CherryTreeProvider
      *
      * @throws NotFoundException
      */
-    private function createProvider($providerKey, $filesystemPathToStructure)
+    private function createProvider($providerKey, string $filesystemPathToStructure)
     {
         switch ($providerKey) {
             case self::REQUEST_KEY_CHERRYTREE:
                 $instance = new CherryTreeProvider(Filesystem::getView(), $filesystemPathToStructure);
-                break;
-            case self::REQUEST_KEY_FOLDER:
-                $instance = new FolderProvider(Filesystem::getView(), $filesystemPathToStructure);
                 break;
         }
         return $instance;
