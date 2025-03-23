@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  nextcloud:
+    image: nextcloud:29-apache
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - /Users/aldem/IT/projects/data-for-nc:/var/www/html
