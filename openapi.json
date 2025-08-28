@@ -3,7 +3,7 @@
     "info": {
         "title": "fractalnote",
         "version": "0.0.1",
-        "description": "Online editor of note trees for Nextcloud/Owncloud server with Cherrytree (*.ctb) support",
+        "description": "Online editor of note trees for Nextcloud server with Cherrytree (*.ctb) support",
         "license": {
             "name": "agpl"
         }

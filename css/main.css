@@ -75,7 +75,7 @@ overflow-y: scroll;
 
 /* Compactability fixes. */
 
-/* Disable nextcloud/ownCloud styles, force jstree styles: */
+/* Disable nextcloud styles, force jstree styles: */
 #app-navigation.note-navigation li.jstree-node > a.jstree-anchor {
     display: inline-block;
     width: auto;

@@ -25,9 +25,6 @@ It is able to synchronise your private files between all your devices. [More abo
 * _[filename].ctb_ size should not be big (about ``<= 5MB``), because for now the full file gets loaded with every page refresh in browser. 
 
 # Installation
-## Server requirements
-* PHP ``>= 7.2``
-* Nextcloud ``>= 15.0``
 ## Steps
 * Install into your web server [Nextcloud](https://nextcloud.com/install/#instructions-server)
 * (This step is not required.) To open _[filename].ctb_ from file list nextcloud app you need:

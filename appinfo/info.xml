@@ -3,12 +3,12 @@
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
     <id>fractalnote</id>
     <name>Fractal Note</name>
-    <summary>Online editor of note trees for Nextcloud/Owncloud server with Cherrytree (*.ctb) support</summary>
-    <description><![CDATA[FractalNote is online editor of hierarchical notes (or note trees) for Nextcloud/Owncloud server.
+    <summary>Online editor of note trees for Nextcloud server with Cherrytree (*.ctb) support</summary>
+    <description><![CDATA[FractalNote is online editor of hierarchical notes (or note trees) for Nextcloud server.
 You can view/edit CherryTree (*.ctb) files with it in browser.]]></description>
     <version>0.0.4</version>
     <licence>apache</licence>
-    <author mail="a.demchenko@aldem.ru" homepage="https://github.com/alboro">Alexander Demchenko</author>
+    <author homepage="https://github.com/alboro">Alexander Demchenko</author>
     <namespace>FractalNote</namespace>
     <category>organization</category>
     <category>tools</category>
@@ -16,8 +16,7 @@ You can view/edit CherryTree (*.ctb) files with it in browser.]]></description>
     <website>https://github.com/alboro/fractalnote</website>
     <bugs>https://github.com/alboro/fractalnote/issues</bugs>
     <dependencies>
-        <nextcloud min-version="29"/>
-        <php min-version="8.0"/>
+        <nextcloud min-version="30"/>
     </dependencies>
     <navigations>
         <navigation>

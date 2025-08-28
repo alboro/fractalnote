@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0
  *
  * @author Alexander Demchenko <https://github.com/alboro>
- * @copyright Alexander Demchenko 2017
+ * @copyright Alexander Demchenko 2025
  */
 /*
 OC.Plugins.register('OCA.Files.FileActions', {
